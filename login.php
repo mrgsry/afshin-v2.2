@@ -11,16 +11,16 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 // --- LOGIKA PHP UNTUK AJAX REQUEST (TIDAK BERUBAH) ---
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
-    
+
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
-    
-    $res = mysqli_query($mysqli, "SELECT * FROM users WHERE username='".mysqli_real_escape_string($mysqli,$username)."' LIMIT 1");
-    
-    if($res && $user = mysqli_fetch_assoc($res)){
-        if(password_verify($password, $user['password'])){
+
+    $res = mysqli_query($mysqli, "SELECT * FROM users WHERE username='" . mysqli_real_escape_string($mysqli, $username) . "' LIMIT 1");
+
+    if ($res && $user = mysqli_fetch_assoc($res)) {
+        if (password_verify($password, $user['password'])) {
             $_SESSION['user'] = $user;
             echo json_encode(['success' => true, 'name' => htmlspecialchars($user['name'] ?? $user['username'])]);
             exit;
@@ -30,14 +30,14 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     } else {
         $error = 'Invalid credentials';
     }
-    
+
     echo json_encode(['success' => false, 'error' => $error]);
     exit;
 }
 // --- END LOGIKA PHP UNTUK AJAX REQUEST ---
 
 // Jika user sudah login (ketika mengakses halaman tanpa POST), redirect
-if(is_logged_in()) header('Location: index.php');
+if (is_logged_in()) header('Location: index.php');
 
 
 include 'header.php';
@@ -45,6 +45,7 @@ include 'header.php';
 
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -128,6 +129,7 @@ include 'header.php';
             0% {
                 transform: translate(0, 0) rotate(0deg);
             }
+
             100% {
                 transform: translate(100px, 100px) rotate(360deg);
             }
@@ -378,6 +380,7 @@ include 'header.php';
                 opacity: 0;
                 transform: translateY(-10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -421,6 +424,7 @@ include 'header.php';
                 transform: scale(0);
                 opacity: 0;
             }
+
             to {
                 transform: scale(1);
                 opacity: 1;
@@ -432,15 +436,15 @@ include 'header.php';
             .login-card {
                 padding: 30px 25px;
             }
-            
+
             .logo-text h1 {
                 font-size: 20px;
             }
-            
+
             .login-header h2 {
                 font-size: 24px;
             }
-            
+
             .form-control {
                 padding: 12px 12px 12px 45px;
             }
@@ -453,10 +457,21 @@ include 'header.php';
             transform: translateY(20px);
         }
 
-        .form-group:nth-child(1) { animation-delay: 0.1s; }
-        .form-group:nth-child(2) { animation-delay: 0.2s; }
-        .remember-forgot { animation-delay: 0.3s; }
-        .login-btn { animation-delay: 0.4s; }
+        .form-group:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .form-group:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .remember-forgot {
+            animation-delay: 0.3s;
+        }
+
+        .login-btn {
+            animation-delay: 0.4s;
+        }
 
         @keyframes fadeInUp {
             to {
@@ -466,6 +481,7 @@ include 'header.php';
         }
     </style>
 </head>
+
 <body>
     <div class="background-animation">
         <div class="circle"></div>
@@ -482,7 +498,7 @@ include 'header.php';
                 <div class="logo-text">
                     <h1>CV Afshin Raya Teknik</h1>
                     <p>Selamat Datang di Sistem Manajemen</p>
-                    <span class="version-badge">v 1.1.0</span>
+                    <span class="version-badge">2.1.0</span>
                 </div>
             </div>
 
@@ -498,13 +514,13 @@ include 'header.php';
                     <label class="form-label" for="username">Username</label>
                     <div class="input-group">
                         <i class="fas fa-user input-icon"></i>
-                        <input type="text" 
-                               class="form-control" 
-                               id="username" 
-                               name="username" 
-                               placeholder="Masukkan username Anda"
-                               required
-                               autocomplete="username">
+                        <input type="text"
+                            class="form-control"
+                            id="username"
+                            name="username"
+                            placeholder="Masukkan username Anda"
+                            required
+                            autocomplete="username">
                     </div>
                 </div>
 
@@ -512,13 +528,13 @@ include 'header.php';
                     <label class="form-label" for="password">Password</label>
                     <div class="input-group">
                         <i class="fas fa-lock input-icon"></i>
-                        <input type="password" 
-                               class="form-control" 
-                               id="password" 
-                               name="password" 
-                               placeholder="Masukkan password Anda"
-                               required
-                               autocomplete="current-password">
+                        <input type="password"
+                            class="form-control"
+                            id="password"
+                            name="password"
+                            placeholder="Masukkan password Anda"
+                            required
+                            autocomplete="current-password">
                         <button type="button" class="toggle-password" id="togglePassword">
                             <i class="fas fa-eye"></i>
                         </button>
@@ -570,104 +586,105 @@ include 'header.php';
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script>
-    $(document).ready(function() {
-        // Toggle password visibility
-        $('#togglePassword').click(function() {
-            const passwordInput = $('#password');
-            const icon = $(this).find('i');
-            
-            if (passwordInput.attr('type') === 'password') {
-                passwordInput.attr('type', 'text');
-                icon.removeClass('fa-eye').addClass('fa-eye-slash');
-            } else {
-                passwordInput.attr('type', 'password');
-                icon.removeClass('fa-eye-slash').addClass('fa-eye');
-            }
-        });
+        $(document).ready(function() {
+            // Toggle password visibility
+            $('#togglePassword').click(function() {
+                const passwordInput = $('#password');
+                const icon = $(this).find('i');
 
-        // Form submission with AJAX
-        $('#loginForm').on('submit', function(e) {
-            e.preventDefault();
-
-            let $form = $(this);
-            let $button = $('#loginButton');
-            let $spinner = $('#loadingSpinner');
-            let $buttonText = $('#buttonText');
-            let $errorDiv = $('#loginError');
-            
-            // Reset error
-            $errorDiv.removeClass('show').empty();
-            
-            // Show loading state
-            $button.attr('disabled', true);
-            $buttonText.text('Memproses...');
-            $spinner.show();
-
-            // Get form data
-            let formData = {
-                username: $('#username').val().trim(),
-                password: $('#password').val()
-            };
-
-            // Simple validation
-            if (!formData.username || !formData.password) {
-                showError('Harap isi semua field');
-                return;
-            }
-
-            $.ajax({
-                type: 'POST',
-                url: 'login.php',
-                data: formData,
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        // Show success modal
-                        $('#userNameDisplay').text(response.name);
-                        $('#welcomeModal').modal('show');
-                        
-                        // Redirect after 2 seconds
-                        setTimeout(function() {
-                            window.location.href = 'index.php';
-                        }, 2000);
-                    } else {
-                        showError(response.error || 'Login gagal. Periksa kembali username dan password.');
-                    }
-                },
-                error: function(xhr, status, error) {
-                    showError('Terjadi kesalahan pada server. Silakan coba lagi.');
-                    console.error('AJAX Error:', error);
-                },
-                complete: function() {
-                    // Reset button state
-                    $button.attr('disabled', false);
-                    $buttonText.text('Masuk');
-                    $spinner.hide();
+                if (passwordInput.attr('type') === 'password') {
+                    passwordInput.attr('type', 'text');
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    passwordInput.attr('type', 'password');
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
                 }
             });
-        });
 
-        // Enter key to submit form
-        $('#username, #password').keypress(function(e) {
-            if (e.which === 13) {
-                $('#loginForm').submit();
-                return false;
+            // Form submission with AJAX
+            $('#loginForm').on('submit', function(e) {
+                e.preventDefault();
+
+                let $form = $(this);
+                let $button = $('#loginButton');
+                let $spinner = $('#loadingSpinner');
+                let $buttonText = $('#buttonText');
+                let $errorDiv = $('#loginError');
+
+                // Reset error
+                $errorDiv.removeClass('show').empty();
+
+                // Show loading state
+                $button.attr('disabled', true);
+                $buttonText.text('Memproses...');
+                $spinner.show();
+
+                // Get form data
+                let formData = {
+                    username: $('#username').val().trim(),
+                    password: $('#password').val()
+                };
+
+                // Simple validation
+                if (!formData.username || !formData.password) {
+                    showError('Harap isi semua field');
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'login.php',
+                    data: formData,
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            // Show success modal
+                            $('#userNameDisplay').text(response.name);
+                            $('#welcomeModal').modal('show');
+
+                            // Redirect after 2 seconds
+                            setTimeout(function() {
+                                window.location.href = 'index.php';
+                            }, 2000);
+                        } else {
+                            showError(response.error || 'Login gagal. Periksa kembali username dan password.');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        showError('Terjadi kesalahan pada server. Silakan coba lagi.');
+                        console.error('AJAX Error:', error);
+                    },
+                    complete: function() {
+                        // Reset button state
+                        $button.attr('disabled', false);
+                        $buttonText.text('Masuk');
+                        $spinner.hide();
+                    }
+                });
+            });
+
+            // Enter key to submit form
+            $('#username, #password').keypress(function(e) {
+                if (e.which === 13) {
+                    $('#loginForm').submit();
+                    return false;
+                }
+            });
+
+            // Auto focus username field
+            $('#username').focus();
+
+            function showError(message) {
+                const $errorDiv = $('#loginError');
+                $errorDiv.text(message).addClass('show');
+
+                // Auto hide error after 5 seconds
+                setTimeout(() => {
+                    $errorDiv.removeClass('show');
+                }, 5000);
             }
         });
-
-        // Auto focus username field
-        $('#username').focus();
-
-        function showError(message) {
-            const $errorDiv = $('#loginError');
-            $errorDiv.text(message).addClass('show');
-            
-            // Auto hide error after 5 seconds
-            setTimeout(() => {
-                $errorDiv.removeClass('show');
-            }, 5000);
-        }
-    });
     </script>
 </body>
+
 </html>
