@@ -1,0 +1,1286 @@
+[13-Dec-2025 04:24:03 UTC] PHP Warning:  Undefined array key "role" in /home/hnetdiih/public_html/afshin_app/header.php on line 218
+[13-Dec-2025 04:24:21 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:24:21 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:24:21 UTC] PHP Warning:  Undefined array key "customer_id" in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 104
+[13-Dec-2025 04:24:21 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:24:21 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:30:11 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:30:11 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:30:11 UTC] PHP Warning:  Undefined array key "customer_id" in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 104
+[13-Dec-2025 04:30:11 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:30:11 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:32:19 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'username_database'@'localhost' (using password: YES) in /home/hnetdiih/public_html/afshin_app/index.php:18
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/index.php(18): mysqli->__construct()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/index.php on line 18
+[13-Dec-2025 04:32:20 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'username_database'@'localhost' (using password: YES) in /home/hnetdiih/public_html/afshin_app/index.php:18
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/index.php(18): mysqli->__construct()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/index.php on line 18
+[13-Dec-2025 04:32:20 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'username_database'@'localhost' (using password: YES) in /home/hnetdiih/public_html/afshin_app/index.php:18
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/index.php(18): mysqli->__construct()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/index.php on line 18
+[13-Dec-2025 04:32:20 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'username_database'@'localhost' (using password: YES) in /home/hnetdiih/public_html/afshin_app/index.php:18
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/index.php(18): mysqli->__construct()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/index.php on line 18
+[13-Dec-2025 04:40:19 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:40:19 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:40:19 UTC] PHP Warning:  Undefined array key "customer_id" in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 104
+[13-Dec-2025 04:40:19 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:40:19 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:42:33 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:42:33 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:42:33 UTC] PHP Warning:  Undefined array key "customer_id" in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 104
+[13-Dec-2025 04:42:33 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:42:33 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:49:55 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 04:50:01 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 04:50:09 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:50:09 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:50:09 UTC] PHP Warning:  Undefined array key "customer_id" in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 104
+[13-Dec-2025 04:50:09 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:50:09 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:50:11 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 04:50:33 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 04:51:03 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 04:58:24 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 04:58:25 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 04:58:34 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:58:34 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:58:34 UTC] PHP Warning:  Undefined array key "customer_id" in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 104
+[13-Dec-2025 04:58:34 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:58:34 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:58:37 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:58:37 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:58:56 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:58:56 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:58:56 UTC] PHP Warning:  Undefined array key "customer_id" in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 104
+[13-Dec-2025 04:58:56 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:58:56 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 04:59:12 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 04:59:16 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:00:33 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:00:43 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:02:20 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:02:27 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:04:18 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:04:22 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:04:24 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:04:36 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:04:41 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:04:41 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:04:41 UTC] PHP Warning:  Undefined array key "customer_id" in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 104
+[13-Dec-2025 05:04:41 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:04:41 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:05:45 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:06:24 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:07:12 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:07:12 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:07:12 UTC] PHP Warning:  Undefined array key "customer_id" in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 104
+[13-Dec-2025 05:07:12 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:07:12 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:18:35 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:18:35 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:18:35 UTC] PHP Warning:  Undefined array key "customer_id" in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 104
+[13-Dec-2025 05:18:35 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:18:35 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:18:38 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:18:38 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:18:51 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:18:51 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:18:51 UTC] PHP Warning:  Undefined array key "customer_id" in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 104
+[13-Dec-2025 05:18:51 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:18:51 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:20:24 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:20:24 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:20:47 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:21:24 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:21:30 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'phone' in 'field list' in /home/hnetdiih/public_html/afshin_app/invoices_create.php:307
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/invoices_create.php(307): mysqli->prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 307
+[13-Dec-2025 05:21:44 UTC] Invoice Create POST: customer_id=1, faktur_inv=040025003752965432, created_at=2025-12-13
+[13-Dec-2025 05:21:44 UTC] Invoice Calculations - Subtotal: 7500000, Discount: 0, PPN: 825000, Total: 8325000
+[13-Dec-2025 05:21:44 UTC] Generated Invoice No: INV/ART/2025/XII/058
+[13-Dec-2025 05:21:44 UTC] Transaction failed: Field 'item_code' doesn't have a default value
+[13-Dec-2025 05:22:00 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'phone' in 'field list' in /home/hnetdiih/public_html/afshin_app/invoices_create.php:307
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/invoices_create.php(307): mysqli->prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 307
+[13-Dec-2025 05:22:37 UTC] Invoice Create POST: customer_id=7, faktur_inv=00, created_at=2025-12-13
+[13-Dec-2025 05:22:37 UTC] Invoice Calculations - Subtotal: 7500000, Discount: 0, PPN: 825000, Total: 8325000
+[13-Dec-2025 05:22:37 UTC] Generated Invoice No: INV/ART/2025/XII/058
+[13-Dec-2025 05:22:37 UTC] Transaction failed: Field 'item_code' doesn't have a default value
+[13-Dec-2025 05:22:56 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'phone' in 'field list' in /home/hnetdiih/public_html/afshin_app/invoices_create.php:307
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/invoices_create.php(307): mysqli->prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 307
+[13-Dec-2025 05:23:17 UTC] Invoice Create POST: customer_id=1, faktur_inv=0000000, created_at=2025-12-13
+[13-Dec-2025 05:23:17 UTC] Invoice Calculations - Subtotal: 6500000, Discount: 0, PPN: 715000, Total: 7215000
+[13-Dec-2025 05:23:17 UTC] Generated Invoice No: INV/ART/2025/XII/058
+[13-Dec-2025 05:23:17 UTC] Transaction failed: Field 'item_code' doesn't have a default value
+[13-Dec-2025 05:23:23 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'phone' in 'field list' in /home/hnetdiih/public_html/afshin_app/invoices_create.php:307
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/invoices_create.php(307): mysqli->prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 307
+[13-Dec-2025 05:23:29 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'phone' in 'field list' in /home/hnetdiih/public_html/afshin_app/invoices_create.php:307
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/invoices_create.php(307): mysqli->prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 307
+[13-Dec-2025 05:24:34 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:24:34 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:24:34 UTC] PHP Warning:  Undefined array key "customer_id" in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 104
+[13-Dec-2025 05:24:34 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:24:34 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:24:38 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:27:27 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(24): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:27:34 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(24): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:27:39 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:27:39 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:27:39 UTC] PHP Warning:  Undefined array key "customer_id" in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 104
+[13-Dec-2025 05:27:39 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:27:39 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 883
+[13-Dec-2025 05:27:56 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:28:59 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:29:00 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:29:08 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:29:26 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:31:16 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:38:36 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:38:39 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 771
+[13-Dec-2025 05:38:39 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 771
+[13-Dec-2025 05:38:42 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'phone' in 'field list' in /home/hnetdiih/public_html/afshin_app/invoices_create.php:32
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/invoices_create.php(32): mysqli->prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 32
+[13-Dec-2025 05:38:53 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 771
+[13-Dec-2025 05:38:53 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 771
+[13-Dec-2025 05:40:18 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 771
+[13-Dec-2025 05:40:18 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 771
+[13-Dec-2025 05:40:20 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'phone' in 'field list' in /home/hnetdiih/public_html/afshin_app/invoices_create.php:32
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/invoices_create.php(32): mysqli->prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 32
+[13-Dec-2025 05:41:05 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:45:37 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:45:40 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 771
+[13-Dec-2025 05:45:40 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 771
+[13-Dec-2025 05:46:15 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 771
+[13-Dec-2025 05:46:15 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin_app/invoices_create.php on line 771
+[13-Dec-2025 05:46:18 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:49:37 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(25): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:50:57 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(25): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:51:00 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin_app/functions.php:99
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/functions.php(99): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin_app/customers_create.php(25): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/functions.php on line 99
+[13-Dec-2025 05:58:02 UTC] PHP Fatal error:  Cannot redeclare bulan_romawi() (previously declared in /home/hnetdiih/public_html/afshin_app/service_report_create.php:25) in /home/hnetdiih/public_html/afshin_app/functions.php on line 81
+[13-Dec-2025 06:01:34 UTC] PHP Fatal error:  Cannot redeclare bulan_romawi() (previously declared in /home/hnetdiih/public_html/afshin_app/service_report_create.php:25) in /home/hnetdiih/public_html/afshin_app/functions.php on line 81
+[13-Dec-2025 06:11:33 UTC] PHP Parse error:  syntax error, unexpected token "catch", expecting end of file in /home/hnetdiih/public_html/afshin_app/service_report_create.php on line 172
+[13-Dec-2025 06:11:34 UTC] PHP Parse error:  syntax error, unexpected token "catch", expecting end of file in /home/hnetdiih/public_html/afshin_app/service_report_create.php on line 172
+[13-Dec-2025 06:11:35 UTC] PHP Parse error:  syntax error, unexpected token "catch", expecting end of file in /home/hnetdiih/public_html/afshin_app/service_report_create.php on line 172
+[13-Dec-2025 06:11:35 UTC] PHP Parse error:  syntax error, unexpected token "catch", expecting end of file in /home/hnetdiih/public_html/afshin_app/service_report_create.php on line 172
+[13-Dec-2025 06:11:36 UTC] PHP Parse error:  syntax error, unexpected token "catch", expecting end of file in /home/hnetdiih/public_html/afshin_app/service_report_create.php on line 172
+[13-Dec-2025 06:35:00 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'hnetdiih_hnetdiih'@'localhost' to database 'hnetdiih_afshin_app' in /home/hnetdiih/public_html/afshin_app/db.php:7
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_app/db.php(7): mysqli_connect()
+#1 /home/hnetdiih/public_html/afshin_app/functions.php(2): require_once('/home/hnetdiih/...')
+#2 /home/hnetdiih/public_html/afshin_app/service_report_create.php(9): require_once('/home/hnetdiih/...')
+#3 {main}
+  thrown in /home/hnetdiih/public_html/afshin_app/db.php on line 7
+[14-Dec-2025 13:41:40 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'phone' in 'field list' in /home/hnetdiih/public_html/afshin_old/invoices_create.php:32
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_old/invoices_create.php(32): mysqli->prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin_old/invoices_create.php on line 32
+[14-Dec-2025 14:47:08 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'phone' in 'field list' in /home/hnetdiih/public_html/afshin_old/invoices_create.php:32
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_old/invoices_create.php(32): mysqli->prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin_old/invoices_create.php on line 32
+[14-Dec-2025 15:06:41 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'phone' in 'field list' in /home/hnetdiih/public_html/afshin_old/invoices_create.php:32
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin_old/invoices_create.php(32): mysqli->prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin_old/invoices_create.php on line 32
+[17-Dec-2025 10:50:47 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'status' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_edit.php:124
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_edit.php(124): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_edit.php on line 124
+[17-Dec-2025 10:59:52 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'status' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:114
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(114): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 114
+[17-Dec-2025 10:59:55 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'status' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:114
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(114): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 114
+[18-Dec-2025 14:51:38 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.email' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:81
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(81): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 81
+[18-Dec-2025 14:51:55 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.email' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:81
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(81): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 81
+[18-Dec-2025 14:52:37 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.email' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:81
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(81): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 81
+[18-Dec-2025 14:59:59 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.email' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:91
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(91): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 91
+[18-Dec-2025 15:00:51 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.email' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:92
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(92): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 92
+[18-Dec-2025 15:01:41 UTC] PHP Parse error:  syntax error, unexpected token "]", expecting "-" or identifier or variable or number in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 46
+[18-Dec-2025 15:01:42 UTC] PHP Parse error:  syntax error, unexpected token "]", expecting "-" or identifier or variable or number in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 46
+[18-Dec-2025 15:01:42 UTC] PHP Parse error:  syntax error, unexpected token "]", expecting "-" or identifier or variable or number in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 46
+[18-Dec-2025 15:01:42 UTC] PHP Parse error:  syntax error, unexpected token "]", expecting "-" or identifier or variable or number in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 46
+[18-Dec-2025 15:02:45 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.email' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:92
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(92): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 92
+[18-Dec-2025 15:05:14 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.phone' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:92
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(92): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 92
+[18-Dec-2025 15:05:15 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.phone' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:92
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(92): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 92
+[18-Dec-2025 15:05:15 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.phone' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:92
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(92): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 92
+[18-Dec-2025 15:05:15 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.phone' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:92
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(92): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 92
+[18-Dec-2025 15:05:16 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.phone' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:92
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(92): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 92
+[18-Dec-2025 15:05:16 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.phone' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:92
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(92): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 92
+[18-Dec-2025 15:05:47 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'payment_status' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:151
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(151): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 151
+[18-Dec-2025 15:07:32 UTC] PHP Warning:  Undefined variable $stats_query in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 129
+[18-Dec-2025 15:07:32 UTC] PHP Deprecated:  mysqli_query(): Passing null to parameter #2 ($query) of type string is deprecated in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 129
+[18-Dec-2025 15:07:32 UTC] PHP Fatal error:  Uncaught ValueError: mysqli_query(): Argument #2 ($query) cannot be empty in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:129
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(129): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 129
+[19-Dec-2025 09:24:34 UTC] PHP Warning:  Undefined variable $pph in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 156
+[19-Dec-2025 09:24:34 UTC] PHP Warning:  Undefined variable $pph in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 156
+[19-Dec-2025 09:24:34 UTC] PHP Warning:  Undefined variable $pph in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 156
+[19-Dec-2025 09:24:34 UTC] PHP Warning:  Undefined variable $pph in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 156
+[19-Dec-2025 09:24:34 UTC] PHP Warning:  Undefined variable $pph in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 156
+[19-Dec-2025 09:24:34 UTC] PHP Warning:  Undefined variable $pph in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 156
+[19-Dec-2025 09:24:34 UTC] PHP Warning:  Undefined variable $pph in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 156
+[21-Dec-2025 13:52:53 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'phone' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php:32
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php(32): mysqli->prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php on line 32
+[21-Dec-2025 13:58:22 UTC] Updating BA ID: 16
+[21-Dec-2025 13:58:22 UTC] Nomor BA: 029/BAST-ART/XII/2025
+[21-Dec-2025 13:58:22 UTC] Pekerjaan: REPAIR SERVO MOTOR SPINDLE A06B-1404-B103
+[21-Dec-2025 13:58:22 UTC] Description: REPAIR SERVO MOTOR SPINDLE A06B-1404-B103
+[21-Dec-2025 13:58:22 UTC] Affected rows: 1
+[21-Dec-2025 14:18:45 UTC] PHP Warning:  Undefined variable $po_numbers_query in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 24
+[21-Dec-2025 14:19:11 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'ii.item_code' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:63
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(63): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 63
+[21-Dec-2025 14:19:13 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'ii.item_code' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:63
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(63): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 63
+[21-Dec-2025 14:19:13 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'ii.item_code' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:63
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(63): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 63
+[21-Dec-2025 14:19:13 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'ii.item_code' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:63
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(63): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 63
+[21-Dec-2025 14:19:28 UTC] PHP Warning:  Undefined variable $po_list in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 318
+[21-Dec-2025 14:19:28 UTC] PHP Fatal error:  Uncaught TypeError: array_keys(): Argument #1 ($array) must be of type array, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:318
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(318): array_keys()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 318
+[21-Dec-2025 14:19:32 UTC] PHP Warning:  Undefined variable $po_list in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 318
+[21-Dec-2025 14:19:32 UTC] PHP Fatal error:  Uncaught TypeError: array_keys(): Argument #1 ($array) must be of type array, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:318
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(318): array_keys()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 318
+[21-Dec-2025 14:19:40 UTC] PHP Warning:  Undefined variable $po_list in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 318
+[21-Dec-2025 14:19:40 UTC] PHP Fatal error:  Uncaught TypeError: array_keys(): Argument #1 ($array) must be of type array, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:318
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(318): array_keys()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 318
+[21-Dec-2025 14:19:44 UTC] PHP Warning:  Undefined variable $po_list in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 318
+[21-Dec-2025 14:19:44 UTC] PHP Fatal error:  Uncaught TypeError: array_keys(): Argument #1 ($array) must be of type array, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:318
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(318): array_keys()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 318
+[21-Dec-2025 14:20:13 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.alamat' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:21
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(21): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 21
+[21-Dec-2025 14:20:14 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.alamat' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:21
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(21): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 21
+[21-Dec-2025 14:20:14 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.alamat' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:21
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(21): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 21
+[21-Dec-2025 14:21:28 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'ii.item_code' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:60
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(60): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 60
+[21-Dec-2025 14:21:29 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'ii.item_code' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:60
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(60): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 60
+[21-Dec-2025 14:21:42 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'ii.item_code' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:62
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(62): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 62
+[21-Dec-2025 14:21:43 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'ii.item_code' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:62
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(62): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 62
+[21-Dec-2025 14:21:43 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'ii.item_code' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:62
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(62): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 62
+[21-Dec-2025 14:21:43 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'ii.item_code' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:62
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(62): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 62
+[21-Dec-2025 14:21:43 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'ii.item_code' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:62
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(62): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 62
+[21-Dec-2025 14:21:44 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'ii.item_code' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:62
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(62): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 62
+[21-Dec-2025 14:24:46 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'item_code' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:56
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(56): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 56
+[21-Dec-2025 14:24:47 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'item_code' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:56
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(56): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 56
+[21-Dec-2025 14:24:47 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'item_code' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:56
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(56): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 56
+[21-Dec-2025 14:24:52 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'item_code' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:56
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(56): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 56
+[21-Dec-2025 14:24:52 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'item_code' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:56
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(56): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 56
+[21-Dec-2025 14:24:59 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'item_code' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:56
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(56): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 56
+[21-Dec-2025 14:25:00 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'item_code' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php:56
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php(56): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_create.php on line 56
+[24-Dec-2025 02:51:04 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'q.faktur_quot' in 'where clause' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/quotations_list.php:69
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/quotations_list.php(69): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/quotations_list.php on line 69
+[24-Dec-2025 02:54:05 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(25): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 02:54:12 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(25): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 02:54:59 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(25): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 02:55:08 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(25): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 02:55:19 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(25): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 02:55:39 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(25): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 02:57:39 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 02:57:57 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 03:09:31 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 10:27:23 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(9): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 10:27:25 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(9): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 10:27:26 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(9): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 10:27:26 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(9): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 10:27:36 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(9): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 10:27:46 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(9): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 10:27:49 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(9): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 10:29:49 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(9): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 10:29:51 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(9): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 10:29:51 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(9): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 10:29:52 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(9): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 10:30:46 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(9): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 10:30:46 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(9): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 10:30:46 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(9): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 10:30:47 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(9): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 10:30:47 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(9): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 10:40:10 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(9): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 10:40:12 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(9): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[24-Dec-2025 10:40:18 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(9): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[27-Dec-2025 05:09:43 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[27-Dec-2025 05:09:59 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[27-Dec-2025 05:11:10 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[27-Dec-2025 05:11:36 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[27-Dec-2025 05:11:45 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[27-Dec-2025 05:12:44 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(26): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[27-Dec-2025 05:12:59 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[27-Dec-2025 05:17:56 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[27-Dec-2025 05:17:56 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[27-Dec-2025 05:18:40 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(51): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[27-Dec-2025 05:21:35 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[27-Dec-2025 05:23:18 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(51): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[27-Dec-2025 05:28:10 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[27-Dec-2025 05:33:13 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[27-Dec-2025 05:34:33 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[27-Dec-2025 05:36:32 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[27-Dec-2025 05:36:55 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[27-Dec-2025 05:38:13 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(53): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[27-Dec-2025 05:43:18 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(22): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[27-Dec-2025 05:45:30 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(22): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[27-Dec-2025 05:46:54 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hnetdiih_afshin_app.TABLES' doesn't exist in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php:97
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(97): mysqli_query()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_create.php(23): gen_customer_no()
+#2 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php on line 97
+[27-Dec-2025 06:16:27 UTC] PHP Parse error:  syntax error, unexpected token "endif", expecting end of file in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/header.php on line 791
+[27-Dec-2025 06:17:06 UTC] PHP Parse error:  syntax error, unexpected token "endif", expecting end of file in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/header.php on line 791
+[28-Dec-2025 12:46:35 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'phone' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php:32
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php(32): mysqli->prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php on line 32
+[28-Dec-2025 12:51:36 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'phone' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php:32
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php(32): mysqli->prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php on line 32
+[28-Dec-2025 12:54:18 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Too many connections in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/db.php:7
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/db.php(7): mysqli_connect()
+#1 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/functions.php(2): require_once('/home/hnetdiih/...')
+#2 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/login.php(3): require_once('/home/hnetdiih/...')
+#3 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/db.php on line 7
+[28-Dec-2025 12:59:52 UTC] Updating BA ID: 17
+[28-Dec-2025 12:59:52 UTC] Nomor BA: 030/BAST-ART/XII/2025
+[28-Dec-2025 12:59:52 UTC] Pekerjaan: RepairServo Amplifier Fanuc A06B-6096-H206
+[28-Dec-2025 12:59:52 UTC] Description: RepairServo Amplifier Fanuc A06B-6096-H206
+[28-Dec-2025 12:59:52 UTC] Affected rows: 1
+[28-Dec-2025 13:01:17 UTC] Updating BA ID: 17
+[28-Dec-2025 13:01:17 UTC] Nomor BA: 030/BAST-ART/XII/2025
+[28-Dec-2025 13:01:17 UTC] Pekerjaan: RepairServo Amplifier Fanuc A06B-6096-H206
+[28-Dec-2025 13:01:17 UTC] Description: RepairServo Amplifier Fanuc A06B-6096-H206
+[28-Dec-2025 13:01:17 UTC] Affected rows: 1
+[28-Dec-2025 14:22:31 UTC] PHP Warning:  Undefined variable $pph in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 156
+[28-Dec-2025 14:22:31 UTC] PHP Warning:  Undefined variable $pph in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 156
+[28-Dec-2025 14:22:31 UTC] PHP Warning:  Undefined variable $pph in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 156
+[28-Dec-2025 14:22:31 UTC] PHP Warning:  Undefined variable $pph in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 156
+[28-Dec-2025 14:22:31 UTC] PHP Warning:  Undefined variable $pph in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 156
+[28-Dec-2025 14:22:31 UTC] PHP Warning:  Undefined variable $pph in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 156
+[28-Dec-2025 14:22:31 UTC] PHP Warning:  Undefined variable $pph in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 156
+[28-Dec-2025 14:22:31 UTC] PHP Warning:  Undefined variable $pph in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 156
+[28-Dec-2025 14:22:31 UTC] PHP Warning:  Undefined variable $pph in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 156
+[28-Dec-2025 14:22:31 UTC] PHP Warning:  Undefined variable $pph in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 156
+[04-Jan-2026 13:44:25 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'phone' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php:32
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php(32): mysqli->prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php on line 32
+[04-Jan-2026 13:51:03 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'phone' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php:32
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php(32): mysqli->prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php on line 32
+[04-Jan-2026 13:53:30 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'phone' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php:32
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php(32): mysqli->prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php on line 32
+[04-Jan-2026 14:06:52 UTC] Updating BA ID: 18
+[04-Jan-2026 14:06:52 UTC] Nomor BA: 001/BAST-ART/I/2026
+[04-Jan-2026 14:06:52 UTC] Pekerjaan: REPAIR MESIN SLOTTING "LIAONING MS71 - OGE"
+[04-Jan-2026 14:06:52 UTC] Description: REPAIR MESIN SLOTTING "LIAONING MS71 - OGE"
+[04-Jan-2026 14:06:52 UTC] Affected rows: 1
+[04-Jan-2026 14:08:14 UTC] PHP Parse error:  syntax error, unexpected token "<" in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_print.php on line 24
+[04-Jan-2026 14:10:36 UTC] PHP Warning:  Undefined variable $item in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_print.php on line 50
+[04-Jan-2026 14:10:36 UTC] PHP Warning:  Trying to access array offset on value of type null in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/berita_acara_print.php on line 50
+[04-Jan-2026 14:29:25 UTC] Updating BA ID: 19
+[04-Jan-2026 14:29:25 UTC] Nomor BA: 002/BAST-ART/I/2026
+[04-Jan-2026 14:29:25 UTC] Pekerjaan: REPAIR MESIN BUBUT VERTICAL CNC "TAKANG BVC72 - OGE"
+[04-Jan-2026 14:29:25 UTC] Description: REPAIR MESIN BUBUT VERTICAL CNC "TAKANG BVC72 - OGE" 
+- repair overhaul AC panel AIRCON
+- replace compressor 1/2PK
+- flushing,vacum,isi ulang freon
+- replace fan cooling San ace 
+- cleaning total AC panel
+- replace kapasitor
+- replace jalur pipa aluminium evaporator&kondensor
+[04-Jan-2026 14:29:25 UTC] Affected rows: 1
+[04-Jan-2026 14:40:03 UTC] Updating BA ID: 18
+[04-Jan-2026 14:40:03 UTC] Nomor BA: 001/BAST-ART/I/2026
+[04-Jan-2026 14:40:03 UTC] Pekerjaan: REPAIR MESIN SLOTTING "LIAONING MS71 - OGE"
+[04-Jan-2026 14:40:03 UTC] Description: REPAIR MESIN SLOTTING "LIAONING MS71 - OGE"
+
+- Repair Trafo Magnetic Clutch 220V Type MQ1-5131
+- Replace Magnetic Clutch Type (5A DLM5-5C)
+- Bubut Slotting Shaft SPI
+- Repair Housing Kopling
+- Replace Bearing Kopling
+[04-Jan-2026 14:40:03 UTC] Affected rows: 1
+[04-Jan-2026 14:40:26 UTC] Updating BA ID: 18
+[04-Jan-2026 14:40:26 UTC] Nomor BA: 001/BAST-ART/I/2026
+[04-Jan-2026 14:40:26 UTC] Pekerjaan: REPAIR MESIN SLOTTING "LIAONING MS71 - OGE"
+[04-Jan-2026 14:40:26 UTC] Description: REPAIR MESIN SLOTTING "LIAONING MS71 - OGE"
+- Repair Trafo Magnetic Clutch 220V Type MQ1-5131
+- Replace Magnetic Clutch Type (5A DLM5-5C)
+- Bubut Slotting Shaft SPI
+- Repair Housing Kopling
+- Replace Bearing Kopling
+[04-Jan-2026 14:40:26 UTC] Affected rows: 1
+[04-Jan-2026 14:53:31 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect integer value: '' for column `hnetdiih_afshin_app`.`customers`.`npwp` at row 1 in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_edit.php:31
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_edit.php(31): mysqli_stmt_execute()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/customers_edit.php on line 31
+[05-Jan-2026 15:20:59 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:20:59 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:21:07 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:21:07 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:21:12 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:21:12 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:21:40 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:21:40 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:21:44 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:21:44 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:23:14 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:23:14 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:23:46 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:23:46 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:24:04 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:24:04 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:24:17 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:24:17 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:24:26 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:24:26 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:24:58 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:24:58 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:25:13 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:25:13 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:25:14 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:25:14 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:25:16 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:25:16 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:25:48 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:25:48 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:25:51 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:25:51 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:26:25 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:26:25 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:27:13 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:27:13 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:27:27 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:27:27 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:27:47 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[05-Jan-2026 15:27:47 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 02:12:12 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 02:12:12 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 02:12:22 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 02:12:22 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 02:12:26 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 02:12:26 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 02:14:57 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 02:14:57 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 02:15:01 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 02:15:01 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 02:15:28 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 02:15:28 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 02:15:32 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 02:15:32 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 02:19:45 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 02:19:45 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 02:28:38 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 02:28:38 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 02:33:48 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 02:33:48 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 06:06:01 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 06:06:01 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 06:09:58 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 06:09:58 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 06:10:00 UTC] PHP Warning:  file_get_contents(https://sheets.googleapis.com/v4/spreadsheets/1rc5ZiHXFxvESyduS2-fKZl4O2u-DKJ__Cz-3FxgE3L0/values/finance!A1:P73?key=AIzaSyALEOTYoO5Y62sgmhXKz139vD_9iStZlY8): Failed to open stream: HTTP request failed! HTTP/1.1 400 Bad Request
+ in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/finance.php on line 16
+[07-Jan-2026 06:10:11 UTC] PHP Warning:  file_get_contents(https://sheets.googleapis.com/v4/spreadsheets/1rc5ZiHXFxvESyduS2-fKZl4O2u-DKJ__Cz-3FxgE3L0/values/finance!A1:P73?key=AIzaSyALEOTYoO5Y62sgmhXKz139vD_9iStZlY8): Failed to open stream: HTTP request failed! HTTP/1.1 400 Bad Request
+ in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/finance.php on line 16
+[07-Jan-2026 06:26:57 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 06:26:57 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 06:55:39 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[07-Jan-2026 06:55:39 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[08-Jan-2026 03:14:32 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[08-Jan-2026 03:14:32 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[08-Jan-2026 03:14:38 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[08-Jan-2026 03:14:38 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[08-Jan-2026 03:15:19 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[08-Jan-2026 03:15:19 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[09-Jan-2026 04:26:51 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[09-Jan-2026 04:26:51 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[09-Jan-2026 08:07:47 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'i.status_invoice' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:93
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(93): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 93
+[09-Jan-2026 08:07:48 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'i.status_invoice' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:93
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(93): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 93
+[09-Jan-2026 08:07:49 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'i.status_invoice' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:93
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(93): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 93
+[09-Jan-2026 08:07:49 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'i.status_invoice' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:93
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(93): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 93
+[09-Jan-2026 08:07:49 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'i.status_invoice' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:93
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(93): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 93
+[09-Jan-2026 08:07:50 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'i.status_invoice' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:93
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(93): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 93
+[09-Jan-2026 08:07:50 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'i.status_invoice' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:93
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(93): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 93
+[09-Jan-2026 08:07:50 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'i.status_invoice' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:93
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(93): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 93
+[09-Jan-2026 08:07:50 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'i.status_invoice' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:93
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(93): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 93
+[09-Jan-2026 08:07:51 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'i.status_invoice' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:93
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(93): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 93
+[09-Jan-2026 08:07:51 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'i.status_invoice' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:93
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(93): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 93
+[09-Jan-2026 08:07:51 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'i.status_invoice' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:93
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(93): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 93
+[09-Jan-2026 08:07:52 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'i.status_invoice' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:93
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(93): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 93
+[11-Jan-2026 13:22:31 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'phone' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php:32
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php(32): mysqli->prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php on line 32
+[11-Jan-2026 13:32:22 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'phone' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php:32
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php(32): mysqli->prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php on line 32
+[11-Jan-2026 13:42:30 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'phone' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php:32
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php(32): mysqli->prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php on line 32
+[11-Jan-2026 13:50:25 UTC] PHP Warning:  Undefined variable $po_numbers in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[11-Jan-2026 13:50:25 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/document_history.php on line 353
+[13-Jan-2026 15:19:24 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'phone' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php:32
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php(32): mysqli->prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php on line 32
+[13-Jan-2026 15:31:28 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.company' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:128
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(128): mysqli_prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 128
+[13-Jan-2026 15:31:29 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.company' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:128
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(128): mysqli_prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 128
+[13-Jan-2026 15:31:29 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.company' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:128
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(128): mysqli_prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 128
+[13-Jan-2026 15:31:30 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.company' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:128
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(128): mysqli_prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 128
+[13-Jan-2026 15:31:30 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.company' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:128
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(128): mysqli_prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 128
+[13-Jan-2026 15:31:31 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.company' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:128
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(128): mysqli_prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 128
+[13-Jan-2026 15:31:32 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.company' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:128
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(128): mysqli_prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 128
+[13-Jan-2026 15:31:36 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.company' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:128
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(128): mysqli_prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 128
+[13-Jan-2026 15:31:56 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.company' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:128
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(128): mysqli_prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 128
+[13-Jan-2026 15:32:40 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.company' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:131
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(131): mysqli_prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 131
+[13-Jan-2026 15:33:03 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'company' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:151
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(151): mysqli_query()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 151
+[13-Jan-2026 15:33:30 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'c.customer' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php:131
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php(131): mysqli_prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_list.php on line 131
+[14-Jan-2026 04:14:15 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'phone' in 'field list' in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php:32
+Stack trace:
+#0 /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php(32): mysqli->prepare()
+#1 {main}
+  thrown in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/invoices_create.php on line 32
+[15-Jan-2026 07:55:01 UTC] PHP Warning:  Undefined variable $items in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/quotations_create.php on line 850
+[15-Jan-2026 07:55:01 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/quotations_create.php on line 850
+[15-Jan-2026 08:08:27 UTC] PHP Warning:  Undefined variable $satuans in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/quotations_create.php on line 82
+[15-Jan-2026 08:08:27 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/quotations_create.php on line 82
+[15-Jan-2026 08:08:27 UTC] PHP Warning:  Undefined variable $satuan_options_html in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/quotations_create.php on line 356
+[15-Jan-2026 08:08:27 UTC] PHP Warning:  Undefined variable $success_msg in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/quotations_create.php on line 525
+[15-Jan-2026 08:08:27 UTC] PHP Warning:  Undefined variable $error_msg in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/quotations_create.php on line 531
+[15-Jan-2026 08:08:29 UTC] PHP Warning:  Undefined variable $satuans in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/quotations_create.php on line 82
+[15-Jan-2026 08:08:29 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/quotations_create.php on line 82
+[15-Jan-2026 08:08:29 UTC] PHP Warning:  Undefined variable $satuan_options_html in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/quotations_create.php on line 356
+[15-Jan-2026 08:08:29 UTC] PHP Warning:  Undefined variable $success_msg in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/quotations_create.php on line 525
+[15-Jan-2026 08:08:29 UTC] PHP Warning:  Undefined variable $error_msg in /home/hnetdiih/public_html/afshin.hnet-diigital.biz.id/quotations_create.php on line 531
