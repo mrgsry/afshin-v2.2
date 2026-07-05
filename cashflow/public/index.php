@@ -287,7 +287,17 @@
 
                     <div class="mb-field photo-drop">
                         <label for="photo" class="form-label">Foto Bukti (Opsional)</label>
-                        <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
+                        <div class="d-flex gap-2 mb-2">
+                            <button type="button" class="btn btn-outline-secondary flex-fill"
+                                onclick="selectPhotoSource('camera')">
+                                <i class="bi bi-camera me-1"></i> Ambil Foto
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary flex-fill"
+                                onclick="selectPhotoSource('gallery')">
+                                <i class="bi bi-images me-1"></i> Galeri
+                            </button>
+                        </div>
+                        <input type="file" class="d-none" id="photoInput" name="photo" accept="image/*">
                         <img id="photoPreview" class="photo-preview" alt="Preview">
                         <div class="form-text text-muted mt-1">
                             <i class="bi bi-info-circle me-1"></i>Maksimal 5MB. Format: JPG, PNG, GIF, WEBP
@@ -360,8 +370,21 @@
     const successModal = new bootstrap.Modal(document.getElementById('successModal'));
     const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
 
+    // Select photo source: 'camera' or 'gallery'
+    function selectPhotoSource(source) {
+        const photoInput = document.getElementById('photoInput');
+
+        if (source === 'camera') {
+            photoInput.setAttribute('capture', 'environment');
+        } else {
+            photoInput.removeAttribute('capture');
+        }
+
+        photoInput.click();
+    }
+
     // Photo preview
-    document.getElementById('photo').addEventListener('change', function(e) {
+    document.getElementById('photoInput').addEventListener('change', function(e) {
         const file = e.target.files[0];
         const preview = document.getElementById('photoPreview');
 
