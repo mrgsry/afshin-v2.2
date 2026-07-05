@@ -412,9 +412,14 @@ table.dataTable tbody td {
                         echo '<td>' . htmlspecialchars($row['description'] ?? '-') . '</td>';
                         echo '<td>' . $photoHtml . '</td>';
                         echo '<td>';
-                            echo '<button class="btn btn-danger btn-action"
-                                onclick="deleteTransaction(' . $row['id'] . ')"><i
-                                    class="bi bi-trash3 me-1"></i>Hapus</button>';
+                            echo '<div class="d-flex gap-2">';
+                                echo '<button class="btn btn-warning btn-action"
+                                    onclick="editTransaction(' . $row['id'] . ', \'' . addslashes(htmlspecialchars($row['technician_name'])) . '\', \'' . $row['category'] . '\', ' . $row['amount'] . ', \'' . addslashes(htmlspecialchars($row['description'] ?? '')) . '\', \'' . $row['transaction_date'] . '\')"><i
+                                        class="bi bi-pencil-square me-1"></i>Edit</button>';
+                                echo '<button class="btn btn-danger btn-action"
+                                    onclick="deleteTransaction(' . $row['id'] . ')"><i
+                                        class="bi bi-trash3 me-1"></i>Hapus</button>';
+                            echo '</div>';
                             echo '</td>';
                         echo '</tr>';
                     }
@@ -436,6 +441,55 @@ table.dataTable tbody td {
             </div>
             <div class="modal-body text-center">
                 <img id="photoFull" src="" class="img-fluid rounded" alt="Foto Bukti">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 16px; overflow: hidden;">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Edit Transaksi</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" id="editId">
+                    <div class="mb-3">
+                        <label for="editTransactionDate" class="form-label">Tanggal Transaksi</label>
+                        <input type="date" class="form-control" id="editTransactionDate" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editTechnicianName" class="form-label">Nama Teknisi</label>
+                        <input type="text" class="form-control" id="editTechnicianName" required maxlength="100">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editCategory" class="form-label">Kategori</label>
+                        <select class="form-select" id="editCategory" required>
+                            <option value="">-- Pilih Kategori --</option>
+                            <option value="BBM">BBM</option>
+                            <option value="Tol">Tol</option>
+                            <option value="Sparepart">Sparepart</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editAmount" class="form-label">Nominal (Rp)</label>
+                        <input type="number" class="form-control" id="editAmount" required min="1">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editDescription" class="form-label">Keterangan</label>
+                        <textarea class="form-control" id="editDescription" rows="3" maxlength="500"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-warning" onclick="saveEdit()">
+                    <i class="bi bi-check-lg me-1"></i> Simpan Perubahan
+                </button>
             </div>
         </div>
     </div>
@@ -485,6 +539,75 @@ $(document).ready(function() {
         photoModal.show();
     });
 });
+
+// Edit transaction - open modal with data
+function editTransaction(id, technician_name, category, amount, description, transaction_date) {
+    document.getElementById('editId').value = id;
+    document.getElementById('editTechnicianName').value = technician_name;
+    document.getElementById('editCategory').value = category;
+    document.getElementById('editAmount').value = amount;
+    document.getElementById('editDescription').value = description;
+    document.getElementById('editTransactionDate').value = transaction_date;
+
+    const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+    editModal.show();
+}
+
+// Save edit
+function saveEdit() {
+    const id = document.getElementById('editId').value;
+    const technician_name = document.getElementById('editTechnicianName').value.trim();
+    const category = document.getElementById('editCategory').value;
+    const amount = document.getElementById('editAmount').value.trim();
+    const description = document.getElementById('editDescription').value.trim();
+    const transaction_date = document.getElementById('editTransactionDate').value;
+
+    // Validate
+    if (!technician_name) {
+        alert('Nama teknisi wajib diisi');
+        return;
+    }
+    if (!category) {
+        alert('Kategori wajib dipilih');
+        return;
+    }
+    if (!amount || parseFloat(amount) <= 0) {
+        alert('Nominal harus lebih dari 0');
+        return;
+    }
+    if (!transaction_date) {
+        alert('Tanggal transaksi wajib diisi');
+        return;
+    }
+
+    fetch('../api/edit.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: id,
+                technician_name: technician_name,
+                category: category,
+                amount: amount,
+                description: description,
+                transaction_date: transaction_date
+            })
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                alert('Data berhasil diupdate');
+                location.reload();
+            } else {
+                const errorMsg = result.errors ? result.errors.join('\n') : result.message;
+                alert('Gagal mengupdate: ' + errorMsg);
+            }
+        })
+        .catch(error => {
+            alert('Terjadi kesalahan: ' + error);
+        });
+}
 
 // Delete transaction
 function deleteTransaction(id) {

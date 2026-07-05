@@ -22,10 +22,14 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+// Database connection
+require_once __DIR__ . '/../../db.php';
+
 // Require authentication
 require_once __DIR__ . '/../../functions.php';
 
-if (!isset($_SESSION['user_id'])) {
+// Fix: Check for 'user' instead of 'user_id' to match functions.php
+if (!isset($_SESSION['user'])) {
     http_response_code(401);
     echo json_encode([
         'success' => false,
