@@ -149,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="mb-4">
             <i class="fas fa-cogs fa-3x text-primary mb-3"></i>
             <h4 class="login-title">CV Afshin Raya Teknik</h4>
-            <h4 class="login-title">CRM Apps by Hnet Solution</h4>
+            <small class="login-title">CRM Apps by Hnet Solution</small>
             <small class="text-muted">Sistem Manajemen v2.2</small>
         </div>
 
