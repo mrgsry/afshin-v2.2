@@ -287,8 +287,7 @@
 
                     <div class="mb-field photo-drop">
                         <label for="photo" class="form-label">Foto Bukti (Opsional)</label>
-                        <input type="file" class="form-control" id="photo" name="photo" accept="image/*"
-                            capture="environment">
+                        <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
                         <img id="photoPreview" class="photo-preview" alt="Preview">
                         <div class="form-text text-muted mt-1">
                             <i class="bi bi-info-circle me-1"></i>Maksimal 5MB. Format: JPG, PNG, GIF, WEBP
