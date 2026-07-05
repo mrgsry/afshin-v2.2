@@ -393,29 +393,33 @@ table.dataTable tbody td {
 
                             while ($row = $result->fetch_assoc()) {
                                 $photoHtml = '';
-                                if (!empty($row['photo_path'])) {
-                                    $photoHtml = '<img src="/afshin_v3/' . htmlspecialchars($row['photo_path']) . '" class="photo-thumbnail" data-id="' . $row['id'] . '" alt="Foto">';
-                                } else {
-                                    $photoHtml = '<span class="text-muted">-</span>';
-                                }
+                                 if (!empty($row['photo_path'])) {
+                                     $photoPath = $base_prefix . htmlspecialchars($row['photo_path']);
+                                     $photoHtml = '<img src="' . $photoPath . '" class="photo-thumbnail" data-id="' . $row['id'] . '" alt="Foto">';
+                                 } else {
+                                     $photoHtml = '<span class="text-muted">-</span>';
+                                 }
 
-                                $badgeClass = $badgeMap[$row['category']] ?? 'bg-secondary-subtle text-secondary-emphasis';
+                    $badgeClass = $badgeMap[$row['category']] ?? 'bg-secondary-subtle text-secondary-emphasis';
 
-                                echo '<tr>';
-                                echo '<td>' . $row['id'] . '</td>';
-                                echo '<td>' . date('d/m/Y', strtotime($row['transaction_date'])) . '</td>';
-                                echo '<td>' . htmlspecialchars($row['technician_name']) . '</td>';
-                                echo '<td><span class="badge badge-category ' . $badgeClass . '">' . htmlspecialchars($row['category']) . '</span></td>';
-                                echo '<td class="fw-semibold">' . formatRupiah($row['amount']) . '</td>';
-                                echo '<td>' . htmlspecialchars($row['description'] ?? '-') . '</td>';
-                                echo '<td>' . $photoHtml . '</td>';
-                                echo '<td>';
-                                echo '<button class="btn btn-danger btn-action" onclick="deleteTransaction(' . $row['id'] . ')"><i class="bi bi-trash3 me-1"></i>Hapus</button>';
-                                echo '</td>';
-                                echo '</tr>';
-                            }
-                            $stmt->close();
-                            ?>
+                    echo '<tr>';
+                        echo '<td>' . $row['id'] . '</td>';
+                        echo '<td>' . date('d/m/Y', strtotime($row['transaction_date'])) . '</td>';
+                        echo '<td>' . htmlspecialchars($row['technician_name']) . '</td>';
+                        echo '<td><span class="badge badge-category ' . $badgeClass . '">' .
+                                htmlspecialchars($row['category']) . '</span></td>';
+                        echo '<td class="fw-semibold">' . formatRupiah($row['amount']) . '</td>';
+                        echo '<td>' . htmlspecialchars($row['description'] ?? '-') . '</td>';
+                        echo '<td>' . $photoHtml . '</td>';
+                        echo '<td>';
+                            echo '<button class="btn btn-danger btn-action"
+                                onclick="deleteTransaction(' . $row['id'] . ')"><i
+                                    class="bi bi-trash3 me-1"></i>Hapus</button>';
+                            echo '</td>';
+                        echo '</tr>';
+                    }
+                    $stmt->close();
+                    ?>
                 </tbody>
             </table>
         </div>
