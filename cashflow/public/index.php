@@ -304,10 +304,13 @@
                         </div>
                     </div>
 
-                    <div class="d-grid mt-4">
+                    <div class="d-grid mt-4 gap-2">
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-save2 me-1"></i> Simpan Data
                         </button>
+                        <a href="data.php" class="btn btn-outline-secondary">
+                            <i class="bi bi-table me-1"></i> Lihat Transaksi Saya
+                        </a>
                     </div>
                 </form>
             </div>
