@@ -300,7 +300,7 @@
                         <input type="file" class="d-none" id="photoInput" name="photo" accept="image/*">
                         <img id="photoPreview" class="photo-preview" alt="Preview">
                         <div class="form-text text-muted mt-1">
-                            <i class="bi bi-info-circle me-1"></i>Maksimal 5MB. Format: JPG, PNG, GIF, WEBP
+                            <i class="bi bi-info-circle me-1"></i>Maksimal 25MB. Format: JPG, PNG, GIF, WEBP
                         </div>
                     </div>
 

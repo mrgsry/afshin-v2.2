@@ -92,17 +92,33 @@ if (!empty($errors)) {
 // Process file upload (optional)
 $photoPath = null;
 if (isset($_FILES['photo']) && $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE) {
-    if ($_FILES['photo']['error'] !== UPLOAD_ERR_OK) {
+    // Log file upload error for debugging
+    $uploadError = $_FILES['photo']['error'];
+    error_log("File upload error code: " . $uploadError);
+    error_log("File info: " . print_r($_FILES['photo'], true));
+    
+    if ($uploadError !== UPLOAD_ERR_OK) {
+        $errorMessages = [
+            UPLOAD_ERR_INI_SIZE => 'File terlalu besar (melebihi upload_max_filesize di php.ini)',
+            UPLOAD_ERR_FORM_SIZE => 'File terlalu besar (melebihi MAX_FILE_SIZE di form)',
+            UPLOAD_ERR_PARTIAL => 'File hanya ter-upload sebagian',
+            UPLOAD_ERR_NO_FILE => 'Tidak ada file yang diupload',
+            UPLOAD_ERR_NO_TMP_DIR => 'Folder temporary tidak ditemukan',
+            UPLOAD_ERR_CANT_WRITE => 'Gagal menulis file ke disk',
+            UPLOAD_ERR_EXTENSION => 'Upload dihentikan oleh ekstensi PHP'
+        ];
+        $errorMsg = $errorMessages[$uploadError] ?? 'Gagal mengupload file (error code: ' . $uploadError . ')';
+        
         http_response_code(400);
         echo json_encode([
             'success' => false,
-            'message' => 'Gagal mengupload file'
+            'message' => $errorMsg
         ]);
         exit;
     }
 
     $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-    $maxSize = 5 * 1024 * 1024; // 5MB
+    $maxSize = 25 * 1024 * 1024; // 25MB
 
     $file = $_FILES['photo'];
 
@@ -124,7 +140,7 @@ if (isset($_FILES['photo']) && $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE)
         http_response_code(400);
         echo json_encode([
             'success' => false,
-            'message' => 'Ukuran file maksimal 5MB'
+            'message' => 'Ukuran file maksimal 25MB'
         ]);
         exit;
     }
