@@ -5,6 +5,8 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once 'functions.php';
 
 $current_page = basename($_SERVER['PHP_SELF']);
+// Auto-detect base path - works from any subdirectory
+$base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../../' : '';
 ?>
 <!DOCTYPE html>
 <html>
@@ -146,7 +148,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="/afshin_v3/index.php" class="nav-link">
+                    <a href="index.php" class="nav-link">
                         <i class="fas fa-home"></i> Dashboard
                     </a>
                 </li>
@@ -158,11 +160,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <i class="far fa-user-circle fa-lg"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a href="/afshin_v3/profile.php" class="dropdown-item">
+                        <a href="<?= $base_prefix ?>profile.php" class="dropdown-item">
                             <i class="fas fa-user-cog mr-2"></i> User Setting
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="/afshin_v3/logout.php" class="dropdown-item text-danger">
+                        <a href="<?= $base_prefix ?>logout.php" class="dropdown-item text-danger">
                             <i class="fas fa-sign-out-alt mr-2"></i> Logout
                         </a>
                     </div>
@@ -174,8 +176,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <!-- Sidebar -->
         <aside class="main-sidebar elevation-4" style="background:#f8f9fb;">
 
-            <a href="/afshin_v3/index.php" class="brand-link text-center border-0">
-                <img src="/afshin_v3/img/afshin2.png" class="brand-image img-circle elevation-2" style="width:35px;">
+            <a href="<?= $base_prefix ?>index.php" class="brand-link text-center border-0">
+                <img src="<?= $base_prefix ?>img/afshin2.png" class="brand-image img-circle elevation-2"
+                    style="width:35px;">
                 <span class="brand-text font-weight-bold ml-2">AFSHIN APP</span>
             </a>
 
@@ -187,7 +190,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
                         <!-- DASHBOARD -->
                         <li class="nav-item">
-                            <a href="/afshin_v3/index.php"
+                            <a href="<?= $base_prefix ?>index.php"
                                 class="nav-link <?= $current_page=='index.php'?'active bg-gradient-primary text-white':'' ?>">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>Dashboard</p>
@@ -206,14 +209,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="/afshin_v3/customers_create.php"
+                                    <a href="<?= $base_prefix ?>customers_create.php"
                                         class="nav-link <?= $current_page=='customers_create.php'?'active':'' ?>">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Create Customer</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/afshin_v3/customers_list.php"
+                                    <a href="<?= $base_prefix ?>customers_list.php"
                                         class="nav-link <?= $current_page=='customers_list.php'?'active':'' ?>">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Customer List</p>
@@ -234,14 +237,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="/afshin_v3/quotations_create.php"
+                                    <a href="<?= $base_prefix ?>quotations_create.php"
                                         class="nav-link <?= $current_page=='quotations_create.php'?'active':'' ?>">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Create Quotation</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/afshin_v3/quotations_list.php"
+                                    <a href="<?= $base_prefix ?>quotations_list.php"
                                         class="nav-link <?= $current_page=='quotations_list.php'?'active':'' ?>">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Quotation List</p>
@@ -262,21 +265,21 @@ $current_page = basename($_SERVER['PHP_SELF']);
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="/afshin_v3/invoices_create.php"
+                                    <a href="<?= $base_prefix ?>invoices_create.php"
                                         class="nav-link <?= $current_page=='invoices_create.php'?'active':'' ?>">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Create Invoice</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/afshin_v3/admin_invoice_list.php"
+                                    <a href="<?= $base_prefix ?>admin_invoice_list.php"
                                         class="nav-link <?= $current_page=='admin_invoice_list.php'?'active':'' ?>">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Create Admin Invoice</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/afshin_v3/invoices_list.php"
+                                    <a href="<?= $base_prefix ?>invoices_list.php"
                                         class="nav-link <?= $current_page=='invoices_list.php'?'active':'' ?>">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Invoice List</p>
@@ -297,14 +300,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="/afshin_v3/travel_document_create.php"
+                                    <a href="<?= $base_prefix ?>travel_document_create.php"
                                         class="nav-link <?= $current_page=='travel_document_create.php'?'active':'' ?>">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Create Travel Doc</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/afshin_v3/travel_document_list.php"
+                                    <a href="<?= $base_prefix ?>travel_document_list.php"
                                         class="nav-link <?= $current_page=='travel_document_list.php'?'active':'' ?>">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Travel Doc List</p>
@@ -325,14 +328,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="/afshin_v3/service_report_create.php"
+                                    <a href="<?= $base_prefix ?>service_report_create.php"
                                         class="nav-link <?= $current_page=='service_report_create.php'?'active':'' ?>">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Create Service Report</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/afshin_v3/service_report_list.php"
+                                    <a href="<?= $base_prefix ?>service_report_list.php"
                                         class="nav-link <?= $current_page=='service_report_list.php'?'active':'' ?>">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Service Report List</p>
@@ -353,14 +356,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="/afshin_v3/berita_acara_create.php"
+                                    <a href="<?= $base_prefix ?>berita_acara_create.php"
                                         class="nav-link <?= $current_page=='berita_acara_create.php'?'active':'' ?>">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Create Berita Acara</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/afshin_v3/berita_acara_list.php"
+                                    <a href="<?= $base_prefix ?>berita_acara_list.php"
                                         class="nav-link <?= $current_page=='berita_acara_list.php'?'active':'' ?>">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Berita Acara List</p>
@@ -370,7 +373,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         </li>
 
                         <li class="nav-item">
-                            <a href="/afshin_v3/data_po.php"
+                            <a href="<?= $base_prefix ?>data_po.php"
                                 class="nav-link <?= $current_page=='data_po.php'?'active':'' ?>">
                                 <i class="nav-icon fas fa-file-alt"></i>
                                 <p>Data PO</p>
@@ -379,7 +382,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
                         <!-- OPERATIONAL -->
                         <li class="nav-item">
-                            <a href="/afshin_v3/cashflow/admin/index.php"
+                            <a href="<?= $base_prefix ?>cashflow/admin/index.php"
                                 class="nav-link <?= strpos($_SERVER['REQUEST_URI'], 'cashflow') !== false ? 'active' : '' ?>">
                                 <i class="nav-icon fas fa-cash-register"></i>
                                 <p>Operational</p>
@@ -388,7 +391,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
                         <!-- FINANCE -->
                         <li class="nav-item">
-                            <a href="/afshin_v3/finance.php"
+                            <a href="<?= $base_prefix ?>finance.php"
                                 class="nav-link <?= $current_page=='finance.php'?'active':'' ?>">
                                 <i class="nav-icon fas fa-chart-line"></i>
                                 <p>Finance</p>
@@ -397,7 +400,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
                         <!-- DOCUMENT HISTORY -->
                         <li class="nav-item">
-                            <a href="/afshin_v3/document_history.php"
+                            <a href="<?= $base_prefix ?>document_history.php"
                                 class="nav-link <?= $current_page=='document_history.php'?'active':'' ?>">
                                 <i class="nav-icon fas fa-history"></i>
                                 <p>Document History</p>
@@ -417,14 +420,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="/afshin_v3/users_create.php"
+                                    <a href="<?= $base_prefix ?>users_create.php"
                                         class="nav-link <?= $current_page=='users_create.php'?'active':'' ?>">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Create User</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/afshin_v3/users_manage.php"
+                                    <a href="<?= $base_prefix ?>users_manage.php"
                                         class="nav-link <?= $current_page=='users_manage.php'?'active':'' ?>">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Manage User</p>
