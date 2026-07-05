@@ -1,0 +1,9 @@
+# Allow direct access to image files only (needed for photo display)
+<FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Deny access to all other files
+Order Deny,Allow
+Deny from all
