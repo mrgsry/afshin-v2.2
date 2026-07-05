@@ -404,7 +404,22 @@
     document.getElementById('cashflowForm').addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        const formData = new FormData(this);
+        // Build FormData manually to ensure all fields are included
+        const form = this;
+        const formData = new FormData();
+
+        // Explicitly append each field
+        formData.append('technician_name', form.technician_name.value.trim());
+        formData.append('category', form.category.value.trim());
+        formData.append('amount', form.amount.value.trim());
+        formData.append('description', form.description.value.trim());
+        formData.append('transaction_date', form.transaction_date.value.trim());
+
+        // Append photo if selected
+        const photoInput = document.getElementById('photoInput');
+        if (photoInput.files && photoInput.files[0]) {
+            formData.append('photo', photoInput.files[0]);
+        }
 
         // Show loading
         document.getElementById('loadingOverlay').style.display = 'flex';
@@ -413,6 +428,7 @@
             const response = await fetch('../api/submit.php', {
                 method: 'POST',
                 body: formData
+                // Don't set Content-Type header - browser will set it automatically with boundary for multipart/form-data
             });
 
             const result = await response.json();

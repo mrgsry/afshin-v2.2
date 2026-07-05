@@ -27,11 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 require_once __DIR__ . '/../../db.php';
 
 // Collect and sanitize inputs
-$technician_name = trim($_POST['technician_name'] ?? '');
-$category        = trim($_POST['category'] ?? '');
-$amount          = trim($_POST['amount'] ?? '');
-$description     = trim($_POST['description'] ?? '');
-$transaction_date = trim($_POST['transaction_date'] ?? '');
+// Use isset() to properly handle FormData with file uploads
+$technician_name = isset($_POST['technician_name']) ? trim($_POST['technician_name']) : '';
+$category        = isset($_POST['category']) ? trim($_POST['category']) : '';
+$amount          = isset($_POST['amount']) ? trim($_POST['amount']) : '';
+$description     = isset($_POST['description']) ? trim($_POST['description']) : '';
+$transaction_date = isset($_POST['transaction_date']) ? trim($_POST['transaction_date']) : '';
 
 // Valid categories
 $validCategories = ['BBM', 'Tol', 'Sparepart', 'Lainnya'];
@@ -164,6 +165,8 @@ try {
     }
 
     $amountFloat = floatval($amount);
+    // Fixed bind_param: 6 parameters need 6 type characters
+    // s=string, s=string, s=string, d=double, s=string, s=string
     $stmt->bind_param("sssdss", $transaction_date, $technician_name, $category, $amountFloat, $description, $photoPath);
 
     if (!$stmt->execute()) {
