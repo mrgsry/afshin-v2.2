@@ -8,11 +8,26 @@
 
 require_once __DIR__ . '/../../functions.php';
 
+// Check session timeout (10 minutes = 600 seconds)
+$session_timeout = 600;
+if (isset($_SESSION['user']) && isset($_SESSION['LAST_ACTIVITY'])) {
+    if (time() - $_SESSION['LAST_ACTIVITY'] > $session_timeout) {
+        // Session expired
+        session_unset();
+        session_destroy();
+        header('Location: ../../login.php?expired=1');
+        exit;
+    }
+}
+
 // Check if user is logged in
 if (!is_logged_in()) {
     header('Location: ../../login.php');
     exit;
 }
+
+// Update last activity time
+$_SESSION['LAST_ACTIVITY'] = time();
 
 // Get filter parameters
 $filterDate = $_GET['filter_date'] ?? '';
