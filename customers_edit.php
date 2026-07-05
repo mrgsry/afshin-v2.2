@@ -16,6 +16,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $address = $_POST['address'] ?? '';
     $telephone = $_POST['telephone'] ?? '';
     $pic = $_POST['pic'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $cc_email = $_POST['cc_email'] ?? '';
     $npwp = $_POST['npwp'] ?? '';
     
     // Validasi input
@@ -25,8 +27,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         exit;
     }
     
-    $stmt = mysqli_prepare($mysqli, "UPDATE customers SET name=?, address=?, telephone=?, pic=?, npwp=? WHERE id=?");
-    mysqli_stmt_bind_param($stmt, 'sssssi', $name, $address, $telephone, $pic, $npwp, $id);
+    $stmt = mysqli_prepare($mysqli, "UPDATE customers SET name=?, address=?, telephone=?, pic=?, email=?, cc_email=?, npwp=? WHERE id=?");
+    mysqli_stmt_bind_param($stmt, 'sssssssi', $name, $address, $telephone, $pic, $email, $cc_email, $npwp, $id);
     
     if(mysqli_stmt_execute($stmt)) {
         flash_set('success', 'Customer berhasil diperbarui');
@@ -209,6 +211,39 @@ include 'header.php';
                                                value="<?php echo htmlspecialchars($row['npwp'] ?? ''); ?>"
                                                placeholder="00.000.000.0-000.000">
                                     </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="email" class="font-weight-bold">Email</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text bg-light">
+                                                <i class="fas fa-envelope text-primary"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" name="email" id="email" class="form-control" 
+                                               value="<?php echo htmlspecialchars($row['email'] ?? ''); ?>"
+       placeholder="email@customer.com, email2@customer.com">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="cc_email" class="font-weight-bold">CC Email</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text bg-light">
+                                                <i class="fas fa-copy text-primary"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" name="cc_email" id="cc_email" class="form-control" 
+                                               value="<?php echo htmlspecialchars($row['cc_email'] ?? ''); ?>"
+                                               placeholder="cc1@mail.com, cc2@mail.com">
+                                    </div>
+                                    <small class="form-text text-muted">Separate multiple emails with comma</small>
                                 </div>
                             </div>
                         </div>
@@ -430,7 +465,7 @@ $(document).ready(function() {
         var npwp = $('#npwp').val().trim();
         if(npwp !== '' && !isValidNPWP(npwp)) {
             $('#npwp').addClass('is-invalid');
-            $('#npwp').after('<div class="invalid-feedback">Format NPWP tidak valid. Format: 00.000.000.0-000.000</div>');
+            $('#npwp').after('<div class="invalid-feedback">Format NPWP tidak valid. Format: 000000000000000</div>');
             isValid = false;
         }
         
@@ -444,7 +479,20 @@ $(document).ready(function() {
         }
     });
     
-    
+    function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+}
+
+function validateMultipleEmails(value) {
+    if (value.trim() === '') return true;
+    var emails = value.split(',');
+    for (var i = 0; i < emails.length; i++) {
+        if (emails[i].trim() !== '' && !isValidEmail(emails[i])) {
+            return false;
+        }
+    }
+    return true;
+}
     
     function showToast(message, type = 'info') {
         // Remove existing toasts

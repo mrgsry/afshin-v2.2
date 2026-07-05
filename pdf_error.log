@@ -1,0 +1,37 @@
+2026-06-11 14:53:14 - The PHP GD extension is required, but is not installed.
+2026-06-11 14:55:17 - The PHP GD extension is required, but is not installed.
+2026-06-11 14:59:14 - The PHP GD extension is required, but is not installed.
+2026-06-11 15:01:10 - The PHP GD extension is required, but is not installed.
+#0 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/Adapter/CPDF.php(674): Dompdf\Cpdf->addPngFromFile()
+#1 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/Renderer/Image.php(63): Dompdf\Adapter\CPDF->image()
+#2 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/Renderer.php(305): Dompdf\Renderer\Image->render()
+#3 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/Renderer.php(140): Dompdf\Renderer->_render_frame()
+#4 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/Renderer.php(207): Dompdf\Renderer->render()
+#5 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/Renderer.php(207): Dompdf\Renderer->render()
+#6 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/Renderer.php(207): Dompdf\Renderer->render()
+#7 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/Renderer.php(207): Dompdf\Renderer->render()
+#8 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/Renderer.php(207): Dompdf\Renderer->render()
+#9 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/Renderer.php(207): Dompdf\Renderer->render()
+#10 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/FrameReflower/Page.php(148): Dompdf\Renderer->render()
+#11 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/FrameDecorator/AbstractFrameDecorator.php(915): Dompdf\FrameReflower\Page->reflow()
+#12 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/Dompdf.php(817): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+#13 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/generate_quotation_pdf.php(370): Dompdf\Dompdf->render()
+#14 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/send_quotation_email.php(50): generateQuotationPDF()
+#15 {main}
+2026-06-11 15:08:36 - The PHP GD extension is required, but is not installed.
+#0 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/Adapter/CPDF.php(674): Dompdf\Cpdf->addPngFromFile()
+#1 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/Renderer/Image.php(63): Dompdf\Adapter\CPDF->image()
+#2 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/Renderer.php(305): Dompdf\Renderer\Image->render()
+#3 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/Renderer.php(140): Dompdf\Renderer->_render_frame()
+#4 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/Renderer.php(207): Dompdf\Renderer->render()
+#5 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/Renderer.php(207): Dompdf\Renderer->render()
+#6 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/Renderer.php(207): Dompdf\Renderer->render()
+#7 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/Renderer.php(207): Dompdf\Renderer->render()
+#8 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/Renderer.php(207): Dompdf\Renderer->render()
+#9 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/Renderer.php(207): Dompdf\Renderer->render()
+#10 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/FrameReflower/Page.php(148): Dompdf\Renderer->render()
+#11 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/FrameDecorator/AbstractFrameDecorator.php(915): Dompdf\FrameReflower\Page->reflow()
+#12 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/vendor/dompdf/dompdf/src/Dompdf.php(817): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+#13 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/generate_quotation_pdf.php(371): Dompdf\Dompdf->render()
+#14 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/send_quotation_email.php(50): generateQuotationPDF()
+#15 {main}

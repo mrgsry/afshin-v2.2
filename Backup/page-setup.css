@@ -1,0 +1,119 @@
+/*=== Ukuran Kertas A4 Saat Print === */
+@page {
+  size: A4;
+  margin: 15mm 15mm 15mm 15mm; /* bisa diubah sesuai kebutuhan */
+}
+
+body {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container utama agar layout sesuai margin A4 */
+.print-container {
+  width: 100%;
+  padding: 15mm;
+  box-sizing: border-box;
+}
+
+.header-container {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.header-logo img {
+  width: 110px;
+  float: left;
+  margin-top: -10px;
+}
+
+.header-text {
+  font-weight: bold;
+  text-align: center;
+  font-size: 14px;
+}
+
+.small-text {
+  font-size: 12px;
+  text-align: center;
+}
+
+/* === Judul === */
+.title {
+  text-align: center;
+  font-size: 14px;
+  margin: 10px 0 20px;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+/* === Info Customer === */
+.info-table {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.info-table td {
+  vertical-align: top;
+  padding: 3px 0;
+  font-size: 12px;
+}
+
+/* === Tabel Items === */
+table.items {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 10px;
+}
+
+table.items th,
+table.items td {
+  border: 1px solid black;
+  padding: 6px;
+}
+
+table.items th {
+  background: #f0f0f0;
+  text-align: center;
+  font-size: 12px;
+}
+
+/* === Total === */
+.total-table {
+  width: 40%;
+  float: right;
+  margin-top: 10px;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.total-table td {
+  border: 1px solid black;
+  padding: 5px;
+}
+
+/* === Notes === */
+.note-box {
+  border: 1px solid black;
+  padding: 8px;
+  margin-top: 20px;
+  font-size: 12px;
+}
+
+/* === Signature === */
+.signature-table {
+  width: 100%;
+  margin-top: 40px;
+  font-size: 12px;
+}
+
+.signature-table td {
+  text-align: center;
+  padding: 40px 0;
+}
+.signature-table .name {
+  text-decoration: underline;
+  font-weight: bold;
+}

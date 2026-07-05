@@ -49,6 +49,7 @@ if (isset($_GET['id'])) {
         $pelaksana = $row['pelaksana'];
         $prod_code = $row['item_code'];
         $ship_by = $row['ship_by'] ?? '';
+        $note = $row['note'] ?? '';
         
         // Data dari kolom utama (item pertama)
         $items[] = [
@@ -533,7 +534,7 @@ body {
     <tr>
         <td class="info-label">Nama</td>
         <td class="info-colon">:</td>
-        <td class="info-value"><?php echo htmlspecialchars($customer_name); ?></td>
+        <td class="info-value">Ahlal Dimas</td>
         <td class="info-right-label">NUMBER</td>
         <td class="info-right-colon">:</td>
         <td class="info-right-value"><?php echo htmlspecialchars($nomor_ba); ?></td>
@@ -541,7 +542,7 @@ body {
     <tr>
         <td class="info-label">Pekerjaan</td>
         <td class="info-colon">:</td>
-        <td class="info-value" colspan="4"><?php echo htmlspecialchars($pekerjaan); ?></td>
+        <td class="info-value" colspan="4">Terlampir</td>
     </tr>
     <?php 
     if (strpos($pekerjaan, '[') !== false && strpos($pekerjaan, ']') !== false) {
@@ -646,7 +647,12 @@ body {
         </tbody>
     </table>
 </div>
-
+<?php if (!empty($note)): ?>
+<div style="margin-top: 15px; font-size: 11px; border: 1px solid #ccc; padding: 8px 12px; border-radius: 4px;">
+    <strong>Catatan:</strong><br>
+    <?php echo nl2br(htmlspecialchars($note)); ?>
+</div>
+<?php endif; ?>
 <!-- TANGGAL DITERIMA -->
 <div class="date-received">
     Diterima tanggal : <?php echo format_date($tanggal_ba); ?>

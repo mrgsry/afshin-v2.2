@@ -396,6 +396,14 @@ table.items th {
             </tr>
         </table>
     </div>
+    <!-- Tambahkan setelah div terbilang-note-container -->
+
+<?php if (!empty($inv['note'])): ?>
+<div style="margin-top: 10px; font-size: 12px; border-top: 1px solid #ccc; padding-top: 8px;">
+    <strong>Catatan:</strong><br>
+    <?php echo nl2br(htmlspecialchars($inv['note'])); ?>
+</div>
+<?php endif; ?>
 </div>
 
 <table class="signature-table">

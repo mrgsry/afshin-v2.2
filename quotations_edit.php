@@ -95,7 +95,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         // insert new items
         if(isset($_POST['description_quot'])){
             for($i=0; $i < count($_POST['description_quot']); $i++){
-                $desc  = mysqli_real_escape_string($mysqli, $_POST['description_quot'][$i]);
+                $desc = trim($_POST['description_quot'][$i]);
                 $qty   = floatval($_POST['qty'][$i]);
                 $sat   = mysqli_real_escape_string($mysqli, $_POST['satuan_quot'][$i]);
                 $price = floatval($_POST['unit_price_raw'][$i]);
@@ -885,7 +885,7 @@ foreach($satuans as $s) {
                                         rows="2" 
                                         placeholder="Enter item description..."
                                         oninput="autoResize(this)"
-                                    ><?php echo htmlspecialchars($it['description_quot']); ?></textarea>
+                                    ><?php echo htmlspecialchars(stripslashes($it['description_quot'])); ?></textarea>
                                 </td>
                                 <td>
                                     <input type="number" name="qty[]" class="form-control qty" 
