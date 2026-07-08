@@ -81,6 +81,9 @@ function formatRupiah($amount)
     return 'Rp ' . number_format($amount, 0, ',', '.');
 }
 
+// Base URL for photo (from admin to uploads)
+$base_prefix = '../uploads/';
+
 // Include main app header
 require_once __DIR__ . '/../../header.php';
 ?>

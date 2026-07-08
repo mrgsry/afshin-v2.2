@@ -13,6 +13,10 @@
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 
+// Increase PHP upload limits to allow 25MB file uploads
+ini_set('upload_max_filesize', '25M');
+ini_set('post_max_size', '25M');
+
 // Only accept POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -165,7 +169,7 @@ if (isset($_FILES['photo']) && $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE)
         exit;
     }
 
-    $photoPath = 'cashflow/uploads/' . $filename;
+    $photoPath = $filename;
 }
 
 // Insert into database
