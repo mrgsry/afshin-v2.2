@@ -1,0 +1,7 @@
+# PHP Configuration for File Uploads
+# Increase upload limits to allow files up to 25MB
+php_value upload_max_filesize 25M
+php_value post_max_size 25M
+php_value memory_limit 256M
+php_value max_execution_time 300
+php_value max_input_time 300

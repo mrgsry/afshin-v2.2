@@ -386,12 +386,32 @@
         photoInput.click();
     }
 
-    // Photo preview
+    // Photo preview and validation
     document.getElementById('photoInput').addEventListener('change', function(e) {
         const file = e.target.files[0];
         const preview = document.getElementById('photoPreview');
 
         if (file) {
+            // Validate file size (25MB = 25 * 1024 * 1024 bytes)
+            const maxSize = 25 * 1024 * 1024;
+
+            if (file.size > maxSize) {
+                alert('Ukuran file terlalu besar! Maksimal 25MB. File yang Anda pilih: ' + formatFileSize(file
+                    .size));
+                this.value = ''; // Clear the file input
+                preview.style.display = 'none';
+                return;
+            }
+
+            // Validate file type
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            if (!allowedTypes.includes(file.type)) {
+                alert('Tipe file tidak diizinkan! Hanya JPG, PNG, GIF, WEBP yang diperbolehkan.');
+                this.value = ''; // Clear the file input
+                preview.style.display = 'none';
+                return;
+            }
+
             const reader = new FileReader();
             reader.onload = function(e) {
                 preview.src = e.target.result;
@@ -402,6 +422,15 @@
             preview.style.display = 'none';
         }
     });
+
+    // Helper function to format file size
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
+    }
 
     // Form submission
     document.getElementById('cashflowForm').addEventListener('submit', async function(e) {
