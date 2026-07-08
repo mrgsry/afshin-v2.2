@@ -73,8 +73,8 @@ STEP 3: KONFIGURASI EMAIL SMTP
 File: send_quotation_email.php (Baris 14-15)
 
 Pastikan kredensial email sudah benar:
-$SMTP_USER = 'cvafshinrayateknik@gmail.com';
-$SMTP_PASS = 'isch kxdm blsl xwxv';
+$SMTP_USER = 'mail@gmail.com';
+$SMTP_PASS = 'app password';
 
 CATATAN:
 - Jika hosting memblokir port 465 (SSL), coba gunakan port 587 (TLS)
