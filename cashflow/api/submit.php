@@ -46,6 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($_POST) && empty($_FILES)) {
 
 // Database connection
 require_once __DIR__ . '/../../db.php';
+require_once __DIR__ . '/../../functions.php';
 
 // Collect and sanitize inputs
 // Use isset() to properly handle FormData with file uploads
@@ -177,13 +178,37 @@ if (isset($_FILES['photo']) && $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE)
     $filename = 'bukti_' . date('Ymd_His') . '_' . bin2hex(random_bytes(6)) . '.' . $ext;
     $destPath = $uploadDir . $filename;
 
-    if (!move_uploaded_file($file['tmp_name'], $destPath)) {
-        http_response_code(500);
-        echo json_encode([
-            'success' => false,
-            'message' => 'Gagal menyimpan file upload'
-        ]);
-        exit;
+    // Try server-side compression if GD is available
+    // Otherwise, just use the client-compressed file (which is already optimized)
+    $gdAvailable = extension_loaded('gd');
+    
+    if ($gdAvailable && function_exists('imagecreatefromjpeg')) {
+        // GD is available, compress on server
+        if (compressImage($file['tmp_name'], $destPath, 75, 1200, 1200)) {
+            // Compression successful - filename stays the same but extension becomes .jpg
+            $filename = preg_replace('/\.[^.]+$/', '.jpg', $filename);
+            $destPath = $uploadDir . $filename;
+        } else {
+            // Compression failed, fall back to direct upload
+            if (!move_uploaded_file($file['tmp_name'], $destPath)) {
+                http_response_code(500);
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Gagal menyimpan file upload'
+                ]);
+                exit;
+            }
+        }
+    } else {
+        // GD not available, use client-side compressed file directly
+        if (!move_uploaded_file($file['tmp_name'], $destPath)) {
+            http_response_code(500);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Gagal menyimpan file upload'
+            ]);
+            exit;
+        }
     }
 
     $photoPath = $filename;

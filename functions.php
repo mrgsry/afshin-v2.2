@@ -141,3 +141,77 @@ function gen_reference($prefix, $mysqli, $table){
 
     return strtoupper($prefix) . str_pad($next, 6, '0', STR_PAD_LEFT);
 }
+
+/* ===============================
+   COMPRESS IMAGE (RESIZE & OPTIMIZE)
+=================================*/
+/**
+ * Kompres dan resize gambar jika terlalu besar
+ * 
+ * @param string $source Path file asli
+ * @param string $destination Path untuk menyimpan file hasil kompresi
+ * @param int $quality Kualitas (0-100)
+ * @param int $maxWidth Maksimal lebar gambar
+ * @param int $maxHeight Maksimal tinggi gambar
+ * @return bool Berhasil atau tidak
+ */
+function compressImage($source, $destination, $quality = 75, $maxWidth = 1200, $maxHeight = 1200) {
+    $info = getimagesize($source);
+    if (!$info) return false;
+
+    $mime = $info['mime'];
+    $width = $info[0];
+    $height = $info[1];
+
+    // Buat resource gambar berdasarkan mime type
+    switch ($mime) {
+        case 'image/jpeg':
+            $image = imagecreatefromjpeg($source);
+            break;
+        case 'image/png':
+            $image = imagecreatefrompng($source);
+            break;
+        case 'image/gif':
+            $image = imagecreatefromgif($source);
+            break;
+        case 'image/webp':
+            $image = imagecreatefromwebp($source);
+            break;
+        default:
+            return false;
+    }
+
+    if (!$image) return false;
+
+    // Kalkulasi ukuran baru dengan mempertahankan rasio aspek
+    $newWidth = $width;
+    $newHeight = $height;
+
+    if ($width > $maxWidth || $height > $maxHeight) {
+        $ratio = min($maxWidth / $width, $maxHeight / $height);
+        $newWidth = round($width * $ratio);
+        $newHeight = round($height * $ratio);
+    }
+
+    // Jika ukuran berubah atau ini bukan jpeg, kita buat gambar baru
+    // Kita simpan semuanya sebagai JPEG untuk kompresi terbaik
+    $newImage = imagecreatetruecolor($newWidth, $newHeight);
+
+    // Untuk PNG dan GIF dengan transparansi, beri background putih
+    if ($mime == 'image/png' || $mime == 'image/gif') {
+        $white = imagecolorallocate($newImage, 255, 255, 255);
+        imagefill($newImage, 0, 0, $white);
+    }
+
+    // Resize
+    imagecopyresampled($newImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+
+    // Simpan gambar (selalu disimpan sebagai JPEG)
+    $result = imagejpeg($newImage, $destination, $quality);
+
+    // Bebaskan memory
+    imagedestroy($image);
+    imagedestroy($newImage);
+
+    return $result;
+}
