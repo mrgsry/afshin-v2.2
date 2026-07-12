@@ -58,7 +58,7 @@ function formatRupiah($amount)
 }
 
 // Base URL for photo
-$base_prefix = '../../uploads/';
+$base_prefix = '../uploads/';
 ?>
 <!DOCTYPE html>
 <html lang="id">

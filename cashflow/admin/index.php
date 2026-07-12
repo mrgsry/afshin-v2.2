@@ -7,6 +7,7 @@
  */
 
 require_once __DIR__ . '/../../functions.php';
+require_once __DIR__ . '/../../db.php';
 
 // Check session timeout (10 minutes = 600 seconds)
 $session_timeout = 600;
@@ -82,7 +83,7 @@ function formatRupiah($amount)
 }
 
 // Base URL for photo (from admin to uploads)
-$base_prefix = '../uploads/';
+$uploads_base_prefix = '../uploads/';
 
 // Include main app header
 require_once __DIR__ . '/../../header.php';
@@ -412,7 +413,7 @@ table.dataTable tbody td {
                             while ($row = $result->fetch_assoc()) {
                                 $photoHtml = '';
                                  if (!empty($row['photo_path'])) {
-                                     $photoPath = $base_prefix . htmlspecialchars($row['photo_path']);
+$photoPath = $uploads_base_prefix . htmlspecialchars($row['photo_path']);
                                      $photoHtml = '<img src="' . $photoPath . '" class="photo-thumbnail" data-id="' . $row['id'] . '" alt="Foto">';
                                  } else {
                                      $photoHtml = '<span class="text-muted">-</span>';

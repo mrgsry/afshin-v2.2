@@ -13,9 +13,9 @@
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 
-// Increase PHP upload limits to allow 25MB file uploads
-ini_set('upload_max_filesize', '25M');
-ini_set('post_max_size', '25M');
+// Note: upload_max_filesize and post_max_size are PHP_INI_PERDIR directives
+// They CANNOT be changed with ini_set() at runtime.
+// They must be set in php.ini or .htaccess (see ../. htaccess)
 
 // Only accept POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -25,6 +25,23 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         'message' => 'Method not allowed'
     ]);
     exit;
+}
+
+// Detect if post_max_size was exceeded
+// When post_max_size is exceeded, PHP silently drops all POST data
+// $_POST and $_FILES become empty, but CONTENT_LENGTH still has the original value
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($_POST) && empty($_FILES)) {
+    $contentLength = isset($_SERVER['CONTENT_LENGTH']) ? (int)$_SERVER['CONTENT_LENGTH'] : 0;
+    $postMaxSize = ini_get('post_max_size');
+    
+    if ($contentLength > 0) {
+        http_response_code(413);
+        echo json_encode([
+            'success' => false,
+            'message' => "File terlalu besar! Ukuran upload ({$contentLength} bytes) melebihi batas server ({$postMaxSize}). Silakan kompres gambar terlebih dahulu."
+        ]);
+        exit;
+    }
 }
 
 // Database connection

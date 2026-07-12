@@ -386,38 +386,125 @@
         photoInput.click();
     }
 
-    // Photo preview and validation
-    document.getElementById('photoInput').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        const preview = document.getElementById('photoPreview');
+    // Compressed file storage
+    let compressedFile = null;
 
-        if (file) {
-            // Validate file size (25MB = 25 * 1024 * 1024 bytes)
-            const maxSize = 25 * 1024 * 1024;
-
-            if (file.size > maxSize) {
-                alert('Ukuran file terlalu besar! Maksimal 25MB. File yang Anda pilih: ' + formatFileSize(file
-                    .size));
-                this.value = ''; // Clear the file input
-                preview.style.display = 'none';
-                return;
-            }
-
-            // Validate file type
-            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-            if (!allowedTypes.includes(file.type)) {
-                alert('Tipe file tidak diizinkan! Hanya JPG, PNG, GIF, WEBP yang diperbolehkan.');
-                this.value = ''; // Clear the file input
-                preview.style.display = 'none';
+    /**
+     * Compress image using Canvas API
+     * Resizes to max 1920px and compresses to JPEG ~80% quality
+     * This ensures uploads stay well under server limits
+     */
+    function compressImage(file) {
+        return new Promise((resolve, reject) => {
+            // Skip compression for small files (< 1MB) and non-compressible formats
+            if (file.size < 1 * 1024 * 1024) {
+                resolve(file);
                 return;
             }
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                preview.src = e.target.result;
-                preview.style.display = 'block';
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    // Calculate new dimensions (max 1920px on longest side)
+                    const MAX_DIM = 1920;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > MAX_DIM || height > MAX_DIM) {
+                        if (width > height) {
+                            height = Math.round((height * MAX_DIM) / width);
+                            width = MAX_DIM;
+                        } else {
+                            width = Math.round((width * MAX_DIM) / height);
+                            height = MAX_DIM;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Convert to JPEG blob with 80% quality
+                    canvas.toBlob(function(blob) {
+                        if (blob) {
+                            // Create a new File from the blob
+                            const compressedFileName = file.name.replace(/\.[^.]+$/, '') +
+                                '_compressed.jpg';
+                            const compressedFileObj = new File([blob], compressedFileName, {
+                                type: 'image/jpeg',
+                                lastModified: Date.now()
+                            });
+                            console.log('Compressed: ' + formatFileSize(file.size) + ' → ' +
+                                formatFileSize(compressedFileObj.size));
+                            resolve(compressedFileObj);
+                        } else {
+                            // Fallback to original if compression fails
+                            resolve(file);
+                        }
+                    }, 'image/jpeg', 0.80);
+                };
+                img.onerror = function() {
+                    resolve(file); // fallback to original
+                };
+                img.src = e.target.result;
+            };
+            reader.onerror = function() {
+                resolve(file); // fallback to original
             };
             reader.readAsDataURL(file);
+        });
+    }
+
+    // Photo preview, validation, and compression
+    document.getElementById('photoInput').addEventListener('change', async function(e) {
+        const file = e.target.files[0];
+        const preview = document.getElementById('photoPreview');
+        compressedFile = null; // Reset
+
+        if (file) {
+            // Validate file type first
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            if (!allowedTypes.includes(file.type)) {
+                alert('Tipe file tidak diizinkan! Hanya JPG, PNG, GIF, WEBP yang diperbolehkan.');
+                this.value = '';
+                preview.style.display = 'none';
+                return;
+            }
+
+            // Validate original file size (max 50MB before compression)
+            const maxOriginalSize = 50 * 1024 * 1024;
+            if (file.size > maxOriginalSize) {
+                alert('Ukuran file terlalu besar! Maksimal 50MB. File: ' + formatFileSize(file.size));
+                this.value = '';
+                preview.style.display = 'none';
+                return;
+            }
+
+            // Compress the image
+            try {
+                compressedFile = await compressImage(file);
+
+                // Show preview from compressed file
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    preview.src = ev.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(compressedFile);
+            } catch (err) {
+                // Fallback: use original file
+                compressedFile = file;
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    preview.src = ev.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
         } else {
             preview.style.display = 'none';
         }
@@ -447,10 +534,16 @@
         formData.append('description', form.description.value.trim());
         formData.append('transaction_date', form.transaction_date.value.trim());
 
-        // Append photo if selected
+        // Append photo - use compressed version if available, otherwise original
         const photoInput = document.getElementById('photoInput');
         if (photoInput.files && photoInput.files[0]) {
-            formData.append('photo', photoInput.files[0]);
+            if (compressedFile) {
+                formData.append('photo', compressedFile);
+                console.log('Uploading compressed file: ' + formatFileSize(compressedFile.size));
+            } else {
+                formData.append('photo', photoInput.files[0]);
+                console.log('Uploading original file: ' + formatFileSize(photoInput.files[0].size));
+            }
         }
 
         // Show loading
