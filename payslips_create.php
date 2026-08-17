@@ -100,9 +100,8 @@ $error = $_SESSION['flash_error'] ?? '';
 unset($_SESSION['flash_error']);
 include 'header.php';
 ?>
-<div class="content-wrapper">
-    <section class="content-header"><div class="container-fluid"><h1>Buat Slip Gaji</h1></div></section>
-    <section class="content"><div class="container-fluid">
+<div class="container-fluid py-4">
+    <h3 class="mb-3">Buat Slip Gaji</h3>
         <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
         <div class="card card-primary"><div class="card-header"><h3 class="card-title">Slip Gaji Berdasarkan Invoice</h3></div>
             <form method="post"><div class="card-body">
@@ -112,17 +111,19 @@ include 'header.php';
                     <div class="form-group col-md-3"><label for="issued_date">Tanggal Terbit</label><input id="issued_date" name="issued_date" type="date" class="form-control" required value="<?= htmlspecialchars($_POST['issued_date'] ?? date('Y-m-d')) ?>"></div>
                 </div>
                 <div class="alert <?= $invoiceCount ? 'alert-info' : 'alert-warning' ?> mb-3"><strong>Perhitungan invoice terpilih:</strong> <span id="selected-invoice-count">0</span> invoice x Rp <?= number_format(PAYSLIP_RATE_PER_INVOICE, 0, ',', '.') ?> = <strong id="selected-invoice-total">Rp 0</strong><?php if (!$invoiceCount): ?><br>Tidak ada invoice yang dapat diproses saat ini.<?php endif; ?></div>
-                <div class="table-responsive"><table class="table table-bordered table-sm"><thead><tr><th class="text-center" style="width: 52px;"><input id="select-all-invoices" type="checkbox" title="Pilih semua invoice"></th><th>No.</th><th>Nomor Invoice</th><th>Nama PT</th><th>No. PO</th><th class="text-right">Tarif / Upah Invoice</th></tr></thead><tbody><?php $no = 1; $previousSelected = array_map('intval', $_POST['invoice_ids'] ?? []); while ($invoice = mysqli_fetch_assoc($waitingInvoices)): ?><tr><td class="text-center"><input class="invoice-checkbox" name="invoice_ids[]" type="checkbox" value="<?= $invoice['id'] ?>" <?= in_array((int) $invoice['id'], $previousSelected, true) ? 'checked' : '' ?>></td><td><?= $no++ ?></td><td><?= htmlspecialchars($invoice['invoice_no']) ?></td><td><?= htmlspecialchars($invoice['customer_name'] ?: '-') ?></td><td><?= htmlspecialchars($invoice['po_number'] ?: '-') ?></td><td class="text-right">Rp <?= number_format(PAYSLIP_RATE_PER_INVOICE, 0, ',', '.') ?></td></tr><?php endwhile; ?><?php if ($no === 1): ?><tr><td colspan="6" class="text-center text-muted">Tidak ada invoice waiting.</td></tr><?php endif; ?></tbody></table></div>
+                <div class="form-group"><label for="invoice-search">Cari Nomor Invoice</label><input id="invoice-search" type="search" class="form-control" placeholder="Ketik nomor invoice untuk memfilter daftar"></div>
+                <div class="table-responsive"><table class="table table-bordered table-sm"><thead><tr><th class="text-center" style="width: 52px;"><input id="select-all-invoices" type="checkbox" title="Pilih semua invoice"></th><th>No.</th><th>Nomor Invoice</th><th>Nama PT</th><th>No. PO</th><th class="text-right">Tarif / Upah Invoice</th></tr></thead><tbody><?php $no = 1; $previousSelected = array_map('intval', $_POST['invoice_ids'] ?? []); while ($invoice = mysqli_fetch_assoc($waitingInvoices)): ?><tr class="invoice-row" data-invoice-no="<?= htmlspecialchars(strtolower($invoice['invoice_no']), ENT_QUOTES) ?>"><td class="text-center"><input class="invoice-checkbox" name="invoice_ids[]" type="checkbox" value="<?= $invoice['id'] ?>" <?= in_array((int) $invoice['id'], $previousSelected, true) ? 'checked' : '' ?>></td><td><?= $no++ ?></td><td><?= htmlspecialchars($invoice['invoice_no']) ?></td><td><?= htmlspecialchars($invoice['customer_name'] ?: '-') ?></td><td><?= htmlspecialchars($invoice['po_number'] ?: '-') ?></td><td class="text-right">Rp <?= number_format(PAYSLIP_RATE_PER_INVOICE, 0, ',', '.') ?></td></tr><?php endwhile; ?><?php if ($no === 1): ?><tr><td colspan="6" class="text-center text-muted">Tidak ada invoice waiting.</td></tr><?php endif; ?></tbody></table></div>
                 <div class="form-group mt-3"><label for="description">Deskripsi Tambahan</label><textarea id="description" name="description" rows="3" class="form-control" placeholder="Opsional"><?= htmlspecialchars($_POST['description'] ?? '') ?></textarea></div>
             </div><div class="card-footer"><a href="payslips_list.php" class="btn btn-secondary">Batal</a><button class="btn btn-primary" type="submit" <?= !$invoiceCount ? 'disabled' : '' ?>><i class="fas fa-save mr-1"></i>Buat Slip Gaji</button></div></form>
         </div>
-    </div></section>
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const rate = <?= PAYSLIP_RATE_PER_INVOICE ?>;
     const all = document.getElementById('select-all-invoices');
     const checkboxes = Array.from(document.querySelectorAll('.invoice-checkbox'));
+    const search = document.getElementById('invoice-search');
+    const rows = Array.from(document.querySelectorAll('.invoice-row'));
     const count = document.getElementById('selected-invoice-count');
     const total = document.getElementById('selected-invoice-total');
 
@@ -138,6 +139,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (all) all.addEventListener('change', function () { checkboxes.forEach(function (checkbox) { checkbox.checked = all.checked; }); updateSummary(); });
     checkboxes.forEach(function (checkbox) { checkbox.addEventListener('change', updateSummary); });
+    if (search) search.addEventListener('input', function () {
+        const keyword = search.value.trim().toLowerCase();
+        rows.forEach(function (row) {
+            row.style.display = row.dataset.invoiceNo.includes(keyword) ? '' : 'none';
+        });
+    });
     updateSummary();
 });
 </script>
