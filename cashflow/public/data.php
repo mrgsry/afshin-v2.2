@@ -301,6 +301,7 @@ $base_prefix = '../uploads/';
         }
     }
     </style>
+    <link rel="stylesheet" href="cashflow.css">
 </head>
 
 <body>
@@ -379,7 +380,7 @@ $base_prefix = '../uploads/';
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="cashflowTable" class="table table-striped table-hover align-middle">
+                    <table id="cashflowTable" class="table table-striped table-hover align-middle" data-datatable-theme>
                         <thead>
                             <tr>
                                 <th>ID</th>

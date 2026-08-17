@@ -21,3 +21,56 @@ ALTER TABLE customers
 -- ============================================
 -- SELESAI! Cek dengan: DESCRIBE quotations; DESCRIBE customers;
 -- ============================================
+
+-- Modul Karyawan dan Slip Gaji.
+CREATE TABLE IF NOT EXISTS employees (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  employee_no VARCHAR(50) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  employee_level VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_employees_employee_no (employee_no),
+  KEY idx_employees_name (name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS payslips (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  payslip_no VARCHAR(50) NOT NULL,
+  employee_id INT UNSIGNED NULL,
+  employee_no VARCHAR(50) NOT NULL,
+  employee_name VARCHAR(255) NOT NULL,
+  employee_level VARCHAR(255) NOT NULL,
+  salary_period DATE NOT NULL,
+  issued_date DATE NOT NULL,
+  net_salary DECIMAL(15,2) NOT NULL DEFAULT 0.00,
+  description TEXT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_payslips_payslip_no (payslip_no),
+  KEY idx_payslips_employee_id (employee_id),
+  KEY idx_payslips_salary_period (salary_period),
+  CONSTRAINT fk_payslips_employee FOREIGN KEY (employee_id) REFERENCES employees(id)
+    ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE payslips
+  ADD COLUMN IF NOT EXISTS invoice_count INT UNSIGNED NOT NULL DEFAULT 0 AFTER issued_date,
+  ADD COLUMN IF NOT EXISTS rate_per_invoice DECIMAL(15,2) NOT NULL DEFAULT 350000.00 AFTER invoice_count,
+  ADD COLUMN IF NOT EXISTS gross_salary DECIMAL(15,2) NOT NULL DEFAULT 0.00 AFTER rate_per_invoice,
+  ADD COLUMN IF NOT EXISTS pph21_amount DECIMAL(15,2) NOT NULL DEFAULT 0.00 AFTER gross_salary;
+
+CREATE TABLE IF NOT EXISTS payslip_invoices (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  payslip_id INT UNSIGNED NOT NULL,
+  invoice_id INT NOT NULL,
+  invoice_no VARCHAR(100) NOT NULL,
+  customer_name VARCHAR(255) NOT NULL,
+  po_number VARCHAR(100) NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_payslip_invoices_invoice_id (invoice_id),
+  KEY idx_payslip_invoices_payslip_id (payslip_id),
+  CONSTRAINT fk_payslip_invoices_payslip FOREIGN KEY (payslip_id) REFERENCES payslips(id)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

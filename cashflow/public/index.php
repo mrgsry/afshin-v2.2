@@ -232,6 +232,7 @@
         }
     }
     </style>
+    <link rel="stylesheet" href="cashflow.css">
 </head>
 
 <body>

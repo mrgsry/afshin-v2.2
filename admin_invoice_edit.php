@@ -43,6 +43,9 @@ $po = mysqli_query($mysqli, "
     SELECT i.po_number, i.invoice_no, c.name
     FROM invoices i
     JOIN customers c ON i.customer_id = c.id
+    LEFT JOIN payslip_invoices psi ON psi.invoice_id = i.id
+    WHERE psi.id IS NULL
+      AND i.invoice_no NOT IN (SELECT invoice_no COLLATE utf8mb4_unicode_ci FROM admin_invoice_items)
     ORDER BY i.created_at DESC
 ");
 

@@ -33,7 +33,7 @@ function getInvoiceStatus($faktur, $invoice_no, $mysqli)
 
     // 1. PENDING — faktur belum diisi
     if (
-        empty($faktur) || $faktur === '-' || $faktur === '000' ||
+        empty($faktur) || $faktur === '-' || $faktur === '0' || $faktur === '000' ||
         $faktur === 'NULL' || $faktur === 'null' ||
         preg_match('/^[-\s]*$/', $faktur)
     ) {
@@ -45,16 +45,24 @@ function getInvoiceStatus($faktur, $invoice_no, $mysqli)
         ];
     }
 
-    // 2. Cek apakah invoice_no sudah masuk ke admin_invoice_items
+    // Invoice is paid when it has been included in an admin invoice or payslip.
     $inv_esc = mysqli_real_escape_string($mysqli, $invoice_no);
     $q = mysqli_query($mysqli, "
         SELECT id FROM admin_invoice_items
-        WHERE invoice_no = '$inv_esc'
+        WHERE invoice_no COLLATE utf8mb4_unicode_ci = '$inv_esc' COLLATE utf8mb4_unicode_ci
         LIMIT 1
     ");
 
-    if (mysqli_num_rows($q) > 0) {
-        // 3. INVOICE PAID — sudah masuk admin invoice
+    $payslipQuery = mysqli_query($mysqli, "
+        SELECT psi.id
+        FROM payslip_invoices psi
+        INNER JOIN invoices i ON i.id = psi.invoice_id
+        WHERE i.invoice_no = '$inv_esc'
+        LIMIT 1
+    ");
+
+    if (mysqli_num_rows($q) > 0 || mysqli_num_rows($payslipQuery) > 0) {
+        // INVOICE PAID — sudah masuk admin invoice atau slip gaji.
         return [
             'status'  => 'INVOICE PAID',
             'label'   => 'Invoice Paid',
@@ -99,16 +107,20 @@ if (!empty($filter_date_to)) {
 
 // Filter status
 if ($filter_status === 'pending') {
-    $where_conditions[] = "(i.faktur_inv IS NULL OR i.faktur_inv = '' OR i.faktur_inv = '-' OR i.faktur_inv = '000' OR i.faktur_inv = 'NULL')";
+    $where_conditions[] = "TRIM(COALESCE(i.faktur_inv, '')) IN ('', '-', '0', '000', 'NULL', 'null')";
 } elseif ($filter_status === 'waiting') {
     $where_conditions[] = "
-        (i.faktur_inv IS NOT NULL AND i.faktur_inv != '' AND i.faktur_inv != '-' AND i.faktur_inv != '000' AND i.faktur_inv != 'NULL')
+        TRIM(COALESCE(i.faktur_inv, '')) NOT IN ('', '-', '0', '000', 'NULL', 'null')
         AND i.invoice_no NOT IN (SELECT invoice_no FROM admin_invoice_items WHERE invoice_no IS NOT NULL AND invoice_no != '')
+        AND i.id NOT IN (SELECT invoice_id FROM payslip_invoices)
     ";
 } elseif ($filter_status === 'paid') {
     $where_conditions[] = "
-        (i.faktur_inv IS NOT NULL AND i.faktur_inv != '' AND i.faktur_inv != '-' AND i.faktur_inv != '000' AND i.faktur_inv != 'NULL')
-        AND i.invoice_no IN (SELECT invoice_no FROM admin_invoice_items WHERE invoice_no IS NOT NULL AND invoice_no != '')
+        TRIM(COALESCE(i.faktur_inv, '')) NOT IN ('', '-', '0', '000', 'NULL', 'null')
+        AND (
+            i.invoice_no IN (SELECT invoice_no FROM admin_invoice_items WHERE invoice_no IS NOT NULL AND invoice_no != '')
+            OR i.id IN (SELECT invoice_id FROM payslip_invoices)
+        )
     ";
 }
 

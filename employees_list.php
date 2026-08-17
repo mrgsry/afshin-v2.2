@@ -1,0 +1,17 @@
+<?php
+require_once 'functions.php'; require_login();
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
+    $id = (int) $_POST['delete_id']; $stmt = mysqli_prepare($mysqli, 'DELETE FROM employees WHERE id = ?'); mysqli_stmt_bind_param($stmt, 'i', $id);
+    if (mysqli_stmt_execute($stmt)) { $_SESSION['flash_success'] = 'Karyawan berhasil dihapus. Riwayat slip gaji tetap tersimpan.'; } else { $_SESSION['flash_error'] = 'Karyawan gagal dihapus.'; } header('Location: employees_list.php'); exit;
+}
+$search = trim($_GET['search'] ?? '');
+if ($search !== '') { $like = '%' . $search . '%'; $stmt = mysqli_prepare($mysqli, 'SELECT * FROM employees WHERE employee_no LIKE ? OR name LIKE ? OR employee_level LIKE ? ORDER BY name ASC, id DESC'); mysqli_stmt_bind_param($stmt, 'sss', $like, $like, $like); mysqli_stmt_execute($stmt); $employees = mysqli_stmt_get_result($stmt); }
+else { $employees = mysqli_query($mysqli, 'SELECT * FROM employees ORDER BY name ASC, id DESC'); }
+$success = $_SESSION['flash_success'] ?? ''; $error = $_SESSION['flash_error'] ?? ''; unset($_SESSION['flash_success'], $_SESSION['flash_error']); include 'header.php';
+?>
+<div class="content-wrapper"><section class="content-header"><div class="container-fluid d-flex justify-content-between align-items-center"><h1>Daftar Karyawan</h1><a href="employees_create.php" class="btn btn-primary"><i class="fas fa-plus mr-1"></i>Tambah Karyawan</a></div></section><section class="content"><div class="container-fluid">
+<?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?><?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
+<div class="card"><div class="card-body"><form class="form-row mb-3" method="get"><div class="col-md-5"><input name="search" class="form-control" placeholder="Cari nomor, nama, atau level karyawan" value="<?= htmlspecialchars($search) ?>"></div><div class="col-auto"><button class="btn btn-outline-primary" type="submit"><i class="fas fa-search"></i></button></div><?php if ($search !== ''): ?><div class="col-auto"><a class="btn btn-outline-secondary" href="employees_list.php">Reset</a></div><?php endif; ?></form>
+<div class="table-responsive"><table class="table table-bordered table-hover mb-0"><thead class="thead-light"><tr><th>No.</th><th>Nomor Karyawan</th><th>Nama</th><th>Level / Jabatan</th><th>Dibuat</th><th class="text-center">Aksi</th></tr></thead><tbody><?php $no = 1; while ($employee = mysqli_fetch_assoc($employees)): ?><tr><td><?= $no++ ?></td><td><?= htmlspecialchars($employee['employee_no']) ?></td><td><?= htmlspecialchars($employee['name']) ?></td><td><?= htmlspecialchars($employee['employee_level']) ?></td><td><?= date('d/m/Y', strtotime($employee['created_at'])) ?></td><td class="text-center text-nowrap"><a class="btn btn-sm btn-warning" href="employees_edit.php?id=<?= $employee['id'] ?>" title="Edit"><i class="fas fa-edit"></i></a><form method="post" class="d-inline" onsubmit="return confirm('Hapus karyawan ini? Riwayat slip gaji tidak akan dihapus.');"><input type="hidden" name="delete_id" value="<?= $employee['id'] ?>"><button class="btn btn-sm btn-danger" type="submit" title="Hapus"><i class="fas fa-trash"></i></button></form></td></tr><?php endwhile; ?><?php if ($no === 1): ?><tr><td colspan="6" class="text-center text-muted py-4">Belum ada data karyawan.</td></tr><?php endif; ?></tbody></table></div></div></div>
+</div></section></div>
+<?php include 'footer.php'; ?>

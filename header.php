@@ -225,6 +225,24 @@ $base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../.
                             </ul>
                         </li>
 
+                        <!-- EMPLOYEE -->
+                        <li class="nav-item has-treeview <?= in_array($current_page,['employees_create.php','employees_edit.php','employees_list.php'])?'menu-open':'' ?>">
+                            <a href="#" class="nav-link"><i class="nav-icon fas fa-user-tie"></i><p>Karyawan<i class="right fas fa-angle-right"></i></p></a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item"><a href="<?= $base_prefix ?>employees_create.php" class="nav-link <?= $current_page=='employees_create.php'?'active':'' ?>"><i class="far fa-circle nav-icon"></i><p>Tambah Karyawan</p></a></li>
+                                <li class="nav-item"><a href="<?= $base_prefix ?>employees_list.php" class="nav-link <?= $current_page=='employees_list.php'?'active':'' ?>"><i class="far fa-circle nav-icon"></i><p>Daftar Karyawan</p></a></li>
+                            </ul>
+                        </li>
+
+                        <!-- PAYSLIP -->
+                        <li class="nav-item has-treeview <?= in_array($current_page,['payslips_create.php','payslips_edit.php','payslips_list.php'])?'menu-open':'' ?>">
+                            <a href="#" class="nav-link"><i class="nav-icon fas fa-money-check-alt"></i><p>Slip Gaji<i class="right fas fa-angle-right"></i></p></a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item"><a href="<?= $base_prefix ?>payslips_create.php" class="nav-link <?= $current_page=='payslips_create.php'?'active':'' ?>"><i class="far fa-circle nav-icon"></i><p>Buat Slip Gaji</p></a></li>
+                                <li class="nav-item"><a href="<?= $base_prefix ?>payslips_list.php" class="nav-link <?= $current_page=='payslips_list.php'?'active':'' ?>"><i class="far fa-circle nav-icon"></i><p>Daftar Slip Gaji</p></a></li>
+                            </ul>
+                        </li>
+
                         <!-- QUOTATION -->
                         <li
                             class="nav-item has-treeview <?= in_array($current_page,['quotations_create.php','quotations_list.php'])?'menu-open':'' ?>">
