@@ -1,6 +1,6 @@
 <?php
 require_once 'functions.php';
-require_module_access('invoice');
+require_login();
 
 // Proses delete jika form modal dikirim
 if (isset($_POST['delete_id'])) {

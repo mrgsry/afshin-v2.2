@@ -7,6 +7,11 @@ require_once 'functions.php';
 $current_page = basename($_SERVER['PHP_SELF']);
 // Auto-detect base path - works from any subdirectory
 $base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../../' : '';
+$active_user = current_user() ?: [];
+$active_user_name = trim($active_user['full_name'] ?? '') ?: ($active_user['username'] ?? 'User');
+$active_user_role = ucfirst($active_user['role'] ?? 'guest');
+$active_user_position = trim($active_user['job_position'] ?? '') ?: 'Belum diatur';
+$active_user_photo = trim($active_user['photo_path'] ?? '');
 ?>
 <!DOCTYPE html>
 <html>
@@ -25,6 +30,12 @@ $base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../.
     html,
     body {
         overflow-x: hidden !important;
+    }
+
+    .wrapper {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
     }
 
     .content-wrapper {
@@ -71,9 +82,59 @@ $base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../.
 
     /* Navbar */
     .main-header {
+        position: fixed;
+        top: 0;
+        left: 280px;
+        right: 0;
+        width: auto;
+        margin-left: 0 !important;
+        height: 57px;
+        z-index: 1035;
         background: #ffffff;
         box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
         border: none;
+    }
+
+    .main-header .navbar-nav {
+        min-width: 0;
+    }
+
+    .main-header .navbar-nav.ml-auto {
+        flex-shrink: 1;
+    }
+
+    .header-datetime {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-right: 8px;
+        color: #6c757d;
+        font-size: .82rem;
+        line-height: 1.2;
+        white-space: nowrap;
+    }
+
+    .header-datetime span { display: inline-flex; align-items: center; }
+    .header-datetime i { color: #667eea; }
+    .header-clock { color: #1f2d3d; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    .main-sidebar {
+        top: 0 !important;
+        width: 280px !important;
+        height: 100vh !important;
+    }
+
+    .content-wrapper {
+        flex: 1 0 auto;
+        min-height: 0 !important;
+        margin-top: 57px;
+        margin-left: 280px !important;
+    }
+
+    .main-footer {
+        flex: 0 0 auto;
+        margin-left: 280px !important;
+        margin-top: 0;
     }
 
     /* Sidebar */
@@ -81,6 +142,111 @@ $base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../.
         background: #ffffff;
         border-right: 1px solid #eee;
     }
+
+    .main-sidebar .sidebar {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 57px);
+    }
+
+    .main-sidebar .sidebar > nav {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+    }
+
+    .sidebar-logout {
+        flex: 0 0 auto;
+        margin: 8px 6px 12px;
+        border-top: 1px solid #e9ecef;
+        padding-top: 8px;
+    }
+
+    .sidebar-logout .nav-link {
+        color: #dc3545;
+    }
+
+    .sidebar-logout .nav-link:hover {
+        background: #dc3545;
+        color: #fff !important;
+    }
+
+    body.sidebar-collapse .main-header {
+        left: 4.6rem !important;
+        width: calc(100% - 4.6rem);
+        margin-left: 0 !important;
+    }
+
+    body.sidebar-collapse .main-sidebar {
+        left: 0 !important;
+        margin-left: 0 !important;
+        width: 4.6rem !important;
+    }
+
+    body.sidebar-collapse .content-wrapper,
+    body.sidebar-collapse .main-footer {
+        margin-left: 4.6rem !important;
+    }
+
+    body.sidebar-collapse .brand-link {
+        width: 4.6rem !important;
+        padding-left: 0;
+        padding-right: 0;
+        text-align: center;
+    }
+
+    body.sidebar-collapse .brand-link .brand-image {
+        float: none;
+        margin: 0;
+    }
+
+    body.sidebar-collapse .brand-link .brand-text,
+    body.sidebar-collapse .sidebar-user-name,
+    body.sidebar-collapse .sidebar-user-meta,
+    body.sidebar-collapse .sidebar-user-role,
+    body.sidebar-collapse .nav-sidebar .nav-link p,
+    body.sidebar-collapse .sidebar-logout p {
+        display: none !important;
+    }
+
+    body.sidebar-collapse .sidebar-user-card {
+        margin: 10px 6px 14px;
+        padding: 8px 4px;
+    }
+
+    body.sidebar-collapse .sidebar-user-photo {
+        width: 48px;
+        height: 48px;
+    }
+
+    body.sidebar-collapse .nav-sidebar .nav-link,
+    body.sidebar-collapse .sidebar-logout .nav-link {
+        width: 3.4rem;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 0;
+        padding-right: 0;
+        text-align: center;
+    }
+
+    body.sidebar-collapse .nav-sidebar .nav-icon,
+    body.sidebar-collapse .sidebar-logout .nav-icon {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    body.sidebar-collapse .nav-sidebar .right {
+        display: none;
+    }
+
+    .sidebar-user-card { margin: 10px 8px 14px; padding: 16px 12px; border-radius: 10px; background: #f1f5ff; border: 1px solid #dfe7ff; text-align: center; }
+    .sidebar-user-photo, .user-profile-preview, .user-table-photo { object-fit: cover; border-radius: 50%; }
+    .sidebar-user-photo { width: 68px; height: 68px; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(31,45,61,.15); }
+    .sidebar-user-name { display: block; margin-top: 10px; color: #1f2d3d; font-size: .95rem; font-weight: 700; overflow-wrap: anywhere; }
+    .sidebar-user-meta { display: block; color: #6c757d; font-size: .76rem; line-height: 1.45; overflow-wrap: anywhere; }
+    .sidebar-user-role { display: inline-block; margin-top: 8px; padding: 3px 9px; border-radius: 20px; background: #667eea; color: #fff; font-size: .7rem; font-weight: 600; }
+    .user-profile-preview { width: 96px; height: 96px; border: 2px solid #dee2e6; }
+    .user-table-photo { width: 42px; height: 42px; }
 
     /* Sidebar hover */
     .nav-sidebar .nav-link {
@@ -97,6 +263,37 @@ $base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../.
     .nav-sidebar .nav-link.active {
         background: #667eea;
         color: #fff !important;
+    }
+
+    @media (max-width: 767.98px) {
+        .main-header,
+        body.sidebar-collapse .main-header {
+            left: 0;
+            width: 100%;
+        }
+
+        .main-sidebar {
+            width: 250px !important;
+        }
+
+        body.sidebar-collapse .main-sidebar {
+            width: 4.6rem !important;
+        }
+
+        .content-wrapper,
+        body.sidebar-collapse .content-wrapper {
+            margin-left: 0 !important;
+            padding: 12px !important;
+        }
+
+        .main-footer,
+        body.sidebar-collapse .main-footer {
+            margin-left: 0 !important;
+        }
+        .sidebar-user-card { margin-left: 6px; margin-right: 6px; }
+        .header-datetime { gap: 8px; margin-right: 2px; font-size: .7rem; }
+        .header-date-label { display: none !important; }
+        .main-header .navbar-nav.ml-auto .nav-link { padding-left: 8px; padding-right: 8px; }
     }
 
     /* Card */
@@ -155,6 +352,10 @@ $base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../.
             </ul>
 
             <ul class="navbar-nav ml-auto">
+                <li class="nav-item header-datetime" aria-label="Tanggal dan waktu saat ini">
+                    <span class="header-date-label"><i class="far fa-calendar-alt mr-1"></i><span id="header-date"></span></span>
+                    <span class="header-clock"><i class="far fa-clock mr-1"></i><span id="header-clock"></span></span>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="far fa-user-circle fa-lg"></i>
@@ -173,6 +374,22 @@ $base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../.
 
         </nav>
 
+        <script>
+            (function () {
+                var dayNames = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                var monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                function updateHeaderDateTime() {
+                    var now = new Date();
+                    var dateElement = document.getElementById('header-date');
+                    var clockElement = document.getElementById('header-clock');
+                    if (dateElement) dateElement.textContent = dayNames[now.getDay()] + ', ' + now.getDate() + ' ' + monthNames[now.getMonth()] + ' ' + now.getFullYear();
+                    if (clockElement) clockElement.textContent = [now.getHours(), now.getMinutes(), now.getSeconds()].map(function (value) { return String(value).padStart(2, '0'); }).join(':');
+                }
+                updateHeaderDateTime();
+                window.setInterval(updateHeaderDateTime, 1000);
+            }());
+        </script>
+
         <!-- Sidebar -->
         <aside class="main-sidebar elevation-4" style="background:#f8f9fb;">
 
@@ -183,6 +400,17 @@ $base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../.
             </a>
 
             <div class="sidebar">
+
+                <div class="sidebar-user-card">
+                    <?php if ($active_user_photo): ?>
+                        <img src="<?= htmlspecialchars($base_prefix . $active_user_photo) ?>" alt="Foto <?= htmlspecialchars($active_user_name) ?>" class="sidebar-user-photo">
+                    <?php else: ?>
+                        <i class="fas fa-user-circle fa-4x text-secondary"></i>
+                    <?php endif; ?>
+                    <span class="sidebar-user-name">Selamat Datang, <?= htmlspecialchars($active_user_name) ?></span>
+                    <span class="sidebar-user-meta"><i class="fas fa-briefcase mr-1"></i><?= htmlspecialchars($active_user_position) ?></span>
+                    <span class="sidebar-user-role"><i class="fas fa-shield-alt mr-1"></i><?= htmlspecialchars($active_user_role) ?></span>
+                </div>
 
                 <nav class="mt-3">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
@@ -487,6 +715,13 @@ $base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../.
 
                     </ul>
                 </nav>
+
+                <div class="sidebar-logout">
+                    <a href="<?= $base_prefix ?>logout.php" class="nav-link">
+                        <i class="nav-icon fas fa-sign-out-alt"></i>
+                        <p>Logout</p>
+                    </a>
+                </div>
 
             </div>
         </aside>

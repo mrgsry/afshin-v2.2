@@ -34,7 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'id' => $user['id'],
                     'username' => $user['username'],
                     'full_name' => $user['full_name'],
-                    'role' => $user['role']
+                    'role' => $user['role'],
+                    'job_position' => $user['job_position'] ?? '',
+                    'photo_path' => $user['photo_path'] ?? ''
                 ];
 
                 $_SESSION['LAST_ACTIVITY'] = time();

@@ -26,6 +26,10 @@ UPDATE users SET role = 'staff' WHERE role = 'user';
 ALTER TABLE users
   MODIFY COLUMN role ENUM('admin','staff','guest') NOT NULL DEFAULT 'guest';
 
+ALTER TABLE users
+  ADD COLUMN IF NOT EXISTS job_position VARCHAR(255) NULL AFTER full_name,
+  ADD COLUMN IF NOT EXISTS photo_path VARCHAR(255) NULL AFTER job_position;
+
 CREATE TABLE IF NOT EXISTS user_modules (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   user_id INT UNSIGNED NOT NULL,
@@ -52,11 +56,15 @@ CREATE TABLE IF NOT EXISTS employees (
   employee_no VARCHAR(50) NOT NULL,
   name VARCHAR(255) NOT NULL,
   employee_level VARCHAR(255) NOT NULL,
+  signature_path VARCHAR(255) NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   UNIQUE KEY uq_employees_employee_no (employee_no),
   KEY idx_employees_name (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE employees
+  ADD COLUMN IF NOT EXISTS signature_path VARCHAR(255) NULL AFTER employee_level;
 
 CREATE TABLE IF NOT EXISTS payslips (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,

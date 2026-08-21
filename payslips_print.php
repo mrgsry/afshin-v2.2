@@ -1,9 +1,10 @@
 <?php
 require_once 'functions.php';
+require_once 'employee_signature.php';
 require_module_access('payslip');
 
 $id = (int) ($_GET['id'] ?? 0);
-$payslip = mysqli_fetch_assoc(mysqli_query($mysqli, "SELECT * FROM payslips WHERE id = $id"));
+$payslip = mysqli_fetch_assoc(mysqli_query($mysqli, "SELECT p.*, e.signature_path AS employee_signature_path FROM payslips p LEFT JOIN employees e ON e.id = p.employee_id WHERE p.id = $id"));
 if (!$payslip) {
     exit('Slip gaji tidak ditemukan.');
 }
@@ -13,6 +14,9 @@ $ratePerInvoice = (float) ($payslip['rate_per_invoice'] ?? 350000);
 $grossSalary = (float) ($payslip['gross_salary'] ?? $payslip['net_salary']);
 $pph21Amount = (float) ($payslip['pph21_amount'] ?? 0);
 $salaryMethod = ($payslip['salary_method'] ?? 'invoice') === 'custom' ? 'custom' : 'invoice';
+$employeeSignature = (!empty($payslip['employee_signature_path']) && is_file(__DIR__ . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $payslip['employee_signature_path'])))
+    ? $payslip['employee_signature_path']
+    : 'img/ttd-yussi.png';
 
 function formatPayslipRupiah($amount) {
     return 'Rp ' . number_format((float) $amount, 0, ',', '.');
@@ -343,7 +347,7 @@ function formatPayslipRupiah($amount) {
             <td class="signature-cell">
                 <div class="signature-block">
                     <div class="intro-line">Diterima oleh,</div>
-                    <img src="img/ttd-yussi.png" alt="Tanda Tangan" class="signature-ttd-img">
+                    <img src="<?= htmlspecialchars($employeeSignature) ?>" alt="Tanda Tangan <?= htmlspecialchars($payslip['employee_name']) ?>" class="signature-ttd-img">
                     <div class="name-lines">
                         <span><u><?= htmlspecialchars($payslip['employee_name']) ?></u></span>
                         <span>Karyawan</span>

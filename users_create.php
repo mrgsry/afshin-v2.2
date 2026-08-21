@@ -3,12 +3,13 @@ require_once 'functions.php';
 require_admin();
 $modules = available_modules();
 $error = '';
-$old = ['username' => '', 'full_name' => '', 'role' => 'guest'];
+$old = ['username' => '', 'full_name' => '', 'job_position' => '', 'role' => 'guest'];
 $permissions = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $old['username'] = trim($_POST['username'] ?? '');
     $old['full_name'] = trim($_POST['full_name'] ?? '');
+    $old['job_position'] = trim($_POST['job_position'] ?? '');
     $old['role'] = $_POST['role'] ?? 'guest';
     $password = $_POST['password'] ?? '';
     $permissions = posted_permissions($modules);
@@ -27,10 +28,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         mysqli_begin_transaction($mysqli);
         try {
             $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = mysqli_prepare($mysqli, 'INSERT INTO users (username, password, full_name, role) VALUES (?, ?, ?, ?)');
-            mysqli_stmt_bind_param($stmt, 'ssss', $old['username'], $passwordHash, $old['full_name'], $old['role']);
+            $stmt = mysqli_prepare($mysqli, 'INSERT INTO users (username, password, full_name, job_position, role) VALUES (?, ?, ?, ?, ?)');
+            mysqli_stmt_bind_param($stmt, 'sssss', $old['username'], $passwordHash, $old['full_name'], $old['job_position'], $old['role']);
             if (!mysqli_stmt_execute($stmt)) throw new Exception('User gagal disimpan.');
             $userId = mysqli_insert_id($mysqli);
+            $photoPath = save_user_photo($userId, $_FILES['photo_file'] ?? []);
+            if ($photoPath !== '') {
+                $photoStmt = mysqli_prepare($mysqli, 'UPDATE users SET photo_path = ? WHERE id = ?');
+                mysqli_stmt_bind_param($photoStmt, 'si', $photoPath, $userId);
+                if (!mysqli_stmt_execute($photoStmt)) throw new Exception('Foto user gagal disimpan.');
+            }
             $permissionStmt = mysqli_prepare($mysqli, 'INSERT INTO user_modules (user_id, module_name, policy) VALUES (?, ?, ?)');
             foreach ($permissions as $module => $policy) { mysqli_stmt_bind_param($permissionStmt, 'iss', $userId, $module, $policy); if (!mysqli_stmt_execute($permissionStmt)) throw new Exception('Permission gagal disimpan.'); }
             mysqli_commit($mysqli); flash_set('User berhasil dibuat.'); header('Location: users_manage.php'); exit;
@@ -41,8 +48,9 @@ include 'header.php';
 ?>
 <div class="container-fluid py-4"><div class="d-flex justify-content-between align-items-center mb-3"><h3>Buat User</h3><a href="users_manage.php" class="btn btn-secondary"><i class="fas fa-arrow-left mr-1"></i>Kembali</a></div>
 <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
-<div class="card"><div class="card-body"><form method="post">
-<div class="form-row"><div class="form-group col-md-4"><label>Username</label><input name="username" class="form-control" required value="<?= htmlspecialchars($old['username']) ?>"></div><div class="form-group col-md-4"><label>Nama Lengkap</label><input name="full_name" class="form-control" required value="<?= htmlspecialchars($old['full_name']) ?>"></div><div class="form-group col-md-4"><label>Role</label><select name="role" id="role" class="form-control"><option value="admin" <?= $old['role'] === 'admin' ? 'selected' : '' ?>>Admin</option><option value="staff" <?= $old['role'] === 'staff' ? 'selected' : '' ?>>Staff</option><option value="guest" <?= $old['role'] === 'guest' ? 'selected' : '' ?>>Guest</option></select></div></div>
+<div class="card"><div class="card-body"><form method="post" enctype="multipart/form-data">
+<div class="form-row"><div class="form-group col-md-4"><label>Username</label><input name="username" class="form-control" required value="<?= htmlspecialchars($old['username']) ?>"></div><div class="form-group col-md-4"><label>Nama Lengkap</label><input name="full_name" class="form-control" required value="<?= htmlspecialchars($old['full_name']) ?>"></div><div class="form-group col-md-4"><label>Role / Level User</label><select name="role" id="role" class="form-control"><option value="admin" <?= $old['role'] === 'admin' ? 'selected' : '' ?>>Admin</option><option value="staff" <?= $old['role'] === 'staff' ? 'selected' : '' ?>>Staff</option><option value="guest" <?= $old['role'] === 'guest' ? 'selected' : '' ?>>Guest</option></select></div></div>
+<div class="form-row"><div class="form-group col-md-6"><label>Job Position</label><input name="job_position" class="form-control" placeholder="Contoh: Finance Staff" value="<?= htmlspecialchars($old['job_position']) ?>"></div><div class="form-group col-md-6"><label>Pas Foto User</label><input name="photo_file" type="file" accept="image/jpeg,image/png,image/webp" class="form-control-file"><small class="form-text text-muted">JPG, PNG, atau WEBP. Maksimal 2 MB dan 3000 x 3000 piksel.</small></div></div>
 <div class="form-group"><label>Password</label><input name="password" type="password" class="form-control" required minlength="6"></div><hr>
 <div class="d-flex justify-content-between align-items-center mb-2"><h5 class="mb-0">Akses Modul</h5><div><button type="button" class="btn btn-sm btn-outline-primary" id="select-all">Pilih Semua</button> <button type="button" class="btn btn-sm btn-outline-secondary" id="clear-all">Hapus Semua</button></div></div>
 <div class="table-responsive"><table class="table table-bordered"><thead class="thead-light"><tr><th style="width:70px">Akses</th><th>Modul</th><th style="width:230px">Policy</th></tr></thead><tbody><?php foreach ($modules as $key => $label): ?><tr><td class="text-center"><input type="checkbox" class="module-check" name="modules[<?= $key ?>]" value="1" <?= isset($permissions[$key]) || $old['role'] === 'admin' ? 'checked' : '' ?>></td><td><?= htmlspecialchars($label) ?></td><td><select name="policies[<?= $key ?>]" class="form-control policy-select"><option value="full" <?= ($permissions[$key] ?? '') === 'full' || $old['role'] === 'admin' ? 'selected' : '' ?>>Full Akses</option><option value="read" <?= ($permissions[$key] ?? 'read') === 'read' && $old['role'] !== 'admin' ? 'selected' : '' ?>>Baca Saja</option></select></td></tr><?php endforeach; ?></tbody></table></div>

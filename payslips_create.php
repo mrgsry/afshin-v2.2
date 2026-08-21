@@ -142,7 +142,8 @@ include 'header.php';
                 <div class="form-group"><label>Metode Perhitungan Gaji</label><div class="form-row"><div class="col-md-6"><div class="custom-control custom-radio"><input class="custom-control-input method-radio" id="method-invoice" name="salary_method" type="radio" value="invoice" <?= ($_POST['salary_method'] ?? 'invoice') === 'invoice' ? 'checked' : '' ?>><label class="custom-control-label" for="method-invoice"><strong>By Invoice</strong><br><small class="text-muted">Tarif tetap Rp <?= number_format(PAYSLIP_RATE_PER_INVOICE, 0, ',', '.') ?> per invoice.</small></label></div></div><div class="col-md-6"><div class="custom-control custom-radio"><input class="custom-control-input method-radio" id="method-custom" name="salary_method" type="radio" value="custom" <?= ($_POST['salary_method'] ?? '') === 'custom' ? 'checked' : '' ?>><label class="custom-control-label" for="method-custom"><strong>Nominal Custom</strong><br><small class="text-muted">Untuk gaji direktur atau pekerjaan di luar invoice.</small></label></div></div></div></div>
                 <div id="invoice-section"><div class="alert <?= $invoiceCount ? 'alert-info' : 'alert-warning' ?> mb-3"><strong>Perhitungan invoice terpilih:</strong> <span id="selected-invoice-count">0</span> invoice x Rp <?= number_format(PAYSLIP_RATE_PER_INVOICE, 0, ',', '.') ?> = <strong id="selected-invoice-total">Rp 0</strong><?php if (!$invoiceCount): ?><br>Tidak ada invoice yang dapat diproses saat ini.<?php endif; ?></div>
                     <div class="form-group"><label for="invoice-search">Cari Nomor Invoice atau Nomor PO</label><input id="invoice-search" type="search" class="form-control" placeholder="Ketik nomor invoice atau nomor PO untuk memfilter daftar"></div>
-                    <div class="table-responsive"><table class="table table-bordered table-sm"><thead><tr><th class="text-center" style="width: 52px;"><input id="select-all-invoices" type="checkbox" title="Pilih semua invoice"></th><th>No.</th><th>Nomor Invoice</th><th>Nama PT</th><th>No. PO</th><th class="text-right">Tarif / Upah Invoice</th></tr></thead><tbody><?php $no = 1; $previousSelected = array_map('intval', $_POST['invoice_ids'] ?? []); while ($invoice = mysqli_fetch_assoc($waitingInvoices)): ?><tr class="invoice-row" data-invoice-no="<?= htmlspecialchars(strtolower($invoice['invoice_no']), ENT_QUOTES) ?>" data-po-number="<?= htmlspecialchars(strtolower($invoice['po_number'] ?? ''), ENT_QUOTES) ?>"><td class="text-center"><input class="invoice-checkbox" name="invoice_ids[]" type="checkbox" value="<?= $invoice['id'] ?>" <?= in_array((int) $invoice['id'], $previousSelected, true) ? 'checked' : '' ?>></td><td><?= $no++ ?></td><td><?= htmlspecialchars($invoice['invoice_no']) ?></td><td><?= htmlspecialchars($invoice['customer_name'] ?: '-') ?></td><td><?= htmlspecialchars($invoice['po_number'] ?: '-') ?></td><td class="text-right">Rp <?= number_format(PAYSLIP_RATE_PER_INVOICE, 0, ',', '.') ?></td></tr><?php endwhile; ?><?php if ($no === 1): ?><tr><td colspan="6" class="text-center text-muted">Tidak ada invoice waiting.</td></tr><?php endif; ?></tbody></table></div>
+                    <div class="table-responsive"><table class="table table-bordered table-sm"><thead><tr><th class="text-center" style="width: 52px;"><input id="select-all-invoices" type="checkbox" title="Pilih semua invoice"></th><th>No.</th><th>Nomor Invoice</th><th>Nama PT</th><th>No. PO</th><th class="text-right">Tarif / Upah Invoice</th></tr></thead><tbody><?php $no = 1; $previousSelected = array_map('intval', $_POST['invoice_ids'] ?? []); while ($invoice = mysqli_fetch_assoc($waitingInvoices)): ?><tr class="invoice-row" data-invoice-no="<?= htmlspecialchars(strtolower($invoice['invoice_no']), ENT_QUOTES) ?>" data-po-number="<?= htmlspecialchars(strtolower($invoice['po_number'] ?? ''), ENT_QUOTES) ?>"><td class="text-center"><input class="invoice-checkbox" name="invoice_ids[]" type="checkbox" value="<?= $invoice['id'] ?>" <?= in_array((int) $invoice['id'], $previousSelected, true) ? 'checked' : '' ?>></td><td><?= $no++ ?></td><td><?= htmlspecialchars($invoice['invoice_no']) ?></td><td><?= htmlspecialchars($invoice['customer_name'] ?: '-') ?></td><td><?= htmlspecialchars($invoice['po_number'] ?: '-') ?></td><td class="text-right">Rp <?= number_format(PAYSLIP_RATE_PER_INVOICE, 0, ',', '.') ?></td></tr><?php endwhile; ?><?php if ($no === 1): ?><tr id="no-invoice-row"><td colspan="6" class="text-center text-muted">Tidak ada invoice waiting.</td></tr><?php endif; ?></tbody></table></div>
+                    <nav id="invoice-pagination" aria-label="Pagination invoice" class="mt-2"></nav>
                     <div class="form-group mt-3"><label for="description">Deskripsi Tambahan</label><textarea id="description" name="description" rows="3" class="form-control" placeholder="Opsional"><?= htmlspecialchars($_POST['description'] ?? '') ?></textarea></div></div>
                 <div id="custom-section" class="card card-outline card-info d-none"><div class="card-header"><h3 class="card-title">Slip Custom</h3></div><div class="card-body"><div class="form-group"><label for="custom_description">Deskripsi Gaji</label><textarea id="custom_description" name="custom_description" rows="3" class="form-control" placeholder="Contoh: Gaji Direktur Periode Januari 2026"><?= htmlspecialchars($_POST['custom_description'] ?? '') ?></textarea></div><div class="form-group mb-0"><label for="custom_salary">Nominal Gaji</label><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">Rp</span></div><input id="custom_salary" name="custom_salary" type="number" min="1" step="0.01" class="form-control" placeholder="Masukkan nominal gaji" value="<?= htmlspecialchars($_POST['custom_salary'] ?? '') ?>"></div></div></div></div>
             </div><div class="card-footer"><a href="payslips_list.php" class="btn btn-secondary">Batal</a><button class="btn btn-primary" type="submit"><i class="fas fa-save mr-1"></i>Buat Slip Gaji</button></div></form>
@@ -157,6 +158,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const rows = Array.from(document.querySelectorAll('.invoice-row'));
     const count = document.getElementById('selected-invoice-count');
     const total = document.getElementById('selected-invoice-total');
+    const pagination = document.getElementById('invoice-pagination');
+    const noInvoiceRow = document.getElementById('no-invoice-row');
+    const rowsPerPage = 15;
+    let currentPage = 1;
     const methodRadios = Array.from(document.querySelectorAll('.method-radio'));
     const invoiceSection = document.getElementById('invoice-section');
     const customSection = document.getElementById('custom-section');
@@ -176,16 +181,62 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function getFilteredRows() {
+        const keyword = search ? search.value.trim().toLowerCase() : '';
+        return rows.filter(function (row) {
+            return row.dataset.invoiceNo.includes(keyword) || row.dataset.poNumber.includes(keyword);
+        });
+    }
+
+    function renderPagination(filteredRows) {
+        const pageCount = Math.ceil(filteredRows.length / rowsPerPage);
+        if (!pagination) return;
+        pagination.innerHTML = '';
+        if (pageCount <= 1) return;
+
+        const list = document.createElement('ul');
+        list.className = 'pagination pagination-sm justify-content-center mb-0';
+        function addPage(label, page, disabled, active) {
+            const item = document.createElement('li');
+            item.className = 'page-item' + (disabled ? ' disabled' : '') + (active ? ' active' : '');
+            const link = document.createElement('button');
+            link.type = 'button';
+            link.className = 'page-link';
+            link.textContent = label;
+            link.disabled = disabled;
+            link.addEventListener('click', function () {
+                currentPage = page;
+                renderInvoicePage();
+            });
+            item.appendChild(link);
+            list.appendChild(item);
+        }
+        addPage('Sebelumnya', currentPage - 1, currentPage === 1, false);
+        for (let page = 1; page <= pageCount; page++) addPage(String(page), page, false, page === currentPage);
+        addPage('Berikutnya', currentPage + 1, currentPage === pageCount, false);
+        pagination.appendChild(list);
+    }
+
+    function renderInvoicePage() {
+        const filteredRows = getFilteredRows();
+        const pageCount = Math.max(1, Math.ceil(filteredRows.length / rowsPerPage));
+        if (currentPage > pageCount) currentPage = pageCount;
+        rows.forEach(function (row) { row.style.display = 'none'; });
+        const start = (currentPage - 1) * rowsPerPage;
+        filteredRows.slice(start, start + rowsPerPage).forEach(function (row) { row.style.display = ''; });
+        if (noInvoiceRow) noInvoiceRow.style.display = filteredRows.length ? 'none' : '';
+        renderPagination(filteredRows);
+    }
+
     if (all) all.addEventListener('change', function () { checkboxes.forEach(function (checkbox) { checkbox.checked = all.checked; }); updateSummary(); });
     checkboxes.forEach(function (checkbox) { checkbox.addEventListener('change', updateSummary); });
     methodRadios.forEach(function (radio) { radio.addEventListener('change', toggleMethod); });
     if (search) search.addEventListener('input', function () {
-        const keyword = search.value.trim().toLowerCase();
-        rows.forEach(function (row) {
-            row.style.display = row.dataset.invoiceNo.includes(keyword) || row.dataset.poNumber.includes(keyword) ? '' : 'none';
-        });
+        currentPage = 1;
+        renderInvoicePage();
     });
     updateSummary();
+    renderInvoicePage();
     toggleMethod();
 });
 </script>

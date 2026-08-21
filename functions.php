@@ -45,6 +45,44 @@ function current_user(){
     return $_SESSION['user'] ?? null;
 }
 
+function user_photo_directory(){
+    return __DIR__ . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'users';
+}
+
+function user_photo_relative_path($filename){
+    return 'uploads/users/' . basename($filename);
+}
+
+function delete_user_photo($relativePath){
+    if (!$relativePath || strpos($relativePath, 'uploads/users/') !== 0) return;
+    $path = user_photo_directory() . DIRECTORY_SEPARATOR . basename($relativePath);
+    if (is_file($path)) @unlink($path);
+}
+
+function save_user_photo($userId, $upload, $oldPath = ''){
+    if (!is_array($upload) || ($upload['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) return $oldPath;
+    if (($upload['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) throw new Exception('Upload foto user gagal.');
+    if (($upload['size'] ?? 0) > 2 * 1024 * 1024) throw new Exception('Ukuran foto maksimal 2 MB.');
+    if (!is_uploaded_file($upload['tmp_name'])) throw new Exception('File foto user tidak valid.');
+
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $mime = $finfo->file($upload['tmp_name']);
+    $extensions = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
+    if (!isset($extensions[$mime])) throw new Exception('Foto harus berformat JPG, PNG, atau WEBP.');
+    $dimensions = @getimagesize($upload['tmp_name']);
+    if ($dimensions === false || $dimensions[0] > 3000 || $dimensions[1] > 3000) {
+        throw new Exception('Dimensi foto maksimal 3000 x 3000 piksel.');
+    }
+
+    $directory = user_photo_directory();
+    if (!is_dir($directory) && !mkdir($directory, 0755, true)) throw new Exception('Folder foto user tidak dapat dibuat.');
+    $filename = 'user-' . (int) $userId . '-' . bin2hex(random_bytes(8)) . '.' . $extensions[$mime];
+    $path = $directory . DIRECTORY_SEPARATOR . $filename;
+    if (!move_uploaded_file($upload['tmp_name'], $path)) throw new Exception('Foto user gagal disimpan.');
+    if ($oldPath) delete_user_photo($oldPath);
+    return user_photo_relative_path($filename);
+}
+
 function available_modules(){
     return [
         'dashboard' => 'Dashboard',
