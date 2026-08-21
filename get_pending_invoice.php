@@ -1,5 +1,7 @@
 <?php
+require_once 'functions.php';
 require_once 'db.php';
+require_module_access('invoice');
 
 $query = mysqli_query($mysqli,"
 SELECT 

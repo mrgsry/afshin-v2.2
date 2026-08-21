@@ -197,6 +197,7 @@ $base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../.
                             </a>
                         </li>
 
+                        <?php if (can_access_module('customer')): ?>
                         <!-- CUSTOMER -->
                         <li
                             class="nav-item has-treeview <?= in_array($current_page,['customers_create.php','customers_list.php'])?'menu-open':'' ?>">
@@ -225,6 +226,8 @@ $base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../.
                             </ul>
                         </li>
 
+                        <?php endif; ?>
+                        <?php if (can_access_module('employee')): ?>
                         <!-- EMPLOYEE -->
                         <li class="nav-item has-treeview <?= in_array($current_page,['employees_create.php','employees_edit.php','employees_list.php'])?'menu-open':'' ?>">
                             <a href="#" class="nav-link"><i class="nav-icon fas fa-user-tie"></i><p>Karyawan<i class="right fas fa-angle-right"></i></p></a>
@@ -234,6 +237,8 @@ $base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../.
                             </ul>
                         </li>
 
+                        <?php endif; ?>
+                        <?php if (can_access_module('payslip')): ?>
                         <!-- PAYSLIP -->
                         <li class="nav-item has-treeview <?= in_array($current_page,['payslips_create.php','payslips_edit.php','payslips_list.php'])?'menu-open':'' ?>">
                             <a href="#" class="nav-link"><i class="nav-icon fas fa-money-check-alt"></i><p>Slip Gaji<i class="right fas fa-angle-right"></i></p></a>
@@ -243,6 +248,8 @@ $base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../.
                             </ul>
                         </li>
 
+                        <?php endif; ?>
+                        <?php if (can_access_module('quotation')): ?>
                         <!-- QUOTATION -->
                         <li
                             class="nav-item has-treeview <?= in_array($current_page,['quotations_create.php','quotations_list.php'])?'menu-open':'' ?>">
@@ -271,6 +278,8 @@ $base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../.
                             </ul>
                         </li>
 
+                        <?php endif; ?>
+                        <?php if (can_access_module('invoice')): ?>
                         <!-- INVOICE -->
                         <li
                             class="nav-item has-treeview <?= in_array($current_page,['invoices_create.php','invoices_list.php'])?'menu-open':'' ?>">
@@ -306,6 +315,8 @@ $base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../.
                             </ul>
                         </li>
 
+                        <?php endif; ?>
+                        <?php if (can_access_module('travel_document')): ?>
                         <!-- TRAVEL DOCUMENT -->
                         <li
                             class="nav-item has-treeview <?= in_array($current_page,['travel_document_create.php','travel_document_list.php'])?'menu-open':'' ?>">
@@ -334,6 +345,8 @@ $base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../.
                             </ul>
                         </li>
 
+                        <?php endif; ?>
+                        <?php if (can_access_module('service_report')): ?>
                         <!-- SERVICE REPORT -->
                         <li
                             class="nav-item has-treeview <?= in_array($current_page,['service_report_create.php','service_report_list.php'])?'menu-open':'' ?>">
@@ -362,12 +375,16 @@ $base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../.
                             </ul>
                         </li>
 
+                        <?php endif; ?>
+                        <?php if (can_access_module('berita_acara')): ?>
                         <!-- BERITA ACARA -->
                         <li
                             class="nav-item has-treeview <?= in_array($current_page,['berita_acara_create.php','berita_acara_list.php'])?'menu-open':'' ?>">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-clipboard-list"></i>
-                                <p>
+                        <?php endif; ?>
+                        <?php if (can_access_module('data_po')): ?>
+                        <!-- DATA PO -->
                                     Berita Acara
                                     <i class="right fas fa-angle-right"></i>
                                 </p>
@@ -398,6 +415,8 @@ $base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../.
                             </a>
                         </li>
 
+                        <?php endif; ?>
+                        <?php if (can_access_module('operational')): ?>
                         <!-- OPERATIONAL -->
                         <li class="nav-item">
                             <a href="<?= $base_prefix ?>cashflow/admin/index.php"
@@ -407,6 +426,8 @@ $base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../.
                             </a>
                         </li>
 
+                        <?php endif; ?>
+                        <?php if (can_access_module('finance')): ?>
                         <!-- FINANCE -->
                         <li class="nav-item">
                             <a href="<?= $base_prefix ?>finance.php"
@@ -416,6 +437,8 @@ $base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../.
                             </a>
                         </li>
 
+                        <?php endif; ?>
+                        <?php if (can_access_module('document_history')): ?>
                         <!-- DOCUMENT HISTORY -->
                         <li class="nav-item">
                             <a href="<?= $base_prefix ?>document_history.php"
@@ -425,10 +448,11 @@ $base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../.
                             </a>
                         </li>
 
-                        <!-- USER (ADMIN ONLY) -->
-                        <?php if(current_user()['role']==='admin'): ?>
+                        <?php endif; ?>
+                        <!-- USER MANAGEMENT -->
+                        <?php if(can_access_module('user_management', 'full')): ?>
                         <li
-                            class="nav-item has-treeview <?= in_array($current_page,['users_create.php','users_manage.php'])?'menu-open':'' ?>">
+                            class="nav-item has-treeview <?= in_array($current_page,['users_create.php','users_edit.php','users_manage.php'])?'menu-open':'' ?>">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-user-cog"></i>
                                 <p>
@@ -449,6 +473,12 @@ $base_prefix = (strpos($_SERVER['SCRIPT_NAME'], '/cashflow/') !== false) ? '../.
                                         class="nav-link <?= $current_page=='users_manage.php'?'active':'' ?>">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Manage User</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="<?= $base_prefix ?>users_edit.php" class="nav-link <?= $current_page=='users_edit.php'?'active':'' ?>">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Edit User</p>
                                     </a>
                                 </li>
                             </ul>

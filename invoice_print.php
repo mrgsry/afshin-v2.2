@@ -5,7 +5,7 @@
 
 // Asumsi 'functions.php' dan 'require_login()' sudah didefinisikan
 require_once 'functions.php';
-// require_login(); 
+require_module_access('invoice');
 
 // ASUMSI: $mysqli sudah tersedia dan koneksi database sudah terjalin
 // Di sini, kita asumsikan $mysqli sudah terinisialisasi di 'functions.php' atau file yang menyertainya.

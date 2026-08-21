@@ -4,7 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require_once 'functions.php';
 require_once 'db.php';
-require_login();
+require_module_access('quotation');
 
 /* ================= DELETE ================= */
 if(isset($_POST['delete_id'])){

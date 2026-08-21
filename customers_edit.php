@@ -1,6 +1,6 @@
 <?php
 require_once 'functions.php';
-require_login();
+require_module_access('customer', 'full');
 
 $id = intval($_GET['id'] ?? 0);
 $res = mysqli_query($mysqli, "SELECT * FROM customers WHERE id=$id LIMIT 1");

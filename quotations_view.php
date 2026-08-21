@@ -1,6 +1,6 @@
 <?php
 require_once 'functions.php';
-require_login();
+require_module_access('quotation');
 // Pastikan koneksi database di-include dan variabel $mysqli tersedia
 // Jika Anda masih mengalami error koneksi, pastikan path di bawah sudah benar.
 

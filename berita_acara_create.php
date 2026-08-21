@@ -3,7 +3,7 @@ ini_set('display_errors',1);
 ini_set('display_startup_errors',1);
 error_reporting(E_ALL);
 require_once 'functions.php';
-require_login();
+require_module_access('berita_acara', 'full');
 
 if (!$mysqli) {
     die("Koneksi database gagal!");
@@ -121,7 +121,8 @@ if($_SERVER['REQUEST_METHOD']=='POST' && $_POST['action']=='save'){
     $customer_alamat= $_POST['customer_alamat'];
     $lokasi         = $_POST['lokasi'];
     $pekerjaan      = $_POST['pekerjaan'];
-    $po_number      = $_POST['po_number'];
+    // Keep the complete PO number; never coerce it to a numeric value.
+    $po_number      = trim($_POST['po_number'] ?? '');
     $invoice_id     = (int)$_POST['invoice_id'];
     $pelaksana      = $_POST['pelaksana'];   // ← HAPUS baris duplikat item_code
     $note           = $_POST['note'] ?? '';
@@ -130,6 +131,12 @@ if($_SERVER['REQUEST_METHOD']=='POST' && $_POST['action']=='save'){
 
     if(empty($nomor_ba)||empty($tanggal_ba)||empty($customer_name)||empty($pekerjaan)){
         flash_set('error','Harap lengkapi data terlebih dahulu!');
+        header("Location: berita_acara_create.php");
+        exit;
+    }
+
+    if (mb_strlen($po_number) > 255) {
+        flash_set('error', 'Nomor PO maksimal 255 karakter.');
         header("Location: berita_acara_create.php");
         exit;
     }
@@ -491,7 +498,7 @@ body{
             <label>PO Number</label>
             <div class="input-group-modern">
                 <input type="text" name="po_number" id="po_number_input"
-                    class="form-control-modern">
+                    class="form-control-modern" maxlength="255">
                 <select id="po_select" class="form-control-modern">
                     <option value="">-- Pilih PO --</option>
                     <?php foreach($po_list as $po=>$id): ?>

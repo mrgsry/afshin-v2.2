@@ -5,7 +5,7 @@
 
 // --- Bagian A: Initial Setup & Dependencies ---
 require_once 'functions.php'; 
-require_login(); 
+require_module_access('service_report', 'full');
 
 if (!$mysqli) {
     die("Koneksi database gagal!");

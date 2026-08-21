@@ -4,7 +4,7 @@
 // =========================================================================
 
 require_once 'functions.php';
-require_login();
+require_module_access('berita_acara');
 
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     flash_set('error', 'ID Berita Acara tidak valid!');

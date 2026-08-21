@@ -4,7 +4,7 @@
 // =========================================================================
 
 require_once 'functions.php';
-require_login();
+require_module_access('berita_acara', 'full');
 
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     flash_set('error', 'ID Berita Acara tidak valid!');
@@ -96,6 +96,12 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['a
     // Validasi lebih longgar - hanya field yang benar-benar wajib
     if (empty($nomor_ba)) {
         flash_set('error', 'Nomor BA harus diisi!');
+        header('Location: ' . $_SERVER['PHP_SELF'] . '?id=' . $id);
+        exit;
+    }
+
+    if (mb_strlen($po_number) > 255) {
+        flash_set('error', 'Nomor PO maksimal 255 karakter.');
         header('Location: ' . $_SERVER['PHP_SELF'] . '?id=' . $id);
         exit;
     }
@@ -456,7 +462,7 @@ $items_json_initial = json_encode($all_items);
                             <div class="input-group">
                                 <input type="text" name="po_number" id="po_number_input" 
                                        class="form-control" placeholder="Masukkan Nomor PO"
-                                       value="<?php echo htmlspecialchars($ba['po_number']); ?>">
+                                       value="<?php echo htmlspecialchars($ba['po_number']); ?>" maxlength="255">
                                 <div class="input-group-append">
                                     <select id="po_number_select" class="form-control">
                                         <option value="">-- Pilih PO yang sudah ada --</option>

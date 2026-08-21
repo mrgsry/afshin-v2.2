@@ -1,6 +1,6 @@
 <?php
 require_once 'functions.php';
-require_login();
+require_module_access('invoice', 'full');
 
 /* ================= VALIDASI ID ================= */
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;

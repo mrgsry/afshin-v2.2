@@ -1,6 +1,6 @@
 <?php
 require_once 'functions.php';
-require_login();
+require_module_access('document_history');
 
 // --- Konfigurasi Pagination ---
 $limit = 20;

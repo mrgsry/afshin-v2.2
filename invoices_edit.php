@@ -4,7 +4,7 @@
 // =========================================================================
 
 require_once 'functions.php';
-require_login();
+require_module_access('invoice', 'full');
 
 // 1. Ambil ID dari URL
 $id = intval($_GET['id'] ?? 0);
@@ -772,7 +772,7 @@ include 'header.php';
                     
                     <div class="form-group">
                         <label for="po_number"><i class="fas fa-file-contract"></i> PO Number</label>
-                        <input type="text" name="po_number" id="po_number" class="form-control" 
+                        <input type="text" name="po_number" id="po_number" class="form-control" maxlength="255"
                                value="<?= htmlspecialchars($inv['po_number']); ?>">
                     </div>
                 </div>

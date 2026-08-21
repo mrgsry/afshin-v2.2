@@ -1,6 +1,6 @@
 <?php
 require_once 'functions.php';
-require_login();
+require_module_access('customer');
 // handle delete
 if(isset($_GET['delete'])){
     $id = intval($_GET['delete']);

@@ -1,6 +1,6 @@
 <?php
 require_once 'functions.php';
-require_login();
+require_module_access('payslip');
 
 $id = (int) ($_GET['id'] ?? 0);
 $payslip = mysqli_fetch_assoc(mysqli_query($mysqli, "SELECT * FROM payslips WHERE id = $id"));
@@ -12,6 +12,7 @@ $invoiceCount = (int) ($payslip['invoice_count'] ?? mysqli_num_rows($invoiceDeta
 $ratePerInvoice = (float) ($payslip['rate_per_invoice'] ?? 350000);
 $grossSalary = (float) ($payslip['gross_salary'] ?? $payslip['net_salary']);
 $pph21Amount = (float) ($payslip['pph21_amount'] ?? 0);
+$salaryMethod = ($payslip['salary_method'] ?? 'invoice') === 'custom' ? 'custom' : 'invoice';
 
 function formatPayslipRupiah($amount) {
     return 'Rp ' . number_format((float) $amount, 0, ',', '.');
@@ -240,6 +241,20 @@ function formatPayslipRupiah($amount) {
         z-index: 2;
         pointer-events: none;
     }
+
+    /* Employee signature (ttd) image — same positioning approach as the
+       company stamp above: absolute, overlapping the intro line, sitting
+       just above the name/jabatan lines. */
+    .signature-ttd-img {
+        position: absolute;
+        top: 22px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 150px;
+        height: auto;
+        z-index: 2;
+        pointer-events: none;
+    }
     </style>
 </head>
 
@@ -279,6 +294,9 @@ function formatPayslipRupiah($amount) {
     </table>
 
     <div class="work-title">RINCIAN PEKERJAAN &amp; UPAH:</div>
+    <?php if ($salaryMethod === 'custom'): ?>
+    <div style="border-top: 1px solid black; padding-top: 12px;">1. <?= htmlspecialchars($payslip['description'] ?: 'Gaji custom') ?></div>
+    <?php else: ?>
     <div style="border-top: 1px solid black; padding-top: 12px;">1. Pemrosesan Tagihan/Invoice Masa
         <?= date('F Y', strtotime($payslip['salary_period'])) ?></div>
     <table class="invoice-table">
@@ -301,6 +319,7 @@ function formatPayslipRupiah($amount) {
     </table>
     <div style="margin: 4px 0 18px 18px; line-height: 1.6;">- Jumlah Invoice Selesai : <?= $invoiceCount ?> Invoice<br>-
         Tarif per Invoice&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : <?= formatPayslipRupiah($ratePerInvoice) ?></div>
+    <?php endif; ?>
     <table class="summary-table">
         <tr class="top-border">
             <td class="label"><strong>TOTAL UPAH BRUTO</strong></td>
@@ -324,6 +343,7 @@ function formatPayslipRupiah($amount) {
             <td class="signature-cell">
                 <div class="signature-block">
                     <div class="intro-line">Diterima oleh,</div>
+                    <img src="img/ttd-yussi.png" alt="Tanda Tangan" class="signature-ttd-img">
                     <div class="name-lines">
                         <span><u><?= htmlspecialchars($payslip['employee_name']) ?></u></span>
                         <span>Karyawan</span>

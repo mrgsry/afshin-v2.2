@@ -1,13 +1,19 @@
 <?php
 require_once 'functions.php';
-require_login();
+require_module_access('payslip', 'full');
 
 const PAYSLIP_RATE_PER_INVOICE = 350000;
 
 function generate_payslip_no($mysqli, $salaryPeriod) {
     $year = (int) date('Y', strtotime($salaryPeriod));
     $month = (int) date('n', strtotime($salaryPeriod));
-    $result = mysqli_query($mysqli, "SELECT payslip_no FROM payslips WHERE YEAR(salary_period) = $year ORDER BY id DESC");
+    // Semua metode (by invoice dan custom) memakai satu nomor urut yang sama.
+    // Jangan mengambil nomor dari payslip_invoices karena slip custom memang tidak
+    // memiliki detail invoice.
+    $result = mysqli_query($mysqli, "SELECT payslip_no FROM payslips WHERE YEAR(salary_period) = $year ORDER BY id DESC FOR UPDATE");
+    if (!$result) {
+        throw new Exception('Data nomor slip gaji gagal dibaca: ' . mysqli_error($mysqli));
+    }
     $next = 1;
     while ($row = mysqli_fetch_assoc($result)) {
         if (preg_match('/^(\d+)\/PS\/ART\/[IVX]+\/\d{4}$/', $row['payslip_no'], $matches)) {
@@ -37,7 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $periodInput = $_POST['salary_period'] ?? '';
     $period = preg_match('/^\d{4}-\d{2}$/', $periodInput) ? $periodInput . '-01' : '';
     $issuedDate = $_POST['issued_date'] ?? '';
+    $salaryMethod = ($_POST['salary_method'] ?? 'invoice') === 'custom' ? 'custom' : 'invoice';
     $description = trim($_POST['description'] ?? '');
+    $customDescription = trim($_POST['custom_description'] ?? '');
+    $customSalary = filter_var(str_replace(',', '.', $_POST['custom_salary'] ?? ''), FILTER_VALIDATE_FLOAT);
     $selectedInvoiceIds = array_values(array_unique(array_filter(array_map('intval', $_POST['invoice_ids'] ?? []), function ($id) {
         return $id > 0;
     })));
@@ -50,40 +59,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $employee = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
     }
 
-    if (!$employee || $period === '' || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $issuedDate) || !$selectedInvoiceIds) {
-        $_SESSION['flash_error'] = 'Pilih karyawan, periode, tanggal terbit, dan minimal satu invoice Waiting Admin Payment.';
+    $baseDataIsValid = $employee && $period !== '' && preg_match('/^\d{4}-\d{2}-\d{2}$/', $issuedDate);
+    $methodIsValid = $salaryMethod === 'invoice'
+        ? !empty($selectedInvoiceIds)
+        : ($customDescription !== '' && $customSalary !== false && $customSalary > 0);
+
+    if (!$baseDataIsValid || !$methodIsValid) {
+        $_SESSION['flash_error'] = $salaryMethod === 'invoice'
+            ? 'Pilih karyawan, periode, tanggal terbit, dan minimal satu invoice Waiting Admin Payment.'
+            : 'Pilih karyawan, periode, tanggal terbit, lalu isi deskripsi dan nominal gaji custom yang valid.';
     } else {
         mysqli_begin_transaction($mysqli);
         try {
-            $invoiceResult = get_waiting_invoices($mysqli, true);
-            $eligibleInvoices = mysqli_fetch_all($invoiceResult, MYSQLI_ASSOC);
-            $invoices = array_values(array_filter($eligibleInvoices, function ($invoice) use ($selectedInvoiceIds) {
-                return in_array((int) $invoice['id'], $selectedInvoiceIds, true);
-            }));
-            if (!$invoices) {
-                throw new Exception('Invoice yang dipilih tidak lagi berstatus Waiting Admin Payment. Silakan pilih ulang.');
+            $invoices = [];
+            $invoiceCount = 0;
+            $rate = 0.00;
+            $grossSalary = (float) $customSalary;
+            $savedDescription = $customDescription;
+
+            if ($salaryMethod === 'invoice') {
+                $invoiceResult = get_waiting_invoices($mysqli, true);
+                $eligibleInvoices = mysqli_fetch_all($invoiceResult, MYSQLI_ASSOC);
+                $invoices = array_values(array_filter($eligibleInvoices, function ($invoice) use ($selectedInvoiceIds) {
+                    return in_array((int) $invoice['id'], $selectedInvoiceIds, true);
+                }));
+                if (count($invoices) !== count($selectedInvoiceIds)) {
+                    throw new Exception('Ada invoice yang dipilih tidak lagi berstatus Waiting Admin Payment. Silakan pilih ulang.');
+                }
+                $invoiceCount = count($invoices);
+                $rate = PAYSLIP_RATE_PER_INVOICE;
+                $grossSalary = $invoiceCount * $rate;
+                $savedDescription = $description;
             }
 
-            $invoiceCount = count($invoices);
-            $grossSalary = $invoiceCount * PAYSLIP_RATE_PER_INVOICE;
             $payslipNo = generate_payslip_no($mysqli, $period);
             $pph21 = 0.00;
-            $rate = PAYSLIP_RATE_PER_INVOICE;
-            $stmt = mysqli_prepare($mysqli, 'INSERT INTO payslips (payslip_no, employee_id, employee_no, employee_name, employee_level, salary_period, issued_date, invoice_count, rate_per_invoice, gross_salary, pph21_amount, net_salary, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-            mysqli_stmt_bind_param($stmt, 'sisssssidddds', $payslipNo, $employeeId, $employee['employee_no'], $employee['name'], $employee['employee_level'], $period, $issuedDate, $invoiceCount, $rate, $grossSalary, $pph21, $grossSalary, $description);
+            $stmt = mysqli_prepare($mysqli, 'INSERT INTO payslips (payslip_no, employee_id, employee_no, employee_name, employee_level, salary_period, issued_date, invoice_count, rate_per_invoice, gross_salary, pph21_amount, salary_method, net_salary, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+            mysqli_stmt_bind_param($stmt, 'sisssssidddsds', $payslipNo, $employeeId, $employee['employee_no'], $employee['name'], $employee['employee_level'], $period, $issuedDate, $invoiceCount, $rate, $grossSalary, $pph21, $salaryMethod, $grossSalary, $savedDescription);
             if (!mysqli_stmt_execute($stmt)) {
                 throw new Exception('Slip gaji gagal disimpan: ' . mysqli_stmt_error($stmt));
             }
             $payslipId = mysqli_insert_id($mysqli);
-            $detailStmt = mysqli_prepare($mysqli, 'INSERT INTO payslip_invoices (payslip_id, invoice_id, invoice_no, customer_name, po_number) VALUES (?, ?, ?, ?, ?)');
-            foreach ($invoices as $invoice) {
-                mysqli_stmt_bind_param($detailStmt, 'iisss', $payslipId, $invoice['id'], $invoice['invoice_no'], $invoice['customer_name'], $invoice['po_number']);
-                if (!mysqli_stmt_execute($detailStmt)) {
-                    throw new Exception('Detail invoice gagal disimpan: ' . mysqli_stmt_error($detailStmt));
+            if ($salaryMethod === 'invoice') {
+                $detailStmt = mysqli_prepare($mysqli, 'INSERT INTO payslip_invoices (payslip_id, invoice_id, invoice_no, customer_name, po_number) VALUES (?, ?, ?, ?, ?)');
+                foreach ($invoices as $invoice) {
+                    mysqli_stmt_bind_param($detailStmt, 'iisss', $payslipId, $invoice['id'], $invoice['invoice_no'], $invoice['customer_name'], $invoice['po_number']);
+                    if (!mysqli_stmt_execute($detailStmt)) {
+                        throw new Exception('Detail invoice gagal disimpan: ' . mysqli_stmt_error($detailStmt));
+                    }
                 }
             }
             mysqli_commit($mysqli);
-            $_SESSION['flash_success'] = 'Slip gaji berhasil dibuat dari ' . $invoiceCount . ' invoice Waiting Admin Payment.';
+            $_SESSION['flash_success'] = $salaryMethod === 'invoice'
+                ? 'Slip gaji berhasil dibuat dari ' . $invoiceCount . ' invoice Waiting Admin Payment.'
+                : 'Slip gaji custom berhasil dibuat.';
             header('Location: payslips_list.php');
             exit;
         } catch (Throwable $e) {
@@ -103,18 +132,20 @@ include 'header.php';
 <div class="container-fluid py-4">
     <h3 class="mb-3">Buat Slip Gaji</h3>
         <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
-        <div class="card card-primary"><div class="card-header"><h3 class="card-title">Slip Gaji Berdasarkan Invoice</h3></div>
+        <div class="card card-primary"><div class="card-header"><h3 class="card-title">Buat Slip Gaji</h3></div>
             <form method="post"><div class="card-body">
                 <div class="form-row">
                     <div class="form-group col-md-6"><label for="employee_id">Karyawan</label><select id="employee_id" name="employee_id" class="form-control" required><option value="">Pilih karyawan</option><?php while ($employee = mysqli_fetch_assoc($employees)): ?><option value="<?= $employee['id'] ?>" <?= (int) ($_POST['employee_id'] ?? 0) === (int) $employee['id'] ? 'selected' : '' ?>><?= htmlspecialchars($employee['employee_no'] . ' - ' . $employee['name'] . ' (' . $employee['employee_level'] . ')') ?></option><?php endwhile; ?></select></div>
                     <div class="form-group col-md-3"><label for="salary_period">Periode Gaji</label><input id="salary_period" name="salary_period" type="month" class="form-control" required value="<?= htmlspecialchars($_POST['salary_period'] ?? date('Y-m')) ?>"></div>
                     <div class="form-group col-md-3"><label for="issued_date">Tanggal Terbit</label><input id="issued_date" name="issued_date" type="date" class="form-control" required value="<?= htmlspecialchars($_POST['issued_date'] ?? date('Y-m-d')) ?>"></div>
                 </div>
-                <div class="alert <?= $invoiceCount ? 'alert-info' : 'alert-warning' ?> mb-3"><strong>Perhitungan invoice terpilih:</strong> <span id="selected-invoice-count">0</span> invoice x Rp <?= number_format(PAYSLIP_RATE_PER_INVOICE, 0, ',', '.') ?> = <strong id="selected-invoice-total">Rp 0</strong><?php if (!$invoiceCount): ?><br>Tidak ada invoice yang dapat diproses saat ini.<?php endif; ?></div>
-                <div class="form-group"><label for="invoice-search">Cari Nomor Invoice</label><input id="invoice-search" type="search" class="form-control" placeholder="Ketik nomor invoice untuk memfilter daftar"></div>
-                <div class="table-responsive"><table class="table table-bordered table-sm"><thead><tr><th class="text-center" style="width: 52px;"><input id="select-all-invoices" type="checkbox" title="Pilih semua invoice"></th><th>No.</th><th>Nomor Invoice</th><th>Nama PT</th><th>No. PO</th><th class="text-right">Tarif / Upah Invoice</th></tr></thead><tbody><?php $no = 1; $previousSelected = array_map('intval', $_POST['invoice_ids'] ?? []); while ($invoice = mysqli_fetch_assoc($waitingInvoices)): ?><tr class="invoice-row" data-invoice-no="<?= htmlspecialchars(strtolower($invoice['invoice_no']), ENT_QUOTES) ?>"><td class="text-center"><input class="invoice-checkbox" name="invoice_ids[]" type="checkbox" value="<?= $invoice['id'] ?>" <?= in_array((int) $invoice['id'], $previousSelected, true) ? 'checked' : '' ?>></td><td><?= $no++ ?></td><td><?= htmlspecialchars($invoice['invoice_no']) ?></td><td><?= htmlspecialchars($invoice['customer_name'] ?: '-') ?></td><td><?= htmlspecialchars($invoice['po_number'] ?: '-') ?></td><td class="text-right">Rp <?= number_format(PAYSLIP_RATE_PER_INVOICE, 0, ',', '.') ?></td></tr><?php endwhile; ?><?php if ($no === 1): ?><tr><td colspan="6" class="text-center text-muted">Tidak ada invoice waiting.</td></tr><?php endif; ?></tbody></table></div>
-                <div class="form-group mt-3"><label for="description">Deskripsi Tambahan</label><textarea id="description" name="description" rows="3" class="form-control" placeholder="Opsional"><?= htmlspecialchars($_POST['description'] ?? '') ?></textarea></div>
-            </div><div class="card-footer"><a href="payslips_list.php" class="btn btn-secondary">Batal</a><button class="btn btn-primary" type="submit" <?= !$invoiceCount ? 'disabled' : '' ?>><i class="fas fa-save mr-1"></i>Buat Slip Gaji</button></div></form>
+                <div class="form-group"><label>Metode Perhitungan Gaji</label><div class="form-row"><div class="col-md-6"><div class="custom-control custom-radio"><input class="custom-control-input method-radio" id="method-invoice" name="salary_method" type="radio" value="invoice" <?= ($_POST['salary_method'] ?? 'invoice') === 'invoice' ? 'checked' : '' ?>><label class="custom-control-label" for="method-invoice"><strong>By Invoice</strong><br><small class="text-muted">Tarif tetap Rp <?= number_format(PAYSLIP_RATE_PER_INVOICE, 0, ',', '.') ?> per invoice.</small></label></div></div><div class="col-md-6"><div class="custom-control custom-radio"><input class="custom-control-input method-radio" id="method-custom" name="salary_method" type="radio" value="custom" <?= ($_POST['salary_method'] ?? '') === 'custom' ? 'checked' : '' ?>><label class="custom-control-label" for="method-custom"><strong>Nominal Custom</strong><br><small class="text-muted">Untuk gaji direktur atau pekerjaan di luar invoice.</small></label></div></div></div></div>
+                <div id="invoice-section"><div class="alert <?= $invoiceCount ? 'alert-info' : 'alert-warning' ?> mb-3"><strong>Perhitungan invoice terpilih:</strong> <span id="selected-invoice-count">0</span> invoice x Rp <?= number_format(PAYSLIP_RATE_PER_INVOICE, 0, ',', '.') ?> = <strong id="selected-invoice-total">Rp 0</strong><?php if (!$invoiceCount): ?><br>Tidak ada invoice yang dapat diproses saat ini.<?php endif; ?></div>
+                    <div class="form-group"><label for="invoice-search">Cari Nomor Invoice atau Nomor PO</label><input id="invoice-search" type="search" class="form-control" placeholder="Ketik nomor invoice atau nomor PO untuk memfilter daftar"></div>
+                    <div class="table-responsive"><table class="table table-bordered table-sm"><thead><tr><th class="text-center" style="width: 52px;"><input id="select-all-invoices" type="checkbox" title="Pilih semua invoice"></th><th>No.</th><th>Nomor Invoice</th><th>Nama PT</th><th>No. PO</th><th class="text-right">Tarif / Upah Invoice</th></tr></thead><tbody><?php $no = 1; $previousSelected = array_map('intval', $_POST['invoice_ids'] ?? []); while ($invoice = mysqli_fetch_assoc($waitingInvoices)): ?><tr class="invoice-row" data-invoice-no="<?= htmlspecialchars(strtolower($invoice['invoice_no']), ENT_QUOTES) ?>" data-po-number="<?= htmlspecialchars(strtolower($invoice['po_number'] ?? ''), ENT_QUOTES) ?>"><td class="text-center"><input class="invoice-checkbox" name="invoice_ids[]" type="checkbox" value="<?= $invoice['id'] ?>" <?= in_array((int) $invoice['id'], $previousSelected, true) ? 'checked' : '' ?>></td><td><?= $no++ ?></td><td><?= htmlspecialchars($invoice['invoice_no']) ?></td><td><?= htmlspecialchars($invoice['customer_name'] ?: '-') ?></td><td><?= htmlspecialchars($invoice['po_number'] ?: '-') ?></td><td class="text-right">Rp <?= number_format(PAYSLIP_RATE_PER_INVOICE, 0, ',', '.') ?></td></tr><?php endwhile; ?><?php if ($no === 1): ?><tr><td colspan="6" class="text-center text-muted">Tidak ada invoice waiting.</td></tr><?php endif; ?></tbody></table></div>
+                    <div class="form-group mt-3"><label for="description">Deskripsi Tambahan</label><textarea id="description" name="description" rows="3" class="form-control" placeholder="Opsional"><?= htmlspecialchars($_POST['description'] ?? '') ?></textarea></div></div>
+                <div id="custom-section" class="card card-outline card-info d-none"><div class="card-header"><h3 class="card-title">Slip Custom</h3></div><div class="card-body"><div class="form-group"><label for="custom_description">Deskripsi Gaji</label><textarea id="custom_description" name="custom_description" rows="3" class="form-control" placeholder="Contoh: Gaji Direktur Periode Januari 2026"><?= htmlspecialchars($_POST['custom_description'] ?? '') ?></textarea></div><div class="form-group mb-0"><label for="custom_salary">Nominal Gaji</label><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">Rp</span></div><input id="custom_salary" name="custom_salary" type="number" min="1" step="0.01" class="form-control" placeholder="Masukkan nominal gaji" value="<?= htmlspecialchars($_POST['custom_salary'] ?? '') ?>"></div></div></div></div>
+            </div><div class="card-footer"><a href="payslips_list.php" class="btn btn-secondary">Batal</a><button class="btn btn-primary" type="submit"><i class="fas fa-save mr-1"></i>Buat Slip Gaji</button></div></form>
         </div>
 </div>
 <script>
@@ -126,6 +157,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const rows = Array.from(document.querySelectorAll('.invoice-row'));
     const count = document.getElementById('selected-invoice-count');
     const total = document.getElementById('selected-invoice-total');
+    const methodRadios = Array.from(document.querySelectorAll('.method-radio'));
+    const invoiceSection = document.getElementById('invoice-section');
+    const customSection = document.getElementById('custom-section');
+    function toggleMethod() {
+        const custom = document.getElementById('method-custom').checked;
+        invoiceSection.classList.toggle('d-none', custom);
+        customSection.classList.toggle('d-none', !custom);
+    }
 
     function updateSummary() {
         const selected = checkboxes.filter(function (checkbox) { return checkbox.checked; }).length;
@@ -139,13 +178,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (all) all.addEventListener('change', function () { checkboxes.forEach(function (checkbox) { checkbox.checked = all.checked; }); updateSummary(); });
     checkboxes.forEach(function (checkbox) { checkbox.addEventListener('change', updateSummary); });
+    methodRadios.forEach(function (radio) { radio.addEventListener('change', toggleMethod); });
     if (search) search.addEventListener('input', function () {
         const keyword = search.value.trim().toLowerCase();
         rows.forEach(function (row) {
-            row.style.display = row.dataset.invoiceNo.includes(keyword) ? '' : 'none';
+            row.style.display = row.dataset.invoiceNo.includes(keyword) || row.dataset.poNumber.includes(keyword) ? '' : 'none';
         });
     });
     updateSummary();
+    toggleMethod();
 });
 </script>
 <?php include 'footer.php'; ?>

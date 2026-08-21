@@ -1,5 +1,5 @@
 <?php
-require_once 'functions.php'; require_login();
+require_once 'functions.php'; require_module_access('employee', 'full');
 $id = (int) ($_GET['id'] ?? 0); $employee = mysqli_fetch_assoc(mysqli_query($mysqli, "SELECT * FROM employees WHERE id = $id"));
 if (!$employee) { $_SESSION['flash_error'] = 'Karyawan tidak ditemukan.'; header('Location: employees_list.php'); exit; }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

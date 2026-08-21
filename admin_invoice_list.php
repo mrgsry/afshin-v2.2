@@ -1,6 +1,6 @@
 <?php
 require_once 'functions.php';
-require_login();
+require_module_access('invoice');
 
 /* ================= FILTER ================= */
 $month       = $_GET['month'] ?? date('Y-m');

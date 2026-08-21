@@ -4,7 +4,7 @@
 // =========================================================================
 
 require_once 'functions.php';
-require_login();
+require_module_access('berita_acara');
 
 // Cek apakah tabel berita_acara ada
 $check_table = mysqli_query($mysqli, "SHOW TABLES LIKE 'berita_acara'");

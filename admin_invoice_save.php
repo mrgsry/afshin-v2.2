@@ -1,6 +1,6 @@
 <?php
 require_once 'functions.php';
-require_login();
+require_module_access('invoice', 'full');
 
 $po_numbers    = $_POST['po_number'];
 $customer_names = $_POST['customer_name'];

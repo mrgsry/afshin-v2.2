@@ -18,6 +18,30 @@ ALTER TABLE customers
   ADD COLUMN IF NOT EXISTS email VARCHAR(255) NULL,
   ADD COLUMN IF NOT EXISTS cc_email TEXT NULL;
 
+ALTER TABLE users
+  MODIFY COLUMN role ENUM('admin','user','staff','guest') NOT NULL DEFAULT 'guest';
+
+UPDATE users SET role = 'staff' WHERE role = 'user';
+
+ALTER TABLE users
+  MODIFY COLUMN role ENUM('admin','staff','guest') NOT NULL DEFAULT 'guest';
+
+CREATE TABLE IF NOT EXISTS user_modules (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id INT UNSIGNED NOT NULL,
+  module_name VARCHAR(50) NOT NULL,
+  policy ENUM('full','read') NOT NULL DEFAULT 'read',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_user_modules (user_id, module_name),
+  CONSTRAINT fk_user_modules_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE user_modules
+  ADD COLUMN IF NOT EXISTS policy ENUM('full','read') NOT NULL DEFAULT 'read' AFTER module_name;
+
+UPDATE user_modules SET policy = 'full' WHERE policy IS NULL OR policy = '';
+
 -- ============================================
 -- SELESAI! Cek dengan: DESCRIBE quotations; DESCRIBE customers;
 -- ============================================
@@ -58,7 +82,8 @@ ALTER TABLE payslips
   ADD COLUMN IF NOT EXISTS invoice_count INT UNSIGNED NOT NULL DEFAULT 0 AFTER issued_date,
   ADD COLUMN IF NOT EXISTS rate_per_invoice DECIMAL(15,2) NOT NULL DEFAULT 350000.00 AFTER invoice_count,
   ADD COLUMN IF NOT EXISTS gross_salary DECIMAL(15,2) NOT NULL DEFAULT 0.00 AFTER rate_per_invoice,
-  ADD COLUMN IF NOT EXISTS pph21_amount DECIMAL(15,2) NOT NULL DEFAULT 0.00 AFTER gross_salary;
+  ADD COLUMN IF NOT EXISTS pph21_amount DECIMAL(15,2) NOT NULL DEFAULT 0.00 AFTER gross_salary,
+  ADD COLUMN IF NOT EXISTS salary_method ENUM('invoice','custom') NOT NULL DEFAULT 'invoice' AFTER pph21_amount;
 
 CREATE TABLE IF NOT EXISTS payslip_invoices (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -74,3 +99,7 @@ CREATE TABLE IF NOT EXISTS payslip_invoices (
   CONSTRAINT fk_payslip_invoices_payslip FOREIGN KEY (payslip_id) REFERENCES payslips(id)
     ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Keep long PO references intact in invoices and Berita Acara.
+ALTER TABLE invoices MODIFY COLUMN po_number VARCHAR(255) NULL;
+ALTER TABLE berita_acara MODIFY COLUMN po_number VARCHAR(255) NULL;

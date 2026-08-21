@@ -1,6 +1,6 @@
 <?php
 require_once 'functions.php';
-require_login();
+require_module_access('invoice');
 $id = intval($_GET['id'] ?? 0);
 $res = mysqli_query($mysqli, "SELECT i.*, c.name as customer_name, c.customer_no, c.address FROM invoices i LEFT JOIN customers c ON i.customer_id=c.id WHERE i.id=$id");
 if(!$inv = mysqli_fetch_assoc($res)){ flash_set('Not found'); header('Location: invoices_list.php'); exit; }

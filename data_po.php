@@ -1,7 +1,7 @@
 <?php
 require_once 'functions.php';
 require_once 'db.php';
-require_login();
+require_module_access('data_po');
 include 'header.php';
 
 /* ================= QUERY DATA PO ================= */

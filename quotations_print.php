@@ -1,6 +1,6 @@
 <?php
 require_once 'functions.php';
-require_login();
+require_module_access('quotation');
 
 $id = intval($_GET['id'] ?? 0);
 

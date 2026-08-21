@@ -1,6 +1,6 @@
 <?php
 require_once 'functions.php';
-require_login();
+require_module_access('invoice', 'full');
 
 $po=mysqli_query($mysqli,"
 SELECT i.po_number,i.invoice_no,c.name

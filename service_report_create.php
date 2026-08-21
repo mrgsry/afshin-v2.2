@@ -7,7 +7,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 require_once 'functions.php';
-require_login();
+require_module_access('service_report', 'full');
 
 if (!$mysqli) {
     die('DB Connection failed');

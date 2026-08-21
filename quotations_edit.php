@@ -4,7 +4,7 @@
 // =========================================================================
 
 require_once 'functions.php';
-require_login();
+require_module_access('quotation', 'full');
 
 $id = intval($_GET['id'] ?? 0);
 if($id == 0) {

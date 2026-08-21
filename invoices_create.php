@@ -4,7 +4,7 @@
 // =========================================================================
 require_once 'db.php';
 require_once 'functions.php';
-require_login();
+require_module_access('invoice', 'full');
 
 if (!isset($mysqli) || !$mysqli) {
     die("Koneksi database gagal!");
@@ -777,8 +777,8 @@ include 'header.php';
                     <div class="form-group">
                         <label for="po_number"><i class="fas fa-file-contract"></i> PO Number</label>
                         <div class="input-group">
-                            <input type="text" name="po_number" id="po_number" class="form-control" 
-                                   placeholder="Enter PO number">
+                            <input type="text" name="po_number" id="po_number" class="form-control"
+                                   placeholder="Enter PO number" maxlength="255">
                         </div>
                     </div>
                 </div>

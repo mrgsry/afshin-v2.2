@@ -45,6 +45,78 @@ function current_user(){
     return $_SESSION['user'] ?? null;
 }
 
+function available_modules(){
+    return [
+        'dashboard' => 'Dashboard',
+        'customer' => 'Customer',
+        'employee' => 'Karyawan',
+        'payslip' => 'Slip Gaji',
+        'quotation' => 'Quotation',
+        'invoice' => 'Invoice',
+        'travel_document' => 'Travel Document / Surat Jalan',
+        'service_report' => 'Service Report',
+        'berita_acara' => 'Berita Acara',
+        'data_po' => 'Data PO',
+        'operational' => 'Operational',
+        'finance' => 'Finance',
+        'document_history' => 'Document History',
+        'user_management' => 'User Management'
+    ];
+}
+
+function user_policy($module, $user = null){
+    $user = $user ?: current_user();
+    if (!$user) return null;
+    if (($user['role'] ?? '') === 'admin') return 'full';
+    static $permissions = null;
+    if ($permissions === null) {
+        $permissions = [];
+        $userId = (int) ($user['id'] ?? 0);
+        if ($userId > 0) {
+            $stmt = mysqli_prepare($GLOBALS['mysqli'], 'SELECT module_name, policy FROM user_modules WHERE user_id = ?');
+            if ($stmt) {
+                mysqli_stmt_bind_param($stmt, 'i', $userId);
+                mysqli_stmt_execute($stmt);
+                $result = mysqli_stmt_get_result($stmt);
+                while ($row = mysqli_fetch_assoc($result)) $permissions[$row['module_name']] = $row['policy'];
+            }
+        }
+    }
+    return $permissions[$module] ?? null;
+}
+
+function can_access_module($module, $requiredPolicy = 'read'){
+    $policy = user_policy($module);
+    return $policy === 'full' || ($requiredPolicy === 'read' && $policy === 'read');
+}
+
+function require_module_access($module, $requiredPolicy = 'read'){
+    require_login();
+    if (!can_access_module($module, $requiredPolicy)) {
+        header('Location: access_denied.php');
+        exit;
+    }
+}
+
+function require_admin(){
+    require_login();
+    if ((current_user()['role'] ?? '') !== 'admin') {
+        header('Location: access_denied.php');
+        exit;
+    }
+}
+
+function posted_permissions($modules){
+    $result = [];
+    foreach ((array) ($_POST['modules'] ?? []) as $module => $enabled) {
+        if (isset($modules[$module])) {
+            $policy = $_POST['policies'][$module] ?? 'read';
+            $result[$module] = in_array($policy, ['full', 'read'], true) ? $policy : 'read';
+        }
+    }
+    return $result;
+}
+
 /* ===============================
    FLASH MESSAGE
 =================================*/

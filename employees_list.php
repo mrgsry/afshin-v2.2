@@ -1,5 +1,5 @@
 <?php
-require_once 'functions.php'; require_login();
+require_once 'functions.php'; require_module_access('employee');
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
     $id = (int) $_POST['delete_id']; $stmt = mysqli_prepare($mysqli, 'DELETE FROM employees WHERE id = ?'); mysqli_stmt_bind_param($stmt, 'i', $id);
     if (mysqli_stmt_execute($stmt)) { $_SESSION['flash_success'] = 'Karyawan berhasil dihapus. Riwayat slip gaji tetap tersimpan.'; } else { $_SESSION['flash_error'] = 'Karyawan gagal dihapus.'; } header('Location: employees_list.php'); exit;

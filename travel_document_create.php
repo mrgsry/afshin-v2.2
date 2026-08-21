@@ -4,7 +4,7 @@
 // =========================================================================
 
 require_once 'functions.php'; 
-require_login(); 
+require_module_access('travel_document', 'full');
 
 if (!$mysqli) {
     die("Koneksi database gagal!");

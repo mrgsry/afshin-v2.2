@@ -1,7 +1,7 @@
 <?php
 require_once 'functions.php';
 require_once 'db.php';
-require_login();
+require_module_access('invoice');
 
 $query = "
 SELECT i.invoice_no,

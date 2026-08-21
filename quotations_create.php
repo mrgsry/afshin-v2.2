@@ -1,7 +1,7 @@
 <?php
 // Pastikan file functions.php ada dan memiliki definisi fungsi require_login() dan bulan_romawi()
 require_once 'functions.php';
-require_login();
+require_module_access('quotation', 'full');
 
 // Ambil flash messages untuk notifikasi
 $error_msg = flash_get('error');
