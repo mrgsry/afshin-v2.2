@@ -164,8 +164,7 @@ $item_count = $row['item_count'] + 1;
                                         <i class="fas fa-envelope"></i>
                                     </button>
                                     <?php 
-            $public_token = get_or_create_quotation_public_token($mysqli, $row['id']);
-            $public_url = 'https://afshin.hnet-diigital.biz.id/quotations_view_public.php?token=' . rawurlencode($public_token);
+            $public_url = "https://afshin.hnet-diigital.biz.id/quotations_view_public.php?id=" . $row['id'];
             $wa_message = urlencode("Halo, berikut adalah Quotation Anda dari CV Afshin Raya Teknik:\n\nNo: " . $row['quotation_no'] . "\nLink Preview: " . $public_url);
             $wa_url = "https://wa.me/?text=" . $wa_message;
         ?>

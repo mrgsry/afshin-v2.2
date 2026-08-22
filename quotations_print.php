@@ -31,6 +31,12 @@ $items = mysqli_query($mysqli, "
 ");
 
 
+$has_item_discount = false;
+$discount_check = mysqli_query($mysqli, "SELECT EXISTS (SELECT 1 FROM quotation_items WHERE quotation_id = $id AND discount > 0)");
+if ($discount_check) {
+    $has_item_discount = (bool) mysqli_fetch_row($discount_check)[0];
+}
+
 // Fungsi helper untuk memformat angka menjadi format Rupiah (Rp)
 function formatRupiah($number) {
     return 'Rp ' . number_format($number, 0, ',', '.');
@@ -347,7 +353,7 @@ table.items th {
     <th>Qty</th>
     <th>Satuan</th>
     <th>Unit Price</th>
-    <th>Discount</th>
+    <?php if($has_item_discount): ?><th>Discount</th><?php endif; ?>
     <th>Amount</th>
 </tr>
 
@@ -358,7 +364,7 @@ table.items th {
     <td style="text-align:center;"><?php echo $it['qty']; ?></td>
     <td style="text-align:center;"><?php echo htmlspecialchars($it['satuan']); ?></td>
     <td style="text-align:right;"><?php echo formatRupiah($it['unit_price']); ?></td>
-    <td style="text-align:right;"><?php echo formatRupiah($it['discount']); ?></td>
+    <?php if($has_item_discount): ?><td style="text-align:right;"><?php echo formatRupiah($it['discount']); ?></td><?php endif; ?>
     <td style="text-align:right;"><?php echo formatRupiah($it['amount']); ?></td>
 </tr>
 <?php endwhile; ?>

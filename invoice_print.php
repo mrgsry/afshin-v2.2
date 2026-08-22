@@ -31,6 +31,12 @@ $items_res = mysqli_query($mysqli, "
     ORDER BY item_no ASC
 ");
 
+$has_item_discount = false;
+$discount_check = mysqli_query($mysqli, "SELECT EXISTS (SELECT 1 FROM invoice_items WHERE invoice_id = $id AND discount > 0)");
+if ($discount_check) {
+    $has_item_discount = (bool) mysqli_fetch_row($discount_check)[0];
+}
+
 // ASUMSI: Fungsi terbilang() ada. Jika tidak ada, gunakan dummy (seperti di bawah)
 if (!function_exists('terbilang')) {
     function terbilang($number) {
@@ -313,7 +319,7 @@ table.items th {
     <th>Qty</th>
     <th>Unit</th>
     <th>Unit Price</th>
-    <th>Discount</th>
+    <?php if($has_item_discount): ?><th>Discount</th><?php endif; ?>
     <th>Amount</th>
 </tr>
 
@@ -325,7 +331,7 @@ table.items th {
     <td align="center"><?php echo $it['qty']; ?></td>
     <td align="center"><?php echo htmlspecialchars($it['satuan']); ?></td>
     <td align="right"><?php echo formatRupiah($it['unit_price']); ?></td>
-    <td align="right"><?php echo formatRupiah($it['discount'] ?? 0); ?></td>
+    <?php if($has_item_discount): ?><td align="right"><?php echo formatRupiah($it['discount'] ?? 0); ?></td><?php endif; ?>
     <td align="right"><?php echo formatRupiah($it['amount']); ?></td>
 </tr>
 <?php endwhile; ?>
