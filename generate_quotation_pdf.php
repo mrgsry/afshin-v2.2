@@ -35,6 +35,7 @@ function generateQuotationPDF($quotation_id) {
     qty,
     satuan_quot,
     unit_price,
+    discount,
     amount
 FROM quotation_items
         WHERE quotation_id = $id
@@ -266,10 +267,11 @@ table.items th {
     <thead>
         <tr>
             <th width="5%">No</th>
-            <th width="45%">Description</th>
-            <th width="10%">Qty</th>
+            <th width="35%">Description</th>
+            <th width="8%">Qty</th>
             <th width="10%">Satuan</th>
-            <th width="15%">Unit Price</th>
+            <th width="16%">Unit Price</th>
+            <th width="16%">Discount</th>
             <th width="15%">Amount</th>
         </tr>
     </thead>
@@ -282,6 +284,7 @@ table.items th {
             <td align="center">' . $it['qty'] . '</td>
             <td align="center">' . htmlspecialchars($it['satuan_quot']) . '</td>
             <td align="right">' . formatRupiah($it['unit_price']) . '</td>
+            <td align="right">' . formatRupiah($it['discount'] ?? 0) . '</td>
             <td align="right">' . formatRupiah($it['amount']) . '</td>
         </tr>';
     }

@@ -118,6 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $qtys        = $_POST['qty'] ?? [];
     $satuans_post = $_POST['satuan_quot'] ?? [];
     $unit_prices = $_POST['unit_price_raw'] ?? [];
+    $item_discounts = $_POST['item_discount_raw'] ?? [];
     $amounts     = $_POST['amount_raw'] ?? [];
 
     $success = true;
@@ -128,22 +129,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $qty    = (int)$qtys[$i];
         $satuan = (string)$satuans_post[$i];
         $unit   = (float)$unit_prices[$i];
-        $amount = (float)$amounts[$i];
+        $item_discount = min(max((float)($item_discounts[$i] ?? 0), 0), $qty * $unit);
+        $amount = max(($qty * $unit) - $item_discount, 0);
 
         $stmt2 = mysqli_prepare($mysqli,
             "INSERT INTO quotation_items 
-                (quotation_id,item_no,description_quot,qty,satuan_quot,unit_price,amount)
-             VALUES (?,?,?,?,?,?,?)"
+                (quotation_id,item_no,description_quot,qty,satuan_quot,unit_price,discount,amount)
+             VALUES (?,?,?,?,?,?,?,?)"
         );
         mysqli_stmt_bind_param(
             $stmt2,
-            'iisisdd',
+            'iisisddd',
             $qid,
             $item_no,
             $desc,
             $qty,
             $satuan,
             $unit,
+            $item_discount,
             $amount
         );
         
@@ -873,7 +876,8 @@ $preview_quotation_no = generate_quotation_no($mysqli, $default_date);
                                 <th class="item-desc">Description</th>
                                 <th class="item-qty">Qty</th>
                                 <th class="item-satuan">Unit</th>
-                                <th class="item-price">Unit Price (Rp)</th>
+                                <th class="item-price">Unit Price</th>
+                                <th class="item-discount">Discount</th>
                                 <th class="item-amount">Amount (Rp)</th>
                                 <th class="item-actions">Actions</th>
                             </tr>
@@ -904,17 +908,15 @@ $preview_quotation_no = generate_quotation_no($mysqli, $default_date);
                                     </select>
                                 </td>
                                 <td>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text">Rp</span></div>
-                                        <input name="unit_price[]" class="form-control unit_price" placeholder="0">
-                                    </div>
+                                    <input name="unit_price[]" class="form-control unit_price" placeholder="0">
                                     <input type="hidden" name="unit_price_raw[]" value="0">
                                 </td>
                                 <td>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text">Rp</span></div>
-                                        <input name="amount[]" class="form-control amount" value="0" readonly>
-                                    </div>
+                                    <input name="item_discount[]" class="form-control item_discount" placeholder="0">
+                                    <input type="hidden" name="item_discount_raw[]" value="0">
+                                </td>
+                                <td>
+                                    <input name="amount[]" class="form-control amount" value="0" readonly>
                                     <input type="hidden" name="amount_raw[]" value="0">
                                 </td>
                                 <td>
@@ -947,10 +949,7 @@ $preview_quotation_no = generate_quotation_no($mysqli, $default_date);
                     
                     <div class="summary-item">
                         <h4>Discount</h4>
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Rp</span></div>
-                            <input name="discount_display" id="discount" class="form-control" value="0">
-                        </div>
+                        <input name="discount_display" id="discount" class="form-control" value="0">
                         <input type="hidden" name="discount_raw" id="discount_raw" value="0">
                     </div>
                     
@@ -1014,7 +1013,7 @@ $preview_quotation_no = generate_quotation_no($mysqli, $default_date);
     
     function formatRupiah(num, withCurrencySymbol = false) {
         if (isNaN(num) || num === null) num = 0;
-        const formatted = parseFloat(num).toLocaleString('id-ID', {
+        const formatted = parseFloat(num).toLocaleString('en-US', {
             minimumFractionDigits: 0,
             maximumFractionDigits: 0
         });
@@ -1029,12 +1028,7 @@ $preview_quotation_no = generate_quotation_no($mysqli, $default_date);
         
         if (cleaned === '') return 0;
         
-        cleaned = cleaned.replace(',', '.');
-        
-        const parts = cleaned.split('.');
-        if (parts.length > 2) {
-            cleaned = parts[0] + parts.slice(1).join('');
-        }
+        cleaned = cleaned.replace(/,/g, '');
         
         const result = parseFloat(cleaned);
         return isNaN(result) ? 0 : result;
@@ -1052,7 +1046,7 @@ $preview_quotation_no = generate_quotation_no($mysqli, $default_date);
         if (value === 0 || value === '0') {
             $(input).val('0');
         } else {
-            $(input).val(formatRupiah(value, true));
+            $(input).val(formatRupiah(value));
         }
     }
     
@@ -1096,9 +1090,13 @@ $preview_quotation_no = generate_quotation_no($mysqli, $default_date);
             let qty = parseNumber($tr.find('.qty').val());
             let up_raw = parseNumber($tr.find('input[name="unit_price_raw[]"]').val());
             
-            let amount = qty * up_raw;
+            let grossAmount = qty * up_raw;
+            let itemDiscount = parseNumber($tr.find('input[name="item_discount_raw[]"]').val());
+            itemDiscount = Math.min(Math.max(itemDiscount, 0), grossAmount);
+            $tr.find('input[name="item_discount_raw[]"]').val(itemDiscount);
+            let amount = grossAmount - itemDiscount;
 
-            $tr.find('.amount').val(formatRupiah(amount, true));
+            $tr.find('.amount').val(formatRupiah(amount));
             $tr.find('input[name="amount_raw[]"]').val(amount);
             
             subtotal += amount;
@@ -1114,11 +1112,12 @@ $preview_quotation_no = generate_quotation_no($mysqli, $default_date);
             $('#subtotalDisplay').removeClass('zero-value');
         }
 
-        let discount = parseNumber($('#discount_raw').val());
+        let discount = Math.min(Math.max(parseNumber($('#discount_raw').val()), 0), subtotal);
+        $('#discount_raw').val(discount);
         let base = subtotal - discount;
         let ppnValue = base * PPN_RATE_PERCENT / 100;
 
-        const ppnFormatted = formatRupiah(ppnValue, true);
+        const ppnFormatted = formatRupiah(ppnValue);
         $('#ppnDisplay').html(ppnFormatted);
         $('#ppn').val(ppnValue);
         
@@ -1129,7 +1128,7 @@ $preview_quotation_no = generate_quotation_no($mysqli, $default_date);
         }
 
         let total = base + ppnValue;
-        const totalFormatted = formatRupiah(total, true);
+        const totalFormatted = formatRupiah(total);
         $('#totalDisplay').html(totalFormatted);
         $('#total_raw').val(total);
         
@@ -1157,6 +1156,22 @@ $preview_quotation_no = generate_quotation_no($mysqli, $default_date);
         let hidden = $(this).closest("td").find('input[name="unit_price_raw[]"]');
         let raw = parseNumber(hidden.val());
         restoreCurrencyFormat(this, raw);
+    });
+
+    $(document).on('focus', '.item_discount', function() {
+        const raw = parseNumber($(this).closest('td').find('input[name="item_discount_raw[]"]').val());
+        $(this).val(raw === 0 ? '' : raw);
+    });
+
+    $(document).on('input', '.item_discount', function() {
+        const raw = parseNumber($(this).val());
+        $(this).closest('td').find('input[name="item_discount_raw[]"]').val(raw);
+        recalc();
+    });
+
+    $(document).on('blur', '.item_discount', function() {
+        const raw = parseNumber($(this).closest('td').find('input[name="item_discount_raw[]"]').val());
+        $(this).val(formatRupiah(raw));
     });
     
     /* ========== DISCOUNT HANDLING ========== */
@@ -1228,17 +1243,15 @@ $preview_quotation_no = generate_quotation_no($mysqli, $default_date);
                     </select>
                 </td>
                 <td>
-                    <div class="input-group">
-                        <div class="input-group-prepend"><span class="input-group-text">Rp</span></div>
-                        <input name="unit_price[]" class="form-control unit_price" placeholder="0">
-                    </div>
+                    <input name="unit_price[]" class="form-control unit_price" placeholder="0">
                     <input type="hidden" name="unit_price_raw[]" value="0">
                 </td>
                 <td>
-                    <div class="input-group">
-                        <div class="input-group-prepend"><span class="input-group-text">Rp</span></div>
-                        <input name="amount[]" class="form-control amount" value="0" readonly>
-                    </div>
+                    <input name="item_discount[]" class="form-control item_discount" placeholder="0">
+                    <input type="hidden" name="item_discount_raw[]" value="0">
+                </td>
+                <td>
+                    <input name="amount[]" class="form-control amount" value="0" readonly>
                     <input type="hidden" name="amount_raw[]" value="0">
                 </td>
                 <td>

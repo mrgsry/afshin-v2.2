@@ -93,6 +93,7 @@ CREATE TABLE `invoice_items` (
   `qty` int(11) DEFAULT NULL,
   `satuan` varchar(50) DEFAULT NULL,
   `unit_price` decimal(15,2) DEFAULT NULL,
+  `discount` decimal(15,2) NOT NULL DEFAULT 0.00,
   `amount` decimal(15,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -151,16 +152,17 @@ CREATE TABLE `quotation_items` (
   `qty` int(11) DEFAULT NULL,
   `satuan` varchar(50) DEFAULT NULL,
   `unit_price` decimal(15,2) DEFAULT NULL,
+  `discount` decimal(15,2) NOT NULL DEFAULT 0.00,
   `amount` decimal(15,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `quotation_items`
 --
-
-INSERT INTO `quotation_items` (`id`, `quotation_id`, `item_no`, `description`, `qty`, `satuan`, `unit_price`, `amount`) VALUES
-(1, 1, 1, '0', 1, '0', 9500000.00, 9500000.00),
-(2, 1, 2, '0', 1, '0', 750000.00, 750000.00);
+INSERT INTO `quotation_items` (`id`, `quotation_id`, `item_no`, `description`, `qty`, `satuan`, `unit_price`, `discount`, `amount`) VALUES
+(1, 1, 1, '0', 1, '0', 9500000.00, 0.00, 9500000.00),
+(2, 1, 2, '0', 1, '0', 750000.00, 0.00, 750000.00);
+(2, 1, 2, '0', 1, '0', 750000.00, 0.00, 750000.00);
 
 -- --------------------------------------------------------
 

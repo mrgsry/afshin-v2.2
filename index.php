@@ -97,47 +97,66 @@ if($selectedCustomer>0){
 ?>
 
 <style>
-.gradient-card{
-border-radius:16px;
-color:#fff;
-padding:20px;
-position:relative;
-overflow:hidden;
-transition:.3s;
-}
-.gradient-card:hover{
-transform:translateY(-4px);
-box-shadow:0 12px 30px rgba(0,0,0,0.15);
-}
-.gradient-blue{background:linear-gradient(135deg,#667eea,#764ba2);}
-.gradient-green{background:linear-gradient(135deg,#11998e,#38ef7d);}
-.gradient-orange{background:linear-gradient(135deg,#f7971e,#ffd200);}
-.gradient-red{background:linear-gradient(135deg,#ee0979,#ff6a00);}
-.gradient-warning{background:linear-gradient(135deg,#f46b45,#eea849);}
-.gradient-success{background:linear-gradient(135deg,#56ab2f,#a8e063);}
-
-.card-icon{
-font-size:2rem;
-opacity:.25;
-position:absolute;
-right:20px;
-top:20px;
+.gradient-card {
+    border-radius: 16px;
+    color: #fff;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: .3s;
 }
 
-.chart-card{
-border-radius:16px;
-box-shadow:0 6px 20px rgba(0,0,0,0.05);
-padding:20px;
-background:#fff;
+.gradient-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
 }
 
-.chart-wrapper{
-height:300px;
+.gradient-blue {
+    background: linear-gradient(135deg, #667eea, #764ba2);
 }
 
-.section-title{
-font-weight:600;
-margin-bottom:15px;
+.gradient-green {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+}
+
+.gradient-orange {
+    background: linear-gradient(135deg, #f7971e, #ffd200);
+}
+
+.gradient-red {
+    background: linear-gradient(135deg, #ee0979, #ff6a00);
+}
+
+.gradient-warning {
+    background: linear-gradient(135deg, #f46b45, #eea849);
+}
+
+.gradient-success {
+    background: linear-gradient(135deg, #56ab2f, #a8e063);
+}
+
+.card-icon {
+    font-size: 2rem;
+    opacity: .25;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.chart-card {
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    background: #fff;
+}
+
+.chart-wrapper {
+    height: 300px;
+}
+
+.section-title {
+    font-weight: 600;
+    margin-bottom: 15px;
 }
 
 /* ===== FIX MODAL Z-INDEX ===== */
@@ -157,273 +176,293 @@ margin-bottom:15px;
 
 <div class="container-fluid">
 
-<!-- KPI ROW -->
-<div class="row">
+    <!-- KPI ROW -->
+    <div class="row">
 
-<div class="col-lg-3 col-md-6 mb-4">
-<div class="gradient-card gradient-blue">
-<i class="fas fa-users card-icon"></i>
-<div>Customers</div>
-<h4><?= $custCount ?></h4>
-</div>
-</div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="gradient-card gradient-blue">
+                <i class="fas fa-users card-icon"></i>
+                <div>Customers</div>
+                <h4><?= $custCount ?></h4>
+            </div>
+        </div>
 
-<div class="col-lg-3 col-md-6 mb-4">
-<div class="gradient-card gradient-green">
-<i class="fas fa-file-invoice card-icon"></i>
-<div>Total Invoices</div>
-<h4><?= $invCount ?></h4>
-</div>
-</div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="gradient-card gradient-green">
+                <i class="fas fa-file-invoice card-icon"></i>
+                <div>Total Invoices</div>
+                <h4><?= $invCount ?></h4>
+            </div>
+        </div>
 
-<div class="col-lg-3 col-md-6 mb-4">
-<div class="gradient-card gradient-orange">
-<i class="fas fa-chart-line card-icon"></i>
-<div>Revenue This Month</div>
-<h4>Rp <?= number_format($monthRevenue,0,',','.') ?></h4>
-</div>
-</div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="gradient-card gradient-orange">
+                <i class="fas fa-chart-line card-icon"></i>
+                <div>Revenue This Month</div>
+                <h4>Rp <?= number_format($monthRevenue,0,',','.') ?></h4>
+            </div>
+        </div>
 
-<div class="col-lg-3 col-md-6 mb-4">
-<div class="gradient-card gradient-red">
-<i class="fas fa-coins card-icon"></i>
-<div>Revenue <?= $currentYear ?></div>
-<h4>Rp <?= number_format($totalRevenueYear,0,',','.') ?></h4>
-</div>
-</div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="gradient-card gradient-red">
+                <i class="fas fa-coins card-icon"></i>
+                <div>Revenue <?= $currentYear ?></div>
+                <h4>Rp <?= number_format($totalRevenueYear,0,',','.') ?></h4>
+            </div>
+        </div>
 
-</div>
+    </div>
 
-<!-- STATUS ROW -->
-<div class="row">
+    <!-- STATUS ROW -->
+    <div class="row">
 
-<div class="col-md-6 mb-4">
-<div class="gradient-card gradient-warning"
-     data-toggle="modal" data-target="#pendingModal"
-     style="cursor:pointer;">
-<i class="fas fa-clock card-icon"></i>
-<div>Invoice Pending</div>
-<h4><?= $pendingCount ?></h4>
-<small>Klik untuk lihat detail</small>
-</div>
-</div>
+        <div class="col-md-6 mb-4">
+            <div class="gradient-card gradient-warning" data-toggle="modal" data-target="#pendingModal"
+                style="cursor:pointer;">
+                <i class="fas fa-clock card-icon"></i>
+                <div>Invoice Pending</div>
+                <h4><?= $pendingCount ?></h4>
+                <small>Klik untuk lihat detail</small>
+            </div>
+        </div>
 
-<div class="col-md-6 mb-4">
-<div class="gradient-card gradient-success"
-     data-toggle="modal"
-     data-target="#completeModal"
-     style="cursor:pointer;">
-<i class="fas fa-check-circle card-icon"></i>
-<div>Invoice Complete</div>
-<h4><?= $completeCount ?></h4>
-<small>Klik untuk lihat detail</small>
-</div>
-</div>
+        <div class="col-md-6 mb-4">
+            <div class="gradient-card gradient-success" data-toggle="modal" data-target="#completeModal"
+                style="cursor:pointer;">
+                <i class="fas fa-check-circle card-icon"></i>
+                <div>Invoice Complete</div>
+                <h4><?= $completeCount ?></h4>
+                <small>Klik untuk lihat detail</small>
+            </div>
+        </div>
 
-</div>
+    </div>
 
-<!-- CHART ROW 1 -->
-<div class="row">
+    <!-- CHART ROW 1 -->
+    <div class="row">
 
-<div class="col-md-6 mb-4">
-<div class="chart-card">
-<div class="section-title">Revenue Trend (6 Months)</div>
-<div class="chart-wrapper">
-<canvas id="revenueChart"></canvas>
-</div>
-</div>
-</div>
+        <div class="col-md-6 mb-4">
+            <div class="chart-card">
+                <div class="section-title">Revenue Trend (6 Months)</div>
+                <div class="chart-wrapper">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
 
-<div class="col-md-6 mb-4">
-<div class="chart-card">
-<div class="d-flex justify-content-between align-items-center mb-3">
-<div class="section-title mb-0">
-Top Customer (<?= $selectedYear ?>)
-</div>
-<form method="GET">
-<select name="year" class="form-control form-control-sm" onchange="this.form.submit()">
-<?php for($y=date('Y');$y>=date('Y')-5;$y--): ?>
-<option value="<?= $y ?>" <?= $selectedYear==$y?'selected':'' ?>>
-<?= $y ?>
-</option>
-<?php endfor; ?>
-</select>
-</form>
-</div>
-<div class="chart-wrapper">
-<canvas id="topCustomerChart"></canvas>
-</div>
-</div>
-</div>
+        <div class="col-md-6 mb-4">
+            <div class="chart-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="section-title mb-0">
+                        Top Customer (<?= $selectedYear ?>)
+                    </div>
+                    <form method="GET">
+                        <select name="year" class="form-control form-control-sm" onchange="this.form.submit()">
+                            <?php for($y=date('Y');$y>=date('Y')-5;$y--): ?>
+                            <option value="<?= $y ?>" <?= $selectedYear==$y?'selected':'' ?>>
+                                <?= $y ?>
+                            </option>
+                            <?php endfor; ?>
+                        </select>
+                    </form>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="topCustomerChart"></canvas>
+                </div>
+            </div>
+        </div>
 
-</div>
+    </div>
 
-<!-- CHART ROW 2 -->
-<div class="row">
+    <!-- CHART ROW 2 -->
+    <div class="row">
 
-<div class="col-md-12 mb-4">
-<div class="chart-card">
-<div class="section-title">
-Customer Monthly Transaction (<?= $currentYear ?>)
-</div>
+        <div class="col-md-12 mb-4">
+            <div class="chart-card">
+                <div class="section-title">
+                    Customer Monthly Transaction (<?= $currentYear ?>)
+                </div>
 
-<form method="GET" class="mb-3">
-<select name="customer_id" class="form-control form-control-sm" onchange="this.form.submit()">
-<option value="0">-- Select Customer --</option>
-<?php while($c=mysqli_fetch_assoc($customerList)): ?>
-<option value="<?= $c['id'] ?>" <?= $selectedCustomer==$c['id']?'selected':'' ?>>
-<?= htmlspecialchars($c['name']) ?>
-</option>
-<?php endwhile; ?>
-</select>
-</form>
+                <form method="GET" class="mb-3">
+                    <select name="customer_id" class="form-control form-control-sm" onchange="this.form.submit()">
+                        <option value="0">-- Select Customer --</option>
+                        <?php while($c=mysqli_fetch_assoc($customerList)): ?>
+                        <option value="<?= $c['id'] ?>" <?= $selectedCustomer==$c['id']?'selected':'' ?>>
+                            <?= htmlspecialchars($c['name']) ?>
+                        </option>
+                        <?php endwhile; ?>
+                    </select>
+                </form>
 
-<div class="chart-wrapper">
-<canvas id="customerMonthlyChart"></canvas>
-</div>
-</div>
-</div>
+                <div class="chart-wrapper">
+                    <canvas id="customerMonthlyChart"></canvas>
+                </div>
+            </div>
+        </div>
 
-</div>
+    </div>
 
 </div>
 
 <!-- MODAL -->
 <div class="modal fade" id="pendingModal" tabindex="-1">
-<div class="modal-dialog modal-xl modal-dialog-centered">
-<div class="modal-content">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
 
-<div class="modal-header bg-warning">
-<h5 class="modal-title">
-<i class="fas fa-clock"></i> Invoice Pending
-</h5>
-<button type="button" class="close" data-dismiss="modal">
-<span>&times;</span>
-</button>
-</div>
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title">
+                    <i class="fas fa-clock"></i> Invoice Pending
+                </h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
 
-<div class="modal-body">
-<div class="table-responsive">
-<table class="table table-bordered table-striped">
-<thead class="thead-light">
-<tr>
-<th>No</th>
-<th>No Invoice</th>
-<th>Tanggal</th>
-<th>Customer</th>
-<th>Total</th>
-<th>Alasan</th>
-</tr>
-</thead>
-<tbody id="pendingInvoiceBody">
-<tr>
-<td colspan="6" class="text-center">
-<i class="fas fa-spinner fa-spin"></i> Memuat data...
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>No</th>
+                                <th>No Invoice</th>
+                                <th>Tanggal</th>
+                                <th>Customer</th>
+                                <th>Total</th>
+                                <th>Alasan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pendingInvoiceBody">
+                            <tr>
+                                <td colspan="6" class="text-center">
+                                    <i class="fas fa-spinner fa-spin"></i> Memuat data...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-</div>
-</div>
+        </div>
+    </div>
 </div>
 
 <!-- MODAL COMPLETE -->
 <div class="modal fade" id="completeModal" tabindex="-1">
-<div class="modal-dialog modal-xl modal-dialog-centered">
-<div class="modal-content">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
 
-<div class="modal-header bg-success text-white">
-<h5 class="modal-title">
-<i class="fas fa-check-circle"></i> Invoice Complete
-</h5>
-<button type="button" class="close text-white" data-dismiss="modal">
-<span>&times;</span>
-</button>
-</div>
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-check-circle"></i> Invoice Complete
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
 
-<div class="modal-body">
-<div class="table-responsive">
-<table class="table table-bordered table-striped">
-<thead class="thead-light">
-<tr>
-<th>No</th>
-<th>No Invoice</th>
-<th>Tanggal</th>
-<th>Customer</th>
-<th>Total</th>
-<th>Status</th>
-</tr>
-</thead>
-<tbody id="completeInvoiceBody">
-<tr>
-<td colspan="6" class="text-center">
-<i class="fas fa-spinner fa-spin"></i> Memuat data...
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>No</th>
+                                <th>No Invoice</th>
+                                <th>Tanggal</th>
+                                <th>Customer</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="completeInvoiceBody">
+                            <tr>
+                                <td colspan="6" class="text-center">
+                                    <i class="fas fa-spinner fa-spin"></i> Memuat data...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-</div>
-</div>
+        </div>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-
 // Revenue Chart
-new Chart(document.getElementById('revenueChart'),{
-type:'line',
-data:{
-labels:<?= json_encode($revLabels) ?>,
-datasets:[{
-data:<?= json_encode($revData) ?>,
-borderColor:'#667eea',
-backgroundColor:'rgba(102,126,234,0.2)',
-fill:true,
-tension:0.4
-}]
-},
-options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}
+new Chart(document.getElementById('revenueChart'), {
+    type: 'line',
+    data: {
+        labels: <?= json_encode($revLabels) ?>,
+        datasets: [{
+            data: <?= json_encode($revData) ?>,
+            borderColor: '#667eea',
+            backgroundColor: 'rgba(102,126,234,0.2)',
+            fill: true,
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            }
+        }
+    }
 });
 
 // Top Customer
-new Chart(document.getElementById('topCustomerChart'),{
-type:'bar',
-data:{
-labels:<?= json_encode($topYearLabels) ?>,
-datasets:[{
-data:<?= json_encode($topYearData) ?>,
-backgroundColor:'#38ef7d'
-}]
-},
-options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}
+new Chart(document.getElementById('topCustomerChart'), {
+    type: 'bar',
+    data: {
+        labels: <?= json_encode($topYearLabels) ?>,
+        datasets: [{
+            data: <?= json_encode($topYearData) ?>,
+            backgroundColor: '#38ef7d'
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            }
+        }
+    }
 });
 
 // Monthly Chart
-new Chart(document.getElementById('customerMonthlyChart'),{
-type:'line',
-data:{
-labels:<?= json_encode($monthlyLabels) ?>,
-datasets:[{
-data:<?= json_encode($monthlyData) ?>,
-borderColor:'#ee0979',
-backgroundColor:'rgba(238,9,121,0.15)',
-fill:true,
-tension:0.4
-}]
-},
-options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}
+new Chart(document.getElementById('customerMonthlyChart'), {
+    type: 'line',
+    data: {
+        labels: <?= json_encode($monthlyLabels) ?>,
+        datasets: [{
+            data: <?= json_encode($monthlyData) ?>,
+            borderColor: '#ee0979',
+            backgroundColor: 'rgba(238,9,121,0.15)',
+            fill: true,
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            }
+        }
+    }
 });
 
 // Pending Modal AJAX
-$('#pendingModal').on('show.bs.modal', function () {
+$('#pendingModal').on('show.bs.modal', function() {
 
-$('#pendingInvoiceBody').html(`
+    $('#pendingInvoiceBody').html(`
 <tr>
 <td colspan="6" class="text-center">
 <i class="fas fa-spinner fa-spin"></i> Memuat data...
@@ -431,18 +470,18 @@ $('#pendingInvoiceBody').html(`
 </tr>
 `);
 
-$.get('get_pending_invoice.php', function(response){
+    $.get('get_pending_invoice.php', function(response) {
 
-let data = JSON.parse(response);
-let html = '';
+        let data = JSON.parse(response);
+        let html = '';
 
-if(data.length === 0){
-html = `<tr><td colspan="6" class="text-center text-success">
+        if (data.length === 0) {
+            html = `<tr><td colspan="6" class="text-center text-success">
 Tidak ada invoice pending 🎉
 </td></tr>`;
-}else{
-data.forEach((item,index)=>{
-html += `
+        } else {
+            data.forEach((item, index) => {
+                html += `
 <tr>
 <td>${index+1}</td>
 <td>${item.invoice_no}</td>
@@ -451,20 +490,20 @@ html += `
 <td>Rp ${item.total}</td>
 <td><span class="badge badge-danger">${item.reason}</span></td>
 </tr>`;
-});
-}
+            });
+        }
 
-$('#pendingInvoiceBody').html(html);
-});
+        $('#pendingInvoiceBody').html(html);
+    });
 
 });
 
 /* ===== FIX MODAL FREEZE ===== */
-$(document).on('show.bs.modal', function () {
+$(document).on('show.bs.modal', function() {
 
     // Paksa hide loader kalau masih aktif
     const loader = document.getElementById("page-loader");
-    if(loader){
+    if (loader) {
         loader.classList.add("hide");
     }
 
@@ -472,9 +511,9 @@ $(document).on('show.bs.modal', function () {
 
 
 // COMPLETE MODAL AJAX
-$('#completeModal').on('show.bs.modal', function () {
+$('#completeModal').on('show.bs.modal', function() {
 
-$('#completeInvoiceBody').html(`
+    $('#completeInvoiceBody').html(`
 <tr>
 <td colspan="6" class="text-center">
 <i class="fas fa-spinner fa-spin"></i> Memuat data...
@@ -482,18 +521,18 @@ $('#completeInvoiceBody').html(`
 </tr>
 `);
 
-$.get('get_complete_invoice.php', function(response){
+    $.get('get_complete_invoice.php', function(response) {
 
-let data = JSON.parse(response);
-let html = '';
+        let data = JSON.parse(response);
+        let html = '';
 
-if(data.length === 0){
-html = `<tr><td colspan="6" class="text-center text-warning">
+        if (data.length === 0) {
+            html = `<tr><td colspan="6" class="text-center text-warning">
 Belum ada invoice complete
 </td></tr>`;
-}else{
-data.forEach((item,index)=>{
-html += `
+        } else {
+            data.forEach((item, index) => {
+                html += `
 <tr>
 <td>${index+1}</td>
 <td>${item.invoice_no}</td>
@@ -502,16 +541,16 @@ html += `
 <td>Rp ${item.total}</td>
 <td><span class="badge badge-success">${item.status}</span></td>
 </tr>`;
-});
-}
+            });
+        }
 
-$('#completeInvoiceBody').html(html);
+        $('#completeInvoiceBody').html(html);
 
-});
+    });
 
 });
 /* Bersihkan backdrop dobel */
-$(document).on('hidden.bs.modal', function () {
+$(document).on('hidden.bs.modal', function() {
     if ($('.modal-backdrop').length > 1) {
         $('.modal-backdrop').not(':first').remove();
     }

@@ -1,24 +1,26 @@
 <?php
 require_once 'db.php';
+require_once 'crypto.php';
 
 // Fungsi helper untuk memformat angka menjadi format Rupiah (Rp)
 function formatRupiah($number) {
     return 'Rp ' . number_format($number, 0, ',', '.');
 }
 
-$id = intval($_GET['id'] ?? 0);
+$token = trim($_GET['token'] ?? '');
+if ($token === '') {
+    http_response_code(404);
+    echo "Invalid or expired public quotation link";
+    exit;
+}
 
-$res = mysqli_query($mysqli, "
-    SELECT q.*, c.name AS customer_name, c.customer_no, c.address, c.pic
-    FROM quotations q
-    LEFT JOIN customers c ON q.customer_id = c.id
-    WHERE q.id = $id
-");
-
-if(!$quote = mysqli_fetch_assoc($res)){
+$quote = resolve_public_quotation_by_token($mysqli, $token);
+if (!$quote) {
     echo "Quotation not found";
     exit;
 }
+
+$quotation_id = (int) $quote['id'];
 
 $items = mysqli_query($mysqli, "
     SELECT 
@@ -27,9 +29,10 @@ $items = mysqli_query($mysqli, "
         qty,
         satuan_quot,
         unit_price,
+        discount,
         amount
     FROM quotation_items
-    WHERE quotation_id = $id
+    WHERE quotation_id = $quotation_id
     ORDER BY item_no ASC
 ");
 
@@ -136,7 +139,7 @@ table.items th { background: #6bb0ffff; text-align: center; }
 
     <table class="items">
     <tr>
-        <th>No</th><th>Description</th><th>Qty</th><th>Satuan</th><th>Unit Price</th><th>Amount</th>
+        <th>No</th><th>Description</th><th>Qty</th><th>Satuan</th><th>Unit Price</th><th>Discount</th><th>Amount</th>
     </tr>
     <?php while($it = mysqli_fetch_assoc($items)): ?>
     <tr>
@@ -145,6 +148,7 @@ table.items th { background: #6bb0ffff; text-align: center; }
         <td style="text-align:center;"><?php echo $it['qty']; ?></td>
         <td style="text-align:center;"><?php echo htmlspecialchars($it['satuan_quot']); ?></td>
         <td style="text-align:right;"><?php echo formatRupiah($it['unit_price']); ?></td>
+        <td style="text-align:right;"><?php echo formatRupiah($it['discount']); ?></td>
         <td style="text-align:right;"><?php echo formatRupiah($it['amount']); ?></td>
     </tr>
     <?php endwhile; ?>

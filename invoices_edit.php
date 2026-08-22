@@ -91,6 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $qtys = $_POST['qty'] ?? [];
             $satuans_post = $_POST['satuan'] ?? [];
             $unit_prices = $_POST['unit_price_raw'] ?? [];
+            $item_discounts = $_POST['item_discount_raw'] ?? [];
             $amounts = $_POST['amount_raw'] ?? [];
 
             for($i = 0; $i < count($descs); $i++){
@@ -101,23 +102,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $qty = intval($qtys[$i]);
                 $satuan = $satuans_post[$i];
                 $unit_price = floatval($unit_prices[$i] ?? 0);
-                $amount = floatval($amounts[$i] ?? 0);
+                $gross_amount = $qty * $unit_price;
+                $item_discount = floatval($item_discounts[$i] ?? 0);
+                if ($item_discount < 0) $item_discount = 0;
+                if ($item_discount > $gross_amount) $item_discount = $gross_amount;
+                $amount = $gross_amount - $item_discount;
 
                 $stmt2 = mysqli_prepare($mysqli, "
                     INSERT INTO invoice_items
-                    (invoice_id, item_no, description, qty, satuan, unit_price, amount)
-                    VALUES (?,?,?,?,?,?,?)
+                    (invoice_id, item_no, description, qty, satuan, unit_price, discount, amount)
+                    VALUES (?,?,?,?,?,?,?,?)
                 ");
 
                 mysqli_stmt_bind_param(
                     $stmt2,
-                    'iisissd',
+                    'iisissdd',
                     $id,
                     $item_no,
                     $desc,
                     $qty,
                     $satuan,
                     $unit_price,
+                    $item_discount,
                     $amount
                 );
 
@@ -795,8 +801,9 @@ include 'header.php';
                                 <th class="item-desc">Item Description</th>
                                 <th class="item-qty">Qty</th>
                                 <th class="item-satuan">Unit</th>
-                                <th class="item-price">Unit Price (Rp)</th>
-                                <th class="item-amount">Amount (Rp)</th>
+                <th class="item-price">Unit Price</th>
+                <th class="item-discount">Discount</th>
+                <th class="item-amount">Amount</th>
                                 <th class="item-actions">Actions</th>
                             </tr>
                         </thead>
@@ -826,15 +833,20 @@ include 'header.php';
                                     <div class="input-group">
                                         
                                         <input type="text" name="unit_price_display[]" class="form-control unit_price" 
-                                               value="<?= $item['unit_price'] == 0 ? '' : number_format($item['unit_price'], 0, '.', ''); ?>">
+                                           value="<?= $item['unit_price'] == 0 ? '' : number_format($item['unit_price'], 0, '.', ','); ?>">
                                     </div>
                                     <input type="hidden" name="unit_price_raw[]" value="<?= $item['unit_price']; ?>">
+                                </td>
+                                <td>
+                                    <input type="text" name="item_discount_display[]" class="form-control item_discount"
+                                           value="<?= ($item['discount'] ?? 0) == 0 ? '' : number_format($item['discount'], 0, '.', ','); ?>">
+                                    <input type="hidden" name="item_discount_raw[]" value="<?= $item['discount'] ?? 0; ?>">
                                 </td>
                                 <td>
                                     <div class="input-group">
                                        
                                         <input type="text" name="amount_display[]" class="form-control amount" 
-                                               value="<?= $item['amount'] == 0 ? '0' : number_format($item['amount'], 0, '.', ''); ?>" readonly>
+                                               value="<?= $item['amount'] == 0 ? '0' : number_format($item['amount'], 0, '.', ','); ?>" readonly>
                                     </div>
                                     <input type="hidden" name="amount_raw[]" value="<?= $item['amount']; ?>">
                                 </td>
@@ -939,7 +951,7 @@ include 'header.php';
     function formatRupiah(num) {
         if (isNaN(num) || num === null) num = 0;
         // Format angka dengan pemisah ribuan
-        const formatted = parseFloat(num).toLocaleString('id-ID', {
+        const formatted = parseFloat(num).toLocaleString('en-US', {
             minimumFractionDigits: 0,
             maximumFractionDigits: 0
         });
@@ -956,14 +968,8 @@ include 'header.php';
         // Jika kosong setelah dibersihkan, return 0
         if (cleaned === '') return 0;
         
-        // Ganti koma dengan titik untuk decimal
-        cleaned = cleaned.replace(',', '.');
-        
-        // Hapus semua titik kecuali yang terakhir (untuk pemisah ribuan)
-        const parts = cleaned.split('.');
-        if (parts.length > 2) {
-            cleaned = parts[0] + parts.slice(1).join('');
-        }
+        // Nominal invoice menggunakan koma sebagai pemisah ribuan.
+        cleaned = cleaned.replace(/[.,]/g, '');
         
         const result = parseFloat(cleaned);
         return isNaN(result) ? 0 : result;
@@ -997,7 +1003,13 @@ include 'header.php';
             let tr = $(this);
             let qty = parseNumber(tr.find(".qty").val());
             let unit_raw = parseNumber(tr.find('input[name="unit_price_raw[]"]').val());
-            let amount = qty * unit_raw;
+            let grossAmount = qty * unit_raw;
+            let discountInput = tr.find('input[name="item_discount_raw[]"]');
+            let itemDiscount = discountInput.length ? parseNumber(discountInput.val()) : 0;
+            if (itemDiscount < 0) itemDiscount = 0;
+            if (itemDiscount > grossAmount) itemDiscount = grossAmount;
+            if (discountInput.length) discountInput.val(itemDiscount);
+            let amount = grossAmount - itemDiscount;
             
             // Update amount display
             tr.find(".amount").val(formatRupiah(amount));
@@ -1065,6 +1077,25 @@ include 'header.php';
     
     $(document).on("blur", ".unit_price", function() {
         let hidden = $(this).closest("td").find('input[name="unit_price_raw[]"]');
+        let raw = parseNumber(hidden.val());
+        restoreCurrencyFormat(this, raw);
+    });
+
+    /* ========== ITEM DISCOUNT HANDLING ========== */
+    $(document).on("focus", ".item_discount", function() {
+        let hidden = $(this).closest("td").find('input[name="item_discount_raw[]"]');
+        let raw = parseNumber(hidden.val());
+        $(this).val(raw === 0 ? "" : raw);
+    });
+
+    $(document).on("input", ".item_discount", function() {
+        let num = parseNumber($(this).val());
+        $(this).closest("td").find('input[name="item_discount_raw[]"]').val(num);
+        recalcInv();
+    });
+
+    $(document).on("blur", ".item_discount", function() {
+        let hidden = $(this).closest("td").find('input[name="item_discount_raw[]"]');
         let raw = parseNumber(hidden.val());
         restoreCurrencyFormat(this, raw);
     });
@@ -1154,6 +1185,10 @@ include 'header.php';
                         <input type="text" name="unit_price_display[]" class="form-control unit_price" placeholder="0">
                     </div>
                     <input type="hidden" name="unit_price_raw[]" value="0">
+                </td>
+                <td>
+                    <input type="text" name="item_discount_display[]" class="form-control item_discount" placeholder="0">
+                    <input type="hidden" name="item_discount_raw[]" value="0">
                 </td>
                 <td>
                     <div class="input-group">
@@ -1284,6 +1319,12 @@ include 'header.php';
         // Format all existing unit prices on load
         $(".unit_price").each(function() {
             let hidden = $(this).closest("td").find('input[name="unit_price_raw[]"]');
+            let raw = parseNumber(hidden.val());
+            restoreCurrencyFormat(this, raw);
+        });
+
+        $(".item_discount").each(function() {
+            let hidden = $(this).closest("td").find('input[name="item_discount_raw[]"]');
             let raw = parseNumber(hidden.val());
             restoreCurrencyFormat(this, raw);
         });

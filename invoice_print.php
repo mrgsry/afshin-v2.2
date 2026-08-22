@@ -25,7 +25,7 @@ if(!$inv = mysqli_fetch_assoc($res)){
 }
 
 $items_res = mysqli_query($mysqli, "
-    SELECT item_no, description, qty, satuan, unit_price, amount
+    SELECT item_no, description, qty, satuan, unit_price, discount, amount
     FROM invoice_items 
     WHERE invoice_id = $id 
     ORDER BY item_no ASC
@@ -313,6 +313,7 @@ table.items th {
     <th>Qty</th>
     <th>Unit</th>
     <th>Unit Price</th>
+    <th>Discount</th>
     <th>Amount</th>
 </tr>
 
@@ -324,6 +325,7 @@ table.items th {
     <td align="center"><?php echo $it['qty']; ?></td>
     <td align="center"><?php echo htmlspecialchars($it['satuan']); ?></td>
     <td align="right"><?php echo formatRupiah($it['unit_price']); ?></td>
+    <td align="right"><?php echo formatRupiah($it['discount'] ?? 0); ?></td>
     <td align="right"><?php echo formatRupiah($it['amount']); ?></td>
 </tr>
 <?php endwhile; ?>

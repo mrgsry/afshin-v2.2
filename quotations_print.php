@@ -23,6 +23,7 @@ $items = mysqli_query($mysqli, "
         qty,
         satuan_quot AS satuan,
         unit_price,
+        discount,
         amount
     FROM quotation_items
     WHERE quotation_id = $id
@@ -346,6 +347,7 @@ table.items th {
     <th>Qty</th>
     <th>Satuan</th>
     <th>Unit Price</th>
+    <th>Discount</th>
     <th>Amount</th>
 </tr>
 
@@ -356,6 +358,7 @@ table.items th {
     <td style="text-align:center;"><?php echo $it['qty']; ?></td>
     <td style="text-align:center;"><?php echo htmlspecialchars($it['satuan']); ?></td>
     <td style="text-align:right;"><?php echo formatRupiah($it['unit_price']); ?></td>
+    <td style="text-align:right;"><?php echo formatRupiah($it['discount']); ?></td>
     <td style="text-align:right;"><?php echo formatRupiah($it['amount']); ?></td>
 </tr>
 <?php endwhile; ?>

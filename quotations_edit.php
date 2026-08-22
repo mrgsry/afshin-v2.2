@@ -35,18 +35,18 @@ $satuans = ['Unit', 'Pcs', 'Pack', 'Set', 'Koli', 'Box', 'Buah', 'Pallet'];
 
 // === HELPER FUNCTION PHP UNTUK FORMAT RUPIAH DENGAN 2 DESIMAL ===
 function format_rupiah_edit($angka, $withSymbol = false) {
-    if ($angka === null || $angka === '') return $withSymbol ? 'Rp 0' : '0'; 
-    $formatted = number_format($angka, 0, ',', '.'); 
+    if ($angka === null || $angka === '') return $withSymbol ? 'Rp 0' : '0';
+    $formatted = number_format($angka, 0, ',', '.');
     return $withSymbol ? 'Rp ' . $formatted : $formatted;
 }
 
 // === LOGIKA PHP UPDATE ===
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
-    
+
     // Nilai diambil dari hidden raw fields yang seharusnya sudah bersih dari format Rp dan koma/titik ribuan
     $subtotal = floatval($_POST['subtotal_raw'] ?? 0);
     $discount = floatval($_POST['discount_raw'] ?? 0);
-    $ppn      = floatval($_POST['ppn'] ?? 0); 
+    $ppn      = floatval($_POST['ppn'] ?? 0);
     $total    = floatval($_POST['total_raw'] ?? 0);
 
     // Ambil nilai Note (sesuai logika create: option atau custom)
@@ -59,7 +59,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $note = mysqli_real_escape_string($mysqli, $note);
     $control_model = mysqli_real_escape_string($mysqli, $_POST['control_model']);
     $mtb = mysqli_real_escape_string($mysqli, $_POST['mtb']);
-    $date = $_POST['date_quot']; 
+    $date = $_POST['date_quot'];
     $customer_id = intval($_POST['customer_id']);
 
     mysqli_begin_transaction($mysqli);
@@ -81,7 +81,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             note='$note'
         WHERE id=$id
         ";
-        
+
         if (!mysqli_query($mysqli, $update_query)) {
             $success = false;
             throw new Exception('Error updating quotation: ' . mysqli_error($mysqli));
@@ -99,26 +99,28 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 $qty   = floatval($_POST['qty'][$i]);
                 $sat   = mysqli_real_escape_string($mysqli, $_POST['satuan_quot'][$i]);
                 $price = floatval($_POST['unit_price_raw'][$i]);
-                $amt   = floatval($_POST['amount_raw'][$i]);
+                $item_discount = min(max(floatval($_POST['item_discount_raw'][$i] ?? 0), 0), $qty * $price);
+                $amt   = max(($qty * $price) - $item_discount, 0);
 
-                if($desc == '') continue; 
-                
+                if($desc == '') continue;
+
                 $item_no = $i + 1;
 
                 $stmt2 = mysqli_prepare($mysqli,
-                    "INSERT INTO quotation_items 
-                        (quotation_id,item_no,description_quot,qty,satuan_quot,unit_price,amount)
-                    VALUES (?,?,?,?,?,?,?)"
+                    "INSERT INTO quotation_items
+                        (quotation_id,item_no,description_quot,qty,satuan_quot,unit_price,discount,amount)
+                    VALUES (?,?,?,?,?,?,?,?)"
                 );
                 mysqli_stmt_bind_param(
                     $stmt2,
-                    'iisisdd',
+                    'iisisddd',
                     $id,
                     $item_no,
                     $desc,
                     $qty,
                     $sat,
                     $price,
+                    $item_discount,
                     $amt
                 );
                 if (!mysqli_stmt_execute($stmt2)) {
@@ -204,7 +206,7 @@ foreach($satuans as $s) {
             --shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             --transition: all 0.3s ease;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f5f7fb;
@@ -212,13 +214,13 @@ foreach($satuans as $s) {
             margin: 0;
             padding: 0;
         }
-        
+
         .quotation-container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
-        
+
         .quotation-header {
             background: linear-gradient(135deg, var(--warning), #f9c74f);
             color: white;
@@ -227,7 +229,7 @@ foreach($satuans as $s) {
             margin-bottom: 30px;
             box-shadow: 0 10px 20px rgba(248, 150, 30, 0.2);
         }
-        
+
         .quotation-header h1 {
             margin: 0;
             font-size: 28px;
@@ -236,17 +238,17 @@ foreach($satuans as $s) {
             align-items: center;
             gap: 12px;
         }
-        
+
         .quotation-header h1 i {
             font-size: 32px;
         }
-        
+
         .quotation-header p {
             margin: 10px 0 0;
             opacity: 0.9;
             font-size: 16px;
         }
-        
+
         .alert-danger {
             background: rgba(247, 37, 133, 0.1);
             color: #f72585;
@@ -257,7 +259,7 @@ foreach($satuans as $s) {
             font-size: 15px;
             font-weight: 500;
         }
-        
+
         .alert-success {
             background: rgba(76, 201, 240, 0.1);
             color: #4cc9f0;
@@ -268,7 +270,7 @@ foreach($satuans as $s) {
             font-size: 15px;
             font-weight: 500;
         }
-        
+
         .quotation-card {
             background: white;
             border-radius: var(--border-radius);
@@ -276,7 +278,7 @@ foreach($satuans as $s) {
             box-shadow: var(--shadow);
             margin-bottom: 30px;
         }
-        
+
         .section-title {
             font-size: 18px;
             font-weight: 600;
@@ -288,22 +290,22 @@ foreach($satuans as $s) {
             align-items: center;
             gap: 10px;
         }
-        
+
         .section-title i {
             color: var(--warning);
         }
-        
+
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
             margin-bottom: 25px;
         }
-        
+
         .form-group {
             margin-bottom: 20px;
         }
-        
+
         .form-group label {
             display: block;
             margin-bottom: 8px;
@@ -311,7 +313,7 @@ foreach($satuans as $s) {
             color: var(--dark);
             font-size: 14px;
         }
-        
+
         .form-control {
             width: 100%;
             padding: 12px 15px;
@@ -321,18 +323,18 @@ foreach($satuans as $s) {
             transition: var(--transition);
             box-sizing: border-box;
         }
-        
+
         .form-control:focus {
             outline: none;
             border-color: var(--warning);
             box-shadow: 0 0 0 3px rgba(248, 150, 30, 0.1);
         }
-        
+
         .form-control[readonly] {
             background-color: var(--light);
             cursor: not-allowed;
         }
-        
+
         .input-group {
             display: flex;
             border-radius: 8px;
@@ -340,12 +342,12 @@ foreach($satuans as $s) {
             border: 1px solid var(--light-gray);
             transition: var(--transition);
         }
-        
+
         .input-group:focus-within {
             border-color: var(--warning);
             box-shadow: 0 0 0 3px rgba(248, 150, 30, 0.1);
         }
-        
+
         .input-group-prepend {
             background-color: var(--light);
             color: var(--gray);
@@ -355,13 +357,13 @@ foreach($satuans as $s) {
             min-width: 60px;
             text-align: center;
         }
-        
+
         .input-group .form-control {
             border: none;
             border-radius: 0;
             padding-left: 15px;
         }
-        
+
         .items-container {
             background: white;
             border-radius: var(--border-radius);
@@ -369,7 +371,7 @@ foreach($satuans as $s) {
             box-shadow: var(--shadow);
             margin-bottom: 30px;
         }
-        
+
         .items-header {
             background: linear-gradient(135deg, var(--warning), #f9c74f);
             color: white;
@@ -378,7 +380,7 @@ foreach($satuans as $s) {
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .items-header h3 {
             margin: 0;
             font-size: 18px;
@@ -387,12 +389,12 @@ foreach($satuans as $s) {
             align-items: center;
             gap: 10px;
         }
-        
+
         .items-table {
             width: 100%;
             border-collapse: collapse;
         }
-        
+
         .items-table th {
             background-color: #f8f9fa;
             padding: 18px 15px;
@@ -402,17 +404,17 @@ foreach($satuans as $s) {
             font-size: 14px;
             border-bottom: 2px solid var(--light-gray);
         }
-        
+
         .items-table td {
             padding: 15px;
             border-bottom: 1px solid var(--light-gray);
             vertical-align: top;
         }
-        
+
         .items-table tr:hover {
             background-color: rgba(248, 150, 30, 0.03);
         }
-        
+
         .items-table input, .items-table select, .items-table textarea {
             width: 100%;
             padding: 10px 12px;
@@ -422,52 +424,52 @@ foreach($satuans as $s) {
             box-sizing: border-box;
             font-family: inherit;
         }
-        
+
         .items-table input:focus, .items-table select:focus, .items-table textarea:focus {
             outline: none;
             border-color: var(--warning);
             box-shadow: 0 0 0 2px rgba(248, 150, 30, 0.1);
         }
-        
+
         .items-table textarea {
             resize: vertical;
             min-height: 60px;
             max-height: 200px;
             line-height: 1.4;
         }
-        
+
         .item-no {
             width: 50px;
             text-align: center;
             font-weight: 600;
             color: var(--gray);
         }
-        
+
         .item-desc {
             min-width: 300px;
         }
-        
+
         .item-qty {
             width: 100px;
         }
-        
+
         .item-qty input {
             text-align: center;
         }
-        
+
         .item-satuan {
             width: 120px;
         }
-        
+
         .item-price, .item-amount {
             width: 180px;
         }
-        
+
         .item-actions {
             width: 100px;
             text-align: center;
         }
-        
+
         .btn {
             padding: 12px 24px;
             border: none;
@@ -482,81 +484,81 @@ foreach($satuans as $s) {
             transition: var(--transition);
             text-decoration: none;
         }
-        
+
         .btn-warning {
             background: linear-gradient(135deg, var(--warning), #f9c74f);
             color: #212529;
         }
-        
+
         .btn-warning:hover {
             background: linear-gradient(135deg, #f9c74f, var(--warning));
             box-shadow: 0 5px 15px rgba(248, 150, 30, 0.3);
             transform: translateY(-2px);
             color: #212529;
         }
-        
+
         .btn-primary {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
         }
-        
+
         .btn-primary:hover {
             background: linear-gradient(135deg, var(--secondary), var(--primary));
             box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
             transform: translateY(-2px);
             color: white;
         }
-        
+
         .btn-secondary {
             background: linear-gradient(135deg, #6c757d, #495057);
             color: white;
         }
-        
+
         .btn-secondary:hover {
             background: linear-gradient(135deg, #495057, #6c757d);
             box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
             transform: translateY(-2px);
         }
-        
+
         .btn-danger {
             background: linear-gradient(135deg, #f72585, #b5179e);
             color: white;
         }
-        
+
         .btn-danger:hover {
             background: linear-gradient(135deg, #b5179e, #f72585);
             box-shadow: 0 5px 15px rgba(247, 37, 133, 0.3);
             transform: translateY(-2px);
         }
-        
+
         .btn-success {
             background: linear-gradient(135deg, #4cc9f0, #4895ef);
             color: white;
         }
-        
+
         .btn-success:hover {
             background: linear-gradient(135deg, #4895ef, #4cc9f0);
             box-shadow: 0 5px 15px rgba(76, 201, 240, 0.3);
             transform: translateY(-2px);
         }
-        
+
         .btn-info {
             background: linear-gradient(135deg, var(--info), #17a2b8);
             color: white;
         }
-        
+
         .btn-info:hover {
             background: linear-gradient(135deg, #17a2b8, var(--info));
             box-shadow: 0 5px 15px rgba(23, 162, 184, 0.3);
             transform: translateY(-2px);
             color: white;
         }
-        
+
         .btn-sm {
             padding: 8px 16px;
             font-size: 14px;
         }
-        
+
         .summary-container {
             background: white;
             border-radius: var(--border-radius);
@@ -564,20 +566,20 @@ foreach($satuans as $s) {
             box-shadow: var(--shadow);
             margin-bottom: 30px;
         }
-        
+
         .summary-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
         }
-        
+
         .summary-item {
             padding: 20px;
             border-radius: 8px;
             background: var(--light);
             border-left: 4px solid var(--warning);
         }
-        
+
         .summary-item h4 {
             margin: 0 0 10px;
             font-size: 14px;
@@ -586,26 +588,26 @@ foreach($satuans as $s) {
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        
+
         .summary-item .value {
             font-size: 28px;
             font-weight: 700;
             color: var(--dark);
         }
-        
+
         .summary-item.ppn {
             border-left-color: var(--success);
         }
-        
+
         .summary-item.total {
             border-left-color: #7209b7;
             background: linear-gradient(135deg, rgba(114, 9, 183, 0.1), rgba(248, 150, 30, 0.1));
         }
-        
+
         .summary-item.total .value {
             color: #7209b7;
         }
-        
+
         .actions-footer {
             display: flex;
             justify-content: space-between;
@@ -614,7 +616,7 @@ foreach($satuans as $s) {
             padding-top: 20px;
             border-top: 1px solid var(--light-gray);
         }
-        
+
         .info-note {
             background: rgba(76, 201, 240, 0.1);
             border-left: 4px solid #4cc9f0;
@@ -624,17 +626,17 @@ foreach($satuans as $s) {
             font-size: 14px;
             color: #4cc9f0;
         }
-        
+
         .info-note i {
             margin-right: 8px;
         }
-        
+
         /* Zero value styling */
         .zero-value {
             color: #6c757d !important;
             font-style: italic;
         }
-        
+
         /* Modal Notification */
         .modal-notification {
             position: fixed;
@@ -644,112 +646,112 @@ foreach($satuans as $s) {
             max-width: 400px;
             animation: slideInRight 0.5s ease-out;
         }
-        
+
         @keyframes slideInRight {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
-        
+
         .is-invalid {
             border-color: #f72585 !important;
             box-shadow: 0 0 0 3px rgba(247, 37, 133, 0.1) !important;
         }
-        
+
         .fade-in {
             animation: fadeIn 0.5s ease-in;
         }
-        
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
+
         /* Add fade-in animation to main sections */
         .quotation-card, .items-container, .summary-container {
             animation: fadeIn 0.6s ease-out;
         }
-        
+
         /* Responsive Styles */
         @media (max-width: 992px) {
             .quotation-container {
                 padding: 15px;
             }
-            
+
             .form-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .summary-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .item-desc {
                 min-width: 200px;
             }
         }
-        
+
         @media (max-width: 768px) {
             .quotation-header {
                 padding: 20px;
             }
-            
+
             .quotation-card, .summary-container {
                 padding: 20px;
             }
-            
+
             .items-header {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 15px;
             }
-            
+
             .items-table {
                 display: block;
                 overflow-x: auto;
             }
-            
+
             .items-table th, .items-table td {
                 min-width: 120px;
             }
-            
+
             .item-desc {
                 min-width: 250px;
             }
-            
+
             .actions-footer {
                 flex-direction: column;
                 gap: 15px;
                 align-items: stretch;
             }
-            
+
             .btn {
                 width: 100%;
                 justify-content: center;
             }
         }
-        
+
         @media (max-width: 576px) {
             .quotation-container {
                 padding: 10px;
             }
-            
+
             .quotation-header h1 {
                 font-size: 24px;
             }
-            
+
             .section-title {
                 font-size: 16px;
             }
-            
+
             .summary-item .value {
                 font-size: 24px;
             }
-            
+
             .items-table th, .items-table td {
                 padding: 12px 10px;
                 font-size: 13px;
             }
-            
+
             .items-table input, .items-table select, .items-table textarea {
                 padding: 8px 10px;
                 font-size: 13px;
@@ -764,33 +766,33 @@ foreach($satuans as $s) {
             <h1><i class="fas fa-edit"></i> Edit Quotation</h1>
             <p>Update details for Quotation #<?php echo htmlspecialchars($quote['quotation_no']); ?></p>
         </div>
-        
+
         <?php if($error_msg): ?>
             <div class="alert-danger">
                 <i class="fas fa-exclamation-circle"></i> <?php echo htmlspecialchars($error_msg); ?>
             </div>
         <?php endif; ?>
-        
+
         <?php if($success_msg): ?>
             <div class="alert-success">
                 <i class="fas fa-check-circle"></i> <?php echo htmlspecialchars($success_msg); ?>
             </div>
         <?php endif; ?>
-        
+
         <form method="post" id="quoteForm">
             <!-- Quotation Details -->
             <div class="quotation-card">
                 <div class="section-title">
                     <i class="fas fa-info-circle"></i> Quotation Information
                 </div>
-                
+
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="quotation_no"><i class="fas fa-hashtag"></i> Quotation Number</label>
                         <input type="text" name="quotation_no" id="quotation_no" class="form-control"
                             value="<?php echo htmlspecialchars($quote['quotation_no']); ?>" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="customer_id"><i class="fas fa-user"></i> Customer</label>
                         <select name="customer_id" id="customer_id" class="form-control" required>
@@ -803,28 +805,28 @@ foreach($satuans as $s) {
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="date_quot"><i class="fas fa-calendar-day"></i> Quotation Date</label>
                         <input type="date" name="date_quot" id="date_quot" class="form-control"
                             value="<?php echo htmlspecialchars($quotation_date); ?>" required>
                     </div>
                 </div>
-                
+
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="control_model"><i class="fas fa-cogs"></i> Control Model</label>
-                        <input type="text" name="control_model" id="control_model" class="form-control" 
+                        <input type="text" name="control_model" id="control_model" class="form-control"
                             value="<?php echo htmlspecialchars($quote['control_model']); ?>">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="mtb"><i class="fas fa-truck"></i> MTB</label>
-                        <input type="text" name="mtb" id="mtb" class="form-control" 
+                        <input type="text" name="mtb" id="mtb" class="form-control"
                             value="<?php echo htmlspecialchars($quote['mtb']); ?>">
                     </div>
                 </div>
-                
+
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="note_option"><i class="fas fa-sticky-note"></i> Note</label>
@@ -837,14 +839,14 @@ foreach($satuans as $s) {
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                        
-                        <textarea name="custom_note" id="custom_note" class="form-control mt-2" rows="3" 
-                            style="<?php echo ($note_option_selected === 'Custom' ? '' : 'display:none;'); ?>" 
+
+                        <textarea name="custom_note" id="custom_note" class="form-control mt-2" rows="3"
+                            style="<?php echo ($note_option_selected === 'Custom' ? '' : 'display:none;'); ?>"
                             placeholder="Enter custom note here"><?php echo htmlspecialchars($custom_note_value); ?></textarea>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Items Section -->
             <div class="items-container">
                 <div class="items-header">
@@ -853,7 +855,7 @@ foreach($satuans as $s) {
                         <i class="fas fa-plus"></i> Add Item
                     </button>
                 </div>
-                
+
                 <div class="table-responsive">
                     <table class="items-table" id="itemsTable">
                         <thead>
@@ -862,15 +864,16 @@ foreach($satuans as $s) {
                                 <th class="item-desc">Description</th>
                                 <th class="item-qty">Qty</th>
                                 <th class="item-satuan">Unit</th>
-                                <th class="item-price">Unit Price (Rp)</th>
+                                <th class="item-price">Unit Price</th>
+                                <th class="item-discount">Discount</th>
                                 <th class="item-amount">Amount (Rp)</th>
                                 <th class="item-actions">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php 
+                            <?php
                             mysqli_data_seek($items_result, 0);
-                            while($it = mysqli_fetch_assoc($items_result)): 
+                            while($it = mysqli_fetch_assoc($items_result)):
                             ?>
                             <tr>
                                 <td class="item-no">
@@ -879,16 +882,16 @@ foreach($satuans as $s) {
                                 </td>
                                 <td>
                                     <!-- UBAH: Gunakan textarea untuk description -->
-                                    <textarea 
-                                        name="description_quot[]" 
-                                        class="form-control description-textarea" 
-                                        rows="2" 
+                                    <textarea
+                                        name="description_quot[]"
+                                        class="form-control description-textarea"
+                                        rows="2"
                                         placeholder="Enter item description..."
                                         oninput="autoResize(this)"
                                     ><?php echo htmlspecialchars(stripslashes($it['description_quot'])); ?></textarea>
                                 </td>
                                 <td>
-                                    <input type="number" name="qty[]" class="form-control qty" 
+                                    <input type="number" name="qty[]" class="form-control qty"
                                            value="<?php echo $it['qty']; ?>" min="1">
                                 </td>
                                 <td>
@@ -903,19 +906,18 @@ foreach($satuans as $s) {
                                     </select>
                                 </td>
                                 <td>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text">Rp</span></div>
-                                        <input name="unit_price[]" class="form-control unit_price" 
-                                               value="<?php echo $it['unit_price'] == 0 ? '' : number_format($it['unit_price'], 0, '.', ''); ?>">
-                                    </div>
+                                    <input name="unit_price[]" class="form-control unit_price"
+                                           value="<?php echo $it['unit_price'] == 0 ? '' : number_format($it['unit_price'], 0, '.', ','); ?>">
                                     <input type="hidden" name="unit_price_raw[]" value="<?php echo $it['unit_price']; ?>">
                                 </td>
                                 <td>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text">Rp</span></div>
-                                        <input name="amount[]" class="form-control amount" 
-                                               value="<?php echo $it['amount'] == 0 ? '0' : number_format($it['amount'], 0, '.', ''); ?>" readonly>
-                                    </div>
+                                    <input name="item_discount[]" class="form-control item_discount"
+                                           value="<?php echo ($it['discount'] ?? 0) == 0 ? '' : number_format($it['discount'], 0, '.', ','); ?>">
+                                    <input type="hidden" name="item_discount_raw[]" value="<?php echo $it['discount'] ?? 0; ?>">
+                                </td>
+                                <td>
+                                    <input name="amount[]" class="form-control amount"
+                                           value="<?php echo $it['amount'] == 0 ? '0' : number_format($it['amount'], 0, '.', ','); ?>" readonly>
                                     <input type="hidden" name="amount_raw[]" value="<?php echo $it['amount']; ?>">
                                 </td>
                                 <td>
@@ -928,18 +930,18 @@ foreach($satuans as $s) {
                         </tbody>
                     </table>
                 </div>
-                
+
                 <div class="info-note">
                     <i class="fas fa-lightbulb"></i> Tip: Leave item description empty to remove a row
                 </div>
             </div>
-            
+
             <!-- Summary Section -->
             <div class="summary-container">
                 <div class="section-title">
                     <i class="fas fa-calculator"></i> Quotation Summary
                 </div>
-                
+
                 <div class="summary-grid">
                     <div class="summary-item">
                         <h4>Subtotal</h4>
@@ -948,17 +950,14 @@ foreach($satuans as $s) {
                         </div>
                         <input type="hidden" name="subtotal_raw" id="subtotal_raw" value="<?php echo $quote['subtotal']; ?>">
                     </div>
-                    
+
                     <div class="summary-item">
                         <h4>Discount</h4>
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Rp</span></div>
-                            <input name="discount_display" id="discount" class="form-control text-right" 
+                            <input name="discount_display" id="discount" class="form-control text-right"
                                    value="<?php echo $quote['discount'] == 0 ? '' : number_format($quote['discount'], 0, '.', ''); ?>">
-                        </div>
                         <input type="hidden" name="discount_raw" id="discount_raw" value="<?php echo $quote['discount']; ?>">
                     </div>
-                    
+
                     <div class="summary-item ppn">
                         <h4>PPN (11%)</h4>
                         <div class="value <?= ($quote['ppn'] == 0) ? 'zero-value' : ''; ?>" id="ppnDisplay">
@@ -966,7 +965,7 @@ foreach($satuans as $s) {
                         </div>
                         <input type="hidden" name="ppn" id="ppn" value="<?php echo $quote['ppn']; ?>">
                     </div>
-                    
+
                     <div class="summary-item total">
                         <h4>Total Amount</h4>
                         <div class="value <?= ($quote['total'] == 0) ? 'zero-value' : ''; ?>" id="totalDisplay">
@@ -976,7 +975,7 @@ foreach($satuans as $s) {
                     </div>
                 </div>
             </div>
-            
+
             <!-- Form Actions -->
             <div class="actions-footer">
                 <a href="quotations_list.php" class="btn btn-secondary">
@@ -1012,99 +1011,99 @@ foreach($satuans as $s) {
     <script>
     /* ========== UTILITY FUNCTIONS ========== */
     const PPN_RATE_PERCENT = 11;
-    
+
     // Fungsi untuk auto-resize textarea
     function autoResize(textarea) {
         textarea.style.height = 'auto';
         textarea.style.height = (textarea.scrollHeight) + 'px';
     }
-    
+
     // Inisialisasi auto-resize untuk semua textarea saat halaman dimuat
     function initializeTextareaAutoResize() {
         $('.description-textarea').each(function() {
             autoResize(this);
         });
     }
-    
+
     function formatRupiah(num, withCurrencySymbol = false) {
         if (isNaN(num) || num === null) num = 0;
-        const formatted = parseFloat(num).toLocaleString('id-ID', {
+        const formatted = parseFloat(num).toLocaleString('en-US', {
             minimumFractionDigits: 0,
             maximumFractionDigits: 0
         });
         return num === 0 ? '0' : (withCurrencySymbol ? 'Rp ' : '') + formatted;
     }
-    
+
     function parseNumber(str) {
         if (typeof str === 'number') return str;
         if (str === '' || str === null || str === undefined) return 0;
-        
+
         let cleaned = String(str).replace(/[^0-9.,-]/g, "");
-        
+
         if (cleaned === '') return 0;
-        
-        cleaned = cleaned.replace(',', '.');
-        
-        const parts = cleaned.split('.');
-        if (parts.length > 2) {
-            cleaned = parts[0] + parts.slice(1).join('');
-        }
-        
+
+        cleaned = cleaned.replace(/,/g, '');
+
         const result = parseFloat(cleaned);
         return isNaN(result) ? 0 : result;
     }
-    
+
     function cleanCurrencyInput(input) {
         let value = $(input).val();
         if (value === '' || value === '0') return '';
-        
+
         value = value.replace(/Rp\s?/g, '').replace(/\./g, '');
         return value;
     }
-    
+
     function restoreCurrencyFormat(input, value) {
         if (value === 0 || value === '0') {
             $(input).val('0');
         } else {
-            $(input).val(formatRupiah(value, true));
+            $(input).val(formatRupiah(value));
         }
     }
-    
+
     /* ========== MAIN CALCULATION ========== */
     function recalc() {
         let subtotal = 0;
-        
+
         $('#itemsTable tbody tr').each(function() {
             let $tr = $(this);
             let qty = parseNumber($tr.find('.qty').val());
             let up_raw = parseNumber($tr.find('input[name="unit_price_raw[]"]').val());
-            
-            let amount = qty * up_raw;
 
-            $tr.find('.amount').val(formatRupiah(amount, true));
+            let grossAmount = qty * up_raw;
+            let itemDiscount = parseNumber($tr.find('input[name="item_discount_raw[]"]').val());
+            itemDiscount = Math.min(Math.max(itemDiscount, 0), grossAmount);
+            $tr.find('input[name="item_discount_raw[]"]').val(itemDiscount);
+            let amount = grossAmount - itemDiscount;
+
+            $tr.find('.amount').val(formatRupiah(amount));
             $tr.find('input[name="amount_raw[]"]').val(amount);
-            
+
             subtotal += amount;
         });
 
         const subtotalFormatted = formatRupiah(subtotal, true);
         $('#subtotalDisplay').html(subtotalFormatted);
         $('#subtotal_raw').val(subtotal);
-        
+
         if (subtotal === 0) {
             $('#subtotalDisplay').addClass('zero-value');
         } else {
             $('#subtotalDisplay').removeClass('zero-value');
         }
 
-        let discount = parseNumber($('#discount_raw').val());
+        let discount = Math.min(Math.max(parseNumber($('#discount_raw').val()), 0), subtotal);
+        $('#discount_raw').val(discount);
         let base = subtotal - discount;
         let ppnValue = base * PPN_RATE_PERCENT / 100;
 
-        const ppnFormatted = formatRupiah(ppnValue, true);
+        const ppnFormatted = formatRupiah(ppnValue);
         $('#ppnDisplay').html(ppnFormatted);
         $('#ppn').val(ppnValue);
-        
+
         if (ppnValue === 0) {
             $('#ppnDisplay').addClass('zero-value');
         } else {
@@ -1112,65 +1111,81 @@ foreach($satuans as $s) {
         }
 
         let total = base + ppnValue;
-        const totalFormatted = formatRupiah(total, true);
+        const totalFormatted = formatRupiah(total);
         $('#totalDisplay').html(totalFormatted);
         $('#total_raw').val(total);
-        
+
         if (total === 0) {
             $('#totalDisplay').addClass('zero-value');
         } else {
             $('#totalDisplay').removeClass('zero-value');
         }
     }
-    
+
     /* ========== UNIT PRICE HANDLING ========== */
     $(document).on('focus', '.unit_price', function() {
         let value = cleanCurrencyInput(this);
         $(this).val(value);
     });
-    
+
     $(document).on('input', '.unit_price', function() {
         let num = parseNumber($(this).val());
         let hidden = $(this).closest("td").find('input[name="unit_price_raw[]"]');
         hidden.val(num);
         recalc();
     });
-    
+
     $(document).on('blur', '.unit_price', function() {
         let hidden = $(this).closest("td").find('input[name="unit_price_raw[]"]');
         let raw = parseNumber(hidden.val());
         restoreCurrencyFormat(this, raw);
     });
-    
+
+    $(document).on('focus', '.item_discount', function() {
+        const raw = parseNumber($(this).closest('td').find('input[name="item_discount_raw[]"]').val());
+        $(this).val(raw === 0 ? '' : raw);
+    });
+
+    $(document).on('input', '.item_discount', function() {
+        const raw = parseNumber($(this).val());
+        $(this).closest('td').find('input[name="item_discount_raw[]"]').val(raw);
+        recalc();
+    });
+
+    $(document).on('blur', '.item_discount', function() {
+        const raw = parseNumber($(this).closest('td').find('input[name="item_discount_raw[]"]').val());
+        $(this).val(formatRupiah(raw));
+    });
+
     /* ========== DISCOUNT HANDLING ========== */
     $(document).on('focus', '#discount', function() {
         let value = cleanCurrencyInput(this);
         $(this).val(value);
     });
-    
+
     $(document).on('input', '#discount', function() {
         let num = parseNumber($(this).val());
         $('#discount_raw').val(num);
         recalc();
     });
-    
+
     $(document).on('blur', '#discount', function() {
         let raw = parseNumber($('#discount_raw').val());
         restoreCurrencyFormat(this, raw);
     });
-    
+
     /* ========== QTY HANDLING ========== */
     $(document).on('input', '.qty', function() {
         let val = $(this).val();
         $(this).val(val.replace(/[^0-9.]/g, ''));
-        
+
         if (val === '' || parseFloat(val) < 1) {
             $(this).val('1');
         }
-        
+
         recalc();
     });
-    
+
     $(document).on('blur', '.qty', function() {
         let val = $(this).val();
         if (val === '' || parseFloat(val) < 1) {
@@ -1178,11 +1193,11 @@ foreach($satuans as $s) {
             recalc();
         }
     });
-    
+
     /* ========== ADD/REMOVE ROW ========== */
     $('#addRow').click(function() {
         let idx = $('#itemsTable tbody tr').length + 1;
-        
+
         let tr = `
             <tr>
                 <td class="item-no">
@@ -1191,10 +1206,10 @@ foreach($satuans as $s) {
                 </td>
                 <td>
                     <!-- UBAH: Gunakan textarea untuk description -->
-                    <textarea 
-                        name="description_quot[]" 
-                        class="form-control description-textarea" 
-                        rows="2" 
+                    <textarea
+                        name="description_quot[]"
+                        class="form-control description-textarea"
+                        rows="2"
                         placeholder="Enter item description..."
                         oninput="autoResize(this)"
                     ></textarea>
@@ -1209,17 +1224,15 @@ foreach($satuans as $s) {
                     </select>
                 </td>
                 <td>
-                    <div class="input-group">
-                        <div class="input-group-prepend"><span class="input-group-text">Rp</span></div>
-                        <input name="unit_price[]" class="form-control unit_price" placeholder="0">
-                    </div>
+                    <input name="unit_price[]" class="form-control unit_price" placeholder="0">
                     <input type="hidden" name="unit_price_raw[]" value="0">
                 </td>
                 <td>
-                    <div class="input-group">
-                        <div class="input-group-prepend"><span class="input-group-text">Rp</span></div>
-                        <input name="amount[]" class="form-control amount" value="0" readonly>
-                    </div>
+                    <input name="item_discount[]" class="form-control item_discount" placeholder="0">
+                    <input type="hidden" name="item_discount_raw[]" value="0">
+                </td>
+                <td>
+                    <input name="amount[]" class="form-control amount" value="0" readonly>
                     <input type="hidden" name="amount_raw[]" value="0">
                 </td>
                 <td>
@@ -1229,40 +1242,40 @@ foreach($satuans as $s) {
                 </td>
             </tr>
         `;
-        
+
         $('#itemsTable tbody').append(tr);
-        
+
         // Inisialisasi auto-resize untuk textarea baru
         autoResize($('#itemsTable tbody tr:last-child .description-textarea')[0]);
-        
+
         // Scroll to the new row
         $('html, body').animate({
             scrollTop: $('#itemsTable tbody tr:last').offset().top - 100
         }, 500);
     });
-    
+
     $(document).on('click', '.removeRow', function() {
         $(this).closest('tr').remove();
-        
+
         // Update row numbers
         $('#itemsTable tbody tr').each(function(i) {
             $(this).find('.item-no').text(i + 1);
             $(this).find('input[name="item_no[]"]').val(i + 1);
         });
-        
+
         recalc();
     });
-    
+
     /* ========== AUTO-RESIZE TEXTAREA ========== */
     $(document).on('input', '.description-textarea', function() {
         autoResize(this);
     });
-    
+
     /* ========== DROPDOWN NOTE LOGIC ========== */
     $('#note_option').on('change', function() {
         let selectedValue = $(this).val();
         let $customNote = $('#custom_note');
-        
+
         if (selectedValue === 'Custom') {
             $customNote.show().focus();
         } else {
@@ -1270,17 +1283,17 @@ foreach($satuans as $s) {
             $customNote.val('');
         }
     });
-    
+
     // Jalankan saat load untuk memastikan custom note muncul jika sebelumnya dipilih
     if ($('#note_option').val() === 'Custom') {
         $('#custom_note').show();
     }
-    
+
     /* ========== FORM VALIDATION ========== */
     $('#quoteForm').on('submit', function(e) {
         let isValid = true;
         let messages = [];
-        
+
         // Check quotation number
         if (!$('#quotation_no').val().trim()) {
             messages.push("Please enter a quotation number");
@@ -1289,7 +1302,7 @@ foreach($satuans as $s) {
         } else {
             $('#quotation_no').removeClass("is-invalid");
         }
-        
+
         // Check customer selection
         if (!$('#customer_id').val()) {
             messages.push("Please select a customer");
@@ -1298,7 +1311,7 @@ foreach($satuans as $s) {
         } else {
             $('#customer_id').removeClass("is-invalid");
         }
-        
+
         // Check if there's at least one item with description
         let hasItems = false;
         $('textarea[name="description_quot[]"]').each(function() {
@@ -1306,12 +1319,12 @@ foreach($satuans as $s) {
                 hasItems = true;
             }
         });
-        
+
         if (!hasItems) {
             messages.push("Please add at least one item to the quotation");
             isValid = false;
         }
-        
+
         if (!isValid) {
             e.preventDefault();
             showNotification("Validation Error", messages.join("<br>"), "danger");
@@ -1320,26 +1333,26 @@ foreach($satuans as $s) {
             showNotification("Saving", "Updating quotation...", "info");
         }
     });
-    
+
     /* ========== NOTIFICATION FUNCTIONS ========== */
     function showNotification(title, message, type = "success") {
         const modal = $("#notificationModal");
         const titleEl = $("#notificationTitle");
         const messageEl = $("#notificationMessage");
-        
+
         // Set content
         titleEl.text(title);
         messageEl.html(message);
-        
+
         // Set alert type
         const alertDiv = modal.find(".alert");
         alertDiv.removeClass("alert-success alert-danger alert-info alert-warning");
         alertDiv.addClass(`alert-${type}`);
-        
+
         // Update icon
         const icon = alertDiv.find("i");
         icon.removeClass("fa-check-circle fa-exclamation-circle fa-info-circle fa-exclamation-triangle");
-        
+
         if (type === "success") {
             icon.addClass("fa-check-circle");
         } else if (type === "danger") {
@@ -1349,10 +1362,10 @@ foreach($satuans as $s) {
         } else if (type === "warning") {
             icon.addClass("fa-exclamation-triangle");
         }
-        
+
         // Show notification
         modal.fadeIn(300);
-        
+
         // Auto-hide after 5 seconds for success/info messages
         if (type === "success" || type === "info") {
             setTimeout(() => {
@@ -1360,11 +1373,11 @@ foreach($satuans as $s) {
             }, 5000);
         }
     }
-    
+
     function hideNotification() {
         $("#notificationModal").fadeOut(300);
     }
-    
+
     /* ========== INITIALIZATION ========== */
     $(document).ready(function() {
         // Format all existing unit prices on load
@@ -1373,24 +1386,24 @@ foreach($satuans as $s) {
             let raw = parseNumber(hidden.val());
             restoreCurrencyFormat(this, raw);
         });
-        
+
         // Format discount on load
         let discountRaw = parseNumber($("#discount_raw").val());
         restoreCurrencyFormat("#discount", discountRaw);
-        
+
         // Set initial calculation
         recalc();
-        
+
         // Initialize textarea auto-resize
         initializeTextareaAutoResize();
-        
+
         // Check for flash messages
         <?php if($success_msg): ?>
             setTimeout(() => {
                 showNotification("Success", "<?= htmlspecialchars($success_msg); ?>", "success");
             }, 500);
         <?php endif; ?>
-        
+
         <?php if($error_msg): ?>
             setTimeout(() => {
                 showNotification("Error", "<?= htmlspecialchars($error_msg); ?>", "danger");

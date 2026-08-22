@@ -11,6 +11,10 @@ ALTER TABLE quotations
   ADD COLUMN IF NOT EXISTS date_quot DATE NULL AFTER quotation_no,
   ADD COLUMN IF NOT EXISTS po_number VARCHAR(50) NULL AFTER date_quot;
 
+-- Diskon per item quotation. Amount menyimpan nilai setelah diskon item.
+ALTER TABLE quotation_items
+  ADD COLUMN IF NOT EXISTS discount DECIMAL(15,2) NOT NULL DEFAULT 0.00 AFTER unit_price;
+
 -- 2. Pastikan kolom email & cc_email ada di tabel customers
 -- (Biasanya sudah ada, tapi jaga-jaga)
 

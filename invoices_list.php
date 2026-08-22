@@ -11,18 +11,17 @@ if (isset($_POST['delete_id'])) {
     exit;
 }
 
-// --- Konfigurasi Pagination ---
-$limit = 15;
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-if ($page < 1) $page = 1;
-$offset = ($page - 1) * $limit;
-
 // --- Filter dan Search ---
 $search = trim($_GET['search'] ?? '');
 $filter_customer = intval($_GET['customer'] ?? 0);
 $filter_date_from = $_GET['date_from'] ?? '';
 $filter_date_to = $_GET['date_to'] ?? '';
 $filter_status = $_GET['status'] ?? 'all';
+
+// DataTables mengelola pagination di browser setelah hasil filter dimuat.
+$limit = PHP_INT_MAX;
+$page = 1;
+$offset = 0;
 
 // =====================================================
 // Fungsi 3 status
@@ -98,11 +97,13 @@ if ($filter_customer > 0) {
 }
 
 if (!empty($filter_date_from)) {
-    $where_conditions[] = "DATE(i.created_at) >= '$filter_date_from'";
+    $filter_date_from = mysqli_real_escape_string($mysqli, $filter_date_from);
+    $where_conditions[] = "i.created_at >= '{$filter_date_from} 00:00:00'";
 }
 
 if (!empty($filter_date_to)) {
-    $where_conditions[] = "DATE(i.created_at) <= '$filter_date_to'";
+    $filter_date_to = mysqli_real_escape_string($mysqli, $filter_date_to);
+    $where_conditions[] = "i.created_at < DATE_ADD('{$filter_date_to}', INTERVAL 1 DAY)";
 }
 
 // Filter status
@@ -142,8 +143,7 @@ $query = "
     LEFT JOIN invoice_items ii ON ii.invoice_id = i.id
     $where_sql
     GROUP BY i.id
-    ORDER BY i.created_at DESC, i.id DESC
-    LIMIT $limit OFFSET $offset
+        ORDER BY i.created_at DESC, i.id DESC
 ";
 
 $res = mysqli_query($mysqli, $query);
@@ -158,7 +158,7 @@ $count_query = "
 $count_result = mysqli_query($mysqli, $count_query);
 $total_row    = mysqli_fetch_assoc($count_result);
 $total_data   = $total_row['total'] ?? 0;
-$total_pages  = ceil($total_data / $limit);
+$total_pages  = 1;
 
 // Ambil daftar customer
 $customers_query  = "SELECT id, name FROM customers ORDER BY name ASC";
@@ -187,7 +187,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'excel') {
     echo "<tr>
         <th>No</th><th>Invoice No</th><th>Faktur Pajak</th>
         <th>Tanggal Invoice</th><th>Customer</th><th>PO Number</th>
-        <th>Description</th><th>Unit</th><th>Subtotal</th>
+        <th>Description</th><th>Unit</th><th>Subtotal</th><th>Discount</th>
         <th>PPN</th><th>PPH</th><th>Total</th><th>Status</th>
     </tr>";
 
@@ -218,6 +218,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'excel') {
             <td>" . htmlspecialchars($first_description) . "</td>
             <td>" . htmlspecialchars($first_satuan) . "</td>
             <td>" . number_format($subtotal, 2) . "</td>
+            <td>" . number_format(floatval($row['discount'] ?? 0), 2) . "</td>
             <td>" . number_format($ppn, 2) . "</td>
             <td>" . number_format($pph, 2) . "</td>
             <td>" . number_format($total, 2) . "</td>
@@ -837,6 +838,42 @@ body {
 }
 </style>
 
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap4.min.css">
+<style>
+    .filter-card, .table-card { border-radius: 8px; }
+    .filter-card { padding: 0.85rem 1rem; }
+    .filter-card-header { padding-bottom: .7rem; margin-bottom: .8rem; }
+    .filter-card .row { margin-left: -.35rem; margin-right: -.35rem; }
+    .filter-card [class*="col-"] { padding-left: .35rem; padding-right: .35rem; }
+    .form-label-modern { margin-bottom: .25rem; font-size: .72rem; }
+    .form-control-modern { min-height: 34px; padding: .35rem .55rem; font-size: .8rem; }
+    .table-card-header { padding: .8rem 1rem; }
+    .table-modern thead th { padding: .65rem .55rem; font-size: .68rem; }
+    .table-modern tbody td { padding: .6rem .55rem; font-size: .78rem; }
+    .table-modern tbody tr { border-bottom: 1px solid var(--gray-100); }
+    .badge-modern { padding: .25rem .45rem; font-size: .66rem; }
+    .dataTables_wrapper { padding: .75rem 1rem 1rem; font-size: .78rem; }
+    .dataTables_wrapper .dataTables_length select,
+    .dataTables_wrapper .dataTables_filter input { height: 32px; padding: .25rem .5rem; font-size: .78rem; }
+    .dataTables_wrapper .dataTables_filter input { min-width: 210px; margin-left: .35rem; }
+    .dataTables_wrapper .dataTables_info { padding-top: .55rem; color: var(--gray-500); }
+    .dataTables_wrapper .pagination { margin: .35rem 0 0; }
+    .dataTables_wrapper .page-link { padding: .3rem .55rem; font-size: .75rem; }
+    .table-modern td.details-control { cursor: pointer; }
+    @media (max-width: 767.98px) {
+        .filter-card-header { align-items: flex-start; }
+        .status-legend { gap: .3rem; }
+        .dataTables_wrapper { padding-left: .65rem; padding-right: .65rem; }
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter { text-align: left; width: 100%; margin-bottom: .5rem; }
+        .dataTables_wrapper .dataTables_filter input { width: calc(100% - 45px); min-width: 0; }
+        .dataTables_wrapper .dataTables_info,
+        .dataTables_wrapper .dataTables_paginate { text-align: left; float: none; }
+        .dataTables_wrapper .dataTables_paginate { margin-top: .45rem; }
+    }
+</style>
+
 <div class="container-fluid py-4">
 
     <!-- Page Header -->
@@ -1014,14 +1051,13 @@ body {
             <div>
                 <h6><i class="fas fa-table"></i> Data Invoice</h6>
                 <small class="text-muted">
-                    Menampilkan <?php echo min($limit, $total_data); ?> dari <?php echo number_format($total_data); ?>
-                    invoice
+                    <?php echo number_format($total_data); ?> invoice terfilter
                 </small>
             </div>
         </div>
 
         <div class="table-responsive">
-            <table class="table-modern">
+            <table id="invoiceTable" class="table-modern table table-hover nowrap" style="width:100%">
                 <thead>
                     <tr>
                         <th width="3%">No</th>
@@ -1034,6 +1070,7 @@ body {
                         <th width="13%">Description</th>
                         <th width="5%">Unit</th>
                         <th width="7%">Subtotal</th>
+                        <th width="6%">Discount</th>
                         <th width="5%">PPN</th>
                         <th width="5%">PPH</th>
                         <th width="7%">Total</th>
@@ -1044,7 +1081,7 @@ body {
                 <tbody>
                     <?php if (mysqli_num_rows($res) > 0): ?>
                     <?php
-                        $no = $offset + 1;
+                        $no = 1;
                         while ($row = mysqli_fetch_assoc($res)):
                             $item_count  = $row['item_count'] ?? 0;
                             $total_items = $item_count + 1;
@@ -1073,7 +1110,9 @@ body {
                             </strong>
                         </td>
 
-                        <td><span class="text-muted"><?php echo $created_date; ?></span></td>
+                        <td data-order="<?php echo !empty($row['created_at']) ? strtotime($row['created_at']) : 0; ?>">
+                            <span class="text-muted"><?php echo $created_date; ?></span>
+                        </td>
 
                         <td>
                             <span class="badge-modern <?php echo $status_info['badge']; ?>">
@@ -1131,17 +1170,20 @@ body {
                             <?php endif; ?>
                         </td>
 
-                        <td class="text-right">
+                        <td class="text-right" data-order="<?php echo $subtotal; ?>">
                             <span
                                 class="number-display number-positive"><?php echo number_format($subtotal, 0, ',', '.'); ?></span>
                         </td>
-                        <td class="text-right">
+                        <td class="text-right" data-order="<?php echo floatval($row['discount'] ?? 0); ?>">
+                            <span class="number-display"><?php echo number_format(floatval($row['discount'] ?? 0), 0, ',', '.'); ?></span>
+                        </td>
+                        <td class="text-right" data-order="<?php echo $ppn; ?>">
                             <span class="number-display"><?php echo number_format($ppn, 0, ',', '.'); ?></span>
                         </td>
-                        <td class="text-right">
+                        <td class="text-right" data-order="<?php echo $pph; ?>">
                             <span class="number-display"><?php echo number_format($pph, 0, ',', '.'); ?></span>
                         </td>
-                        <td class="text-right">
+                        <td class="text-right" data-order="<?php echo $total; ?>">
                             <strong class="number-display" style="color:var(--primary-color);">
                                 <?php echo number_format($total, 0, ',', '.'); ?>
                             </strong>
@@ -1180,7 +1222,7 @@ body {
 
                     <?php else: ?>
                     <tr>
-                        <td colspan="15">
+                        <td colspan="16">
                             <div class="empty-state">
                                 <i class="fas fa-file-invoice"></i>
                                 <?php if (!empty($search) || $filter_customer > 0 || !empty($filter_date_from) || !empty($filter_date_to) || $filter_status !== 'all'): ?>
@@ -1204,72 +1246,6 @@ body {
             </table>
         </div>
 
-        <!-- Pagination -->
-        <?php if ($total_pages > 1): ?>
-        <div class="pagination-modern">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <div class="text-muted">
-                    <small>
-                        Menampilkan <?php echo ($total_data > 0) ? ($offset + 1) : 0; ?> -
-                        <?php echo min($offset + $limit, $total_data); ?> dari
-                        <?php echo number_format($total_data); ?> data
-                    </small>
-                </div>
-                <nav>
-                    <ul class="pagination mb-0">
-                        <li class="page-item <?php echo ($page <= 1) ? 'disabled' : ''; ?>">
-                            <a class="page-link" href="#" onclick="goToPage(1);return false;">
-                                <i class="fas fa-angle-double-left"></i>
-                            </a>
-                        </li>
-                        <li class="page-item <?php echo ($page <= 1) ? 'disabled' : ''; ?>">
-                            <a class="page-link" href="#" onclick="goToPage(<?php echo $page-1; ?>);return false;">
-                                <i class="fas fa-chevron-left"></i>
-                            </a>
-                        </li>
-
-                        <?php
-                        $start_page = max(1, $page - 2);
-                        $end_page   = min($total_pages, $page + 2);
-                        if ($start_page == 1) $end_page = min(5, $total_pages);
-                        if ($end_page == $total_pages) $start_page = max(1, $total_pages - 4);
-
-                        if ($start_page > 1) {
-                            echo '<li class="page-item"><a class="page-link" href="#" onclick="goToPage(1);return false;">1</a></li>';
-                            if ($start_page > 2) echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
-                        }
-                        for ($i = $start_page; $i <= $end_page; $i++):
-                        ?>
-                        <li class="page-item <?php echo ($i==$page)?'active':''; ?>">
-                            <a class="page-link" href="#" onclick="goToPage(<?php echo $i; ?>);return false;">
-                                <?php echo $i; ?>
-                            </a>
-                        </li>
-                        <?php endfor;
-                        if ($end_page < $total_pages) {
-                            if ($end_page < $total_pages - 1) echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
-                            echo '<li class="page-item"><a class="page-link" href="#" onclick="goToPage('.$total_pages.');return false;">'.$total_pages.'</a></li>';
-                        }
-                        ?>
-
-                        <li class="page-item <?php echo ($page>=$total_pages)?'disabled':''; ?>">
-                            <a class="page-link" href="#" onclick="goToPage(<?php echo $page+1; ?>);return false;">
-                                <i class="fas fa-chevron-right"></i>
-                            </a>
-                        </li>
-                        <li class="page-item <?php echo ($page>=$total_pages)?'disabled':''; ?>">
-                            <a class="page-link" href="#" onclick="goToPage(<?php echo $total_pages; ?>);return false;">
-                                <i class="fas fa-angle-double-right"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-                <div class="text-muted">
-                    <small>Halaman <?php echo $page; ?> dari <?php echo $total_pages; ?></small>
-                </div>
-            </div>
-        </div>
-        <?php endif; ?>
     </div>
 </div>
 
@@ -1328,6 +1304,35 @@ body {
 <script>
 $(document).ready(function() {
 
+    $('#invoiceTable').DataTable({
+        responsive: true,
+        pageLength: 15,
+        lengthMenu: [[15, 25, 50, 100], [15, 25, 50, 100]],
+        order: [[2, 'desc'], [0, 'asc']],
+        autoWidth: false,
+        language: {
+            search: '',
+            searchPlaceholder: 'Cari invoice, customer, PO...',
+            lengthMenu: 'Tampilkan _MENU_',
+            info: 'Menampilkan _START_-_END_ dari _TOTAL_ invoice',
+            infoEmpty: 'Tidak ada invoice',
+            zeroRecords: 'Tidak ada invoice yang cocok',
+            paginate: {
+                first: '<i class="fas fa-angle-double-left"></i>',
+                last: '<i class="fas fa-angle-double-right"></i>',
+                next: '<i class="fas fa-angle-right"></i>',
+                previous: '<i class="fas fa-angle-left"></i>'
+            }
+        },
+        columnDefs: [
+            { orderable: false, searchable: false, targets: [0, 15] },
+            { type: 'num', targets: [9, 10, 11, 12, 13] }
+        ],
+        drawCallback: function() {
+            $('[title]').tooltip({ container: 'body' });
+        }
+    });
+
     // View items button
     $('.view-items-btn').on('click', function() {
         var invoiceId = $(this).data('invoice-id');
@@ -1370,7 +1375,7 @@ $(document).ready(function() {
                                 <thead style="background:var(--gray-50);">
                                     <tr>
                                         <th>No</th><th>Description</th><th>Qty</th>
-                                        <th>Unit</th><th>Unit Price</th><th>Amount</th>
+                                        <th>Unit</th><th>Unit Price</th><th>Discount</th><th>Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>`;
@@ -1382,17 +1387,18 @@ $(document).ready(function() {
                             <td class="text-center">${item.qty_formatted}</td>
                             <td class="text-center">${item.satuan}</td>
                             <td class="text-right">${item.unit_price_formatted}</td>
+                            <td class="text-right">${item.discount_formatted}</td>
                             <td class="text-right"><strong>${item.amount_formatted}</strong></td>
                         </tr>`;
                     });
 
                     html += `</tbody>
                         <tfoot style="background:var(--gray-50);">
-                            <tr><td colspan="5" class="text-right"><strong>Subtotal:</strong></td><td class="text-right"><strong>${response.invoice.subtotal_formatted}</strong></td></tr>
-                            <tr><td colspan="5" class="text-right"><strong>PPN:</strong></td><td class="text-right"><strong>${response.invoice.ppn_formatted}</strong></td></tr>
-                            <tr><td colspan="5" class="text-right"><strong>PPH:</strong></td><td class="text-right"><strong>${response.invoice.pph_formatted}</strong></td></tr>
+                            <tr><td colspan="6" class="text-right"><strong>Subtotal:</strong></td><td class="text-right"><strong>${response.invoice.subtotal_formatted}</strong></td></tr>
+                            <tr><td colspan="6" class="text-right"><strong>PPN:</strong></td><td class="text-right"><strong>${response.invoice.ppn_formatted}</strong></td></tr>
+                            <tr><td colspan="6" class="text-right"><strong>PPH:</strong></td><td class="text-right"><strong>${response.invoice.pph_formatted}</strong></td></tr>
                             <tr style="background:var(--primary-color);color:white;">
-                                <td colspan="5" class="text-right"><strong>Total:</strong></td>
+                                <td colspan="6" class="text-right"><strong>Total:</strong></td>
                                 <td class="text-right"><strong>${response.invoice.total_formatted}</strong></td>
                             </tr>
                         </tfoot>

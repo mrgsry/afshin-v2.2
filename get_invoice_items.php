@@ -44,6 +44,7 @@ $items_query = mysqli_query($mysqli, "
         qty, 
         satuan,
         unit_price,
+        discount,
         amount
     FROM invoice_items
     WHERE invoice_id = $invoice_id
@@ -58,6 +59,8 @@ while($row = mysqli_fetch_assoc($items_query)){
         'qty' => number_format(floatval($row['qty'] ?? 0), 2),
         'satuan' => htmlspecialchars($row['satuan'] ?? ''),
         'unit_price_formatted' => 'Rp ' . number_format(floatval($row['unit_price'] ?? 0), 2, ',', '.'),
+        'discount_formatted' => 'Rp ' . number_format(floatval($row['discount'] ?? 0), 2, ',', '.'),
+        'discount' => floatval($row['discount'] ?? 0),
         'amount_formatted' => 'Rp ' . number_format(floatval($row['amount'] ?? 0), 2, ',', '.'),
         'amount' => 'Rp ' . number_format(floatval($row['amount'] ?? 0), 2, ',', '.')
     ];

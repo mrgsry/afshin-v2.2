@@ -17,6 +17,7 @@ $items = mysqli_query($mysqli, "
         qty,
         satuan_quot,
         unit_price,
+        discount,
         amount
     FROM quotation_items
     WHERE quotation_id=$id
@@ -59,7 +60,7 @@ include 'header.php';
     <p>Customer: <?php echo htmlspecialchars($quote['customer_name'].' ('.$quote['customer_no'].')'); ?></p>
     <table class="table table-bordered">
     <thead>
-        <tr><th>No</th><th>Description</th><th>Qty</th><th>Satuan</th><th>Unit Price</th><th>Amount</th></tr>
+        <tr><th>No</th><th>Description</th><th>Qty</th><th>Satuan</th><th>Unit Price</th><th>Discount</th><th>Amount</th></tr>
     </thead>
     <tbody>
     <?php while($it = mysqli_fetch_assoc($items)): ?>
@@ -69,6 +70,7 @@ include 'header.php';
       <td><?php echo $it['qty']; ?></td>
       <td><?php echo htmlspecialchars($it['satuan_quot']); ?></td>
       <td><?php echo number_format($it['unit_price'],0); ?></td>
+      <td><?php echo number_format($it['discount'],0); ?></td>
       <td><?php echo number_format($it['amount'],0); ?></td>
     </tr>
     <?php endwhile; ?>

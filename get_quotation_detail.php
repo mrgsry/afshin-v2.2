@@ -30,6 +30,7 @@ while($row=mysqli_fetch_assoc($items_res)){
         'qty'=>number_format($row['qty'],2),
         'unit'=>$row['satuan'] ?? '-',
         'unit_price'=>number_format($row['unit_price'],0,',','.'),
+        'discount'=>number_format($row['discount'],0,',','.'),
         'amount'=>number_format($row['amount'],0,',','.')
     ];
 }
