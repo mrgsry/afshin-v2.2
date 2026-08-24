@@ -31,7 +31,10 @@ $items = [];
 if (isset($_GET['id'])) {
     $document_id = intval($_GET['id']);
     
-    $query = "SELECT * FROM berita_acara WHERE id = ?";
+    $query = "SELECT b.*, COALESCE(NULLIF(i.po_number, ''), b.po_number) AS source_po_number
+              FROM berita_acara b
+              LEFT JOIN invoices i ON i.id = b.invoice_id
+              WHERE b.id = ?";
     $stmt = mysqli_prepare($mysqli, $query);
     mysqli_stmt_bind_param($stmt, "i", $document_id);
     mysqli_stmt_execute($stmt);
@@ -45,7 +48,7 @@ if (isset($_GET['id'])) {
         $customer_alamat = $row['customer_alamat'];
         $lokasi = $row['lokasi'];
         $pekerjaan = $row['pekerjaan'];
-        $po_number = $row['po_number'];
+        $po_number = $row['source_po_number'] ?? $row['po_number'];
         $pelaksana = $row['pelaksana'];
         $prod_code = $row['item_code'];
         $ship_by = $row['ship_by'] ?? '';

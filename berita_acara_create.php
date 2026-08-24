@@ -25,6 +25,12 @@ $po_numbers_query = mysqli_query($mysqli, "
     LEFT JOIN customers c ON i.customer_id = c.id
     WHERE i.po_number IS NOT NULL 
       AND i.po_number != ''
+      AND NOT EXISTS (
+          SELECT 1
+          FROM berita_acara ba
+          WHERE ba.invoice_id = i.id
+             OR BINARY ba.po_number = BINARY i.po_number
+      )
     ORDER BY i.created_at DESC
 ");
 
@@ -121,13 +127,39 @@ if($_SERVER['REQUEST_METHOD']=='POST' && $_POST['action']=='save'){
     $customer_alamat= $_POST['customer_alamat'];
     $lokasi         = $_POST['lokasi'];
     $pekerjaan      = $_POST['pekerjaan'];
-    // Keep the complete PO number; never coerce it to a numeric value.
-    $po_number      = trim($_POST['po_number'] ?? '');
     $invoice_id     = (int)$_POST['invoice_id'];
-    $pelaksana      = $_POST['pelaksana'];   // ← HAPUS baris duplikat item_code
+    // Keep the complete PO number from the selected invoice. Do not derive it
+    // from a numeric-looking value submitted by the browser.
+    $po_number      = trim($_POST['po_number'] ?? '');
+    $pelaksana      = $_POST['pelaksana'];
     $note           = $_POST['note'] ?? '';
 
     $items = json_decode($_POST['items_json'], true);
+
+    if ($invoice_id > 0) {
+        $po_stmt = $mysqli->prepare("SELECT po_number FROM invoices WHERE id = ? LIMIT 1");
+        if (!$po_stmt) {
+            flash_set('error', 'Gagal membaca nomor PO yang dipilih.');
+            header("Location: berita_acara_create.php");
+            exit;
+        }
+
+        $po_stmt->bind_param('i', $invoice_id);
+        $po_stmt->execute();
+        $po_result = $po_stmt->get_result();
+        $po_row = $po_result ? $po_result->fetch_assoc() : null;
+        $po_stmt->close();
+
+        if (!$po_row || trim((string)($po_row['po_number'] ?? '')) === '') {
+            flash_set('error', 'Nomor PO yang dipilih tidak ditemukan. Silakan pilih ulang.');
+            header("Location: berita_acara_create.php");
+            exit;
+        }
+
+        // The invoice is the source of truth, preserving values such as
+        // 9030-AP-26-000524 in full.
+        $po_number = trim((string)$po_row['po_number']);
+    }
 
     if(empty($nomor_ba)||empty($tanggal_ba)||empty($customer_name)||empty($pekerjaan)){
         flash_set('error','Harap lengkapi data terlebih dahulu!');
@@ -502,7 +534,8 @@ body{
                 <select id="po_select" class="form-control-modern">
                     <option value="">-- Pilih PO --</option>
                     <?php foreach($po_list as $po=>$id): ?>
-                        <option value="<?= $po ?>"><?= $po ?></option>
+                        <?php $po_display = htmlspecialchars((string)$po, ENT_QUOTES, 'UTF-8'); ?>
+                        <option value="<?= $po_display ?>"><?= $po_display ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>

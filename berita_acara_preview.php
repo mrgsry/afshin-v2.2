@@ -16,9 +16,11 @@ $id = (int)$_GET['id'];
 
 // Query data berita acara
 $query = "
-    SELECT b.*, c.name as customer_name_original, c.customer_no 
+    SELECT b.*, c.name as customer_name_original, c.customer_no,
+           COALESCE(NULLIF(i.po_number, ''), b.po_number) AS display_po_number
     FROM berita_acara b
     LEFT JOIN customers c ON b.customer_id = c.id
+    LEFT JOIN invoices i ON i.id = b.invoice_id
     WHERE b.id = {$id}
 ";
 
@@ -103,7 +105,7 @@ include 'header.php';
                             <table class="table table-sm table-borderless">
                                 <tr>
                                     <th width="40%">PO Number</th>
-                                    <td>: <?php echo !empty($ba['po_number']) ? htmlspecialchars($ba['po_number']) : '-'; ?></td>
+                                    <td>: <?php echo !empty($ba['display_po_number']) ? htmlspecialchars($ba['display_po_number']) : '-'; ?></td>
                                 </tr>
                                 <tr>
                                     <th>Product Code</th>

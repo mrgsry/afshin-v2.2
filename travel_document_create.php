@@ -59,7 +59,12 @@ $po_numbers_query = mysqli_query($mysqli, "
         i.customer_id,  
         i.created_at AS date_inv 
     FROM invoices i
-    WHERE i.po_number IS NOT NULL AND i.po_number != '' 
+    WHERE i.po_number IS NOT NULL AND i.po_number != ''
+      AND NOT EXISTS (
+          SELECT 1
+          FROM travel_documents td
+          WHERE BINARY td.po_number = BINARY i.po_number
+      )
     GROUP BY i.po_number
     ORDER BY i.created_at DESC
 ");

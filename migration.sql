@@ -115,3 +115,16 @@ CREATE TABLE IF NOT EXISTS payslip_invoices (
 -- Keep long PO references intact in invoices and Berita Acara.
 ALTER TABLE invoices MODIFY COLUMN po_number VARCHAR(255) NULL;
 ALTER TABLE berita_acara MODIFY COLUMN po_number VARCHAR(255) NULL;
+
+-- Catatan tambahan pada Berita Acara.
+ALTER TABLE berita_acara
+  ADD COLUMN IF NOT EXISTS note TEXT NULL AFTER pelaksana;
+
+-- Pulihkan nomor PO BA lama dari invoice sumber jika sebelumnya tersimpan
+-- hanya sebagai prefix (contoh: 9030).
+UPDATE berita_acara b
+INNER JOIN invoices i ON i.id = b.invoice_id
+SET b.po_number = i.po_number
+WHERE i.po_number IS NOT NULL
+  AND i.po_number <> ''
+  AND (b.po_number IS NULL OR b.po_number = '' OR BINARY b.po_number <> BINARY i.po_number);

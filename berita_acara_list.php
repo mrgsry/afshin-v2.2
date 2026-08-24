@@ -36,7 +36,8 @@ if (!empty($search)) {
                            b.customer_name LIKE '%{$search}%' OR 
                            b.pekerjaan LIKE '%{$search}%' OR
                            b.description LIKE '%{$search}%' OR
-                           b.po_number LIKE '%{$search}%')";
+                           b.po_number LIKE '%{$search}%' OR
+                           i.po_number LIKE '%{$search}%')";
 }
 
 // Filter customer
@@ -62,8 +63,10 @@ if (!empty($where_conditions)) {
 $query = "
     SELECT 
         b.*,
+        COALESCE(NULLIF(i.po_number, ''), b.po_number) AS display_po_number,
         (SELECT COUNT(*) FROM berita_acara_items bi WHERE bi.berita_acara_id = b.id) as item_count
     FROM berita_acara b
+    LEFT JOIN invoices i ON i.id = b.invoice_id
     {$where_sql}
     ORDER BY b.tanggal_ba DESC, b.id DESC
     LIMIT {$limit} OFFSET {$offset}
@@ -72,7 +75,7 @@ $query = "
 $result = mysqli_query($mysqli, $query);
 
 // Query untuk total data (untuk pagination)
-$count_query = "SELECT COUNT(*) as total FROM berita_acara b {$where_sql}";
+$count_query = "SELECT COUNT(*) as total FROM berita_acara b LEFT JOIN invoices i ON i.id = b.invoice_id {$where_sql}";
 $count_result = mysqli_query($mysqli, $count_query);
 $total_row = mysqli_fetch_assoc($count_result);
 $total_data = $total_row['total'];
@@ -221,8 +224,8 @@ include 'header.php';
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <?php if(!empty($row['po_number'])): ?>
-                                        <span class="badge badge-light"><?php echo htmlspecialchars($row['po_number']); ?></span>
+                                    <?php if(!empty($row['display_po_number'])): ?>
+                                        <span class="badge badge-light"><?php echo htmlspecialchars($row['display_po_number']); ?></span>
                                     <?php else: ?>
                                         <span class="text-muted">-</span>
                                     <?php endif; ?>
