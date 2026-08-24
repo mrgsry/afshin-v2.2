@@ -11,7 +11,6 @@ function afshin_encryption_key()
         $secret = $_SERVER['AFSHIN_ENCRYPTION_KEY'] ?? '';
     }
 
-    // Keeps local development functional; always configure a private key in production.
     if (!is_string($secret) || trim($secret) === '') {
         $secret = 'afshin-v3-local-development-key-change-in-production';
     }

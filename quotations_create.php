@@ -1,6 +1,7 @@
 <?php
 // Pastikan file functions.php ada dan memiliki definisi fungsi require_login() dan bulan_romawi()
 require_once 'functions.php';
+require_once 'ai_config.php';
 require_module_access('quotation', 'full');
 
 // Ambil flash messages untuk notifikasi
@@ -12,6 +13,8 @@ $customers = mysqli_query($mysqli, "SELECT * FROM customers ORDER BY name ASC");
 
 // Definisikan opsi satuan di PHP
 $satuans = ['Unit', 'Pcs', 'Pack', 'Set', 'Koli', 'Box', 'Buah', 'Pallet'];
+$ai_config = gemini_config($mysqli);
+$ai_openai_config = ai_config($mysqli, 'openai_compatible');
 
 function generate_quotation_no($mysqli, $date_quot) {
     if (empty($date_quot)) {
@@ -797,6 +800,42 @@ $preview_quotation_no = generate_quotation_no($mysqli, $default_date);
         <?php endif; ?>
         
         <form method="post" id="quoteForm">
+            <div class="quotation-card border-left border-info">
+                <div class="section-title"><i class="fas fa-robot"></i> AI Auto Fill</div>
+                <p class="text-muted small">Masukkan kebutuhan pelanggan. AI akan membuat draft item, note, control model, dan MTB. Harga diatur ke 0 untuk Anda tinjau.</p>
+                <div class="form-group mb-2"><label for="aiBrief">Brief quotation</label><textarea id="aiBrief" class="form-control" rows="4" maxlength="6000" placeholder="Contoh: Repair spindle motor Fanuc, termasuk inspeksi, penggantian bearing, testing, dan laporan hasil pekerjaan."></textarea></div>
+                <button type="button" class="btn btn-info" id="generateAiBtn"><i class="fas fa-wand-magic-sparkles mr-1"></i>Generate Draft dengan Gemini</button>
+                <button type="button" class="btn btn-outline-secondary ml-1" data-toggle="modal" data-target="#aiSettingsModal" title="Pengaturan AI"><i class="fas fa-sliders-h mr-1"></i>Pengaturan</button>
+                <span id="aiStatus" class="ml-2 small text-muted"></span>
+            </div>
+            <div class="modal fade" id="aiSettingsModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document"><div class="modal-content">
+                    <div class="modal-header bg-light"><h5 class="modal-title"><i class="fas fa-robot mr-2"></i>Pengaturan Provider AI</h5><button type="button" class="close" data-dismiss="modal"><span>&times;</span></button></div>
+                    <div class="modal-body">
+                        <div class="p-3" style="background:#d9eee5;border:1px solid #a8d5c0;border-radius:6px">
+                            <div class="form-group"><label for="aiProvider">Provider AI</label><select id="aiProvider" class="form-control"><option value="gemini">Gemini API</option><option value="openai_compatible">OpenAI Compatible (9Router)</option></select></div>
+                            <div class="form-group"><label for="aiBaseUrl">Base URL</label><input type="url" id="aiBaseUrl" class="form-control" value="<?= htmlspecialchars($ai_config['base_url']) ?>"></div>
+                            <div class="form-group"><label for="aiApiKey">API Key</label><input type="password" id="aiApiKey" class="form-control" autocomplete="new-password"></div>
+                            <div class="input-group"><select id="aiModel" class="form-control"><option value="<?= htmlspecialchars($ai_config['model']) ?>"><?= htmlspecialchars($ai_config['model']) ?></option></select><div class="input-group-append"><button type="button" id="loadAiModels" class="btn btn-outline-success"><i class="fas fa-sync mr-1"></i>Load Models</button></div></div>
+                            <script type="application/json" id="aiProviderConfigs"><?= json_encode(['gemini' => ['base_url' => $ai_config['base_url'], 'model' => $ai_config['model'], 'configured' => $ai_config['configured']], 'openai_compatible' => ['base_url' => $ai_openai_config['base_url'], 'model' => $ai_openai_config['model'], 'configured' => $ai_openai_config['configured']]], JSON_UNESCAPED_SLASHES) ?></script>
+                            <small class="form-text text-muted">Model akan dimuat dari provider yang dipilih.</small>
+                        </div>
+                        <div id="aiSettingsStatus" class="small mt-2"></div>
+                    </div>
+                    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button><button type="button" class="btn btn-primary" id="saveAiSettings"><i class="fas fa-save mr-1"></i>Simpan</button></div>
+                </div></div>
+            </div>
+            <div class="modal fade" id="aiApplyModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document"><div class="modal-content">
+                    <div class="modal-header bg-info text-white"><h5 class="modal-title"><i class="fas fa-wand-magic-sparkles mr-2"></i>Terapkan Draft AI</h5><button type="button" class="close text-white" data-dismiss="modal"><span>&times;</span></button></div>
+                    <div class="modal-body">
+                        <p class="mb-2">Draft AI siap diterapkan ke form quotation.</p>
+                        <div class="alert alert-light border mb-0"><i class="fas fa-circle-info text-info mr-2"></i><span id="aiApplySummary"></span></div>
+                        <small class="text-muted d-block mt-2">Data item yang sedang diisi akan diganti. Harga tetap dapat Anda tinjau dan ubah.</small>
+                    </div>
+                    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-xmark mr-1"></i>Batal</button><button type="button" class="btn btn-info" id="applyAiDraft"><i class="fas fa-check mr-1"></i>Terapkan Draft</button></div>
+                </div></div>
+            </div>
             <!-- Quotation Details -->
             <div class="quotation-card">
                 <div class="section-title">
@@ -981,19 +1020,18 @@ $preview_quotation_no = generate_quotation_no($mysqli, $default_date);
 
     <!-- Modal Notification -->
     <div id="notificationModal" class="modal-notification" style="display: none;">
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <div class="d-flex align-items-center">
-                <i class="fas fa-check-circle me-3" style="font-size: 24px;"></i>
-                <div>
-                    <h5 class="mb-0" id="notificationTitle">Success!</h5>
-                    <p class="mb-0" id="notificationMessage">Your quotation has been created successfully.</p>
-                </div>
+        <div class="alert alert-primary d-flex align-items-center alert-dismissible fade show" role="alert">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            </svg>
+            <div>
+                <h5 class="mb-0" id="notificationTitle">Success!</h5>
+                <p class="mb-0" id="notificationMessage">Your quotation has been created successfully.</p>
             </div>
             <button type="button" class="btn-close" onclick="hideNotification()"></button>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
     /* ========== UTILITY FUNCTIONS ========== */
     const PPN_RATE_PERCENT = 11;
@@ -1215,6 +1253,92 @@ $preview_quotation_no = generate_quotation_no($mysqli, $default_date);
     $('#date_quot').on('change', function() {
         updateQuotationPreview();
     });
+
+    $('#aiProvider').on('change', function() {
+        const configs = JSON.parse($('#aiProviderConfigs').text() || '{}');
+        const config = configs[$(this).val()] || {};
+        $('#aiBaseUrl').val(config.base_url || '');
+        $('#aiModel').empty();
+        if (config.model) $('#aiModel').append($('<option>', {value: config.model, text: config.model}));
+        $('#aiApiKey').val('');
+        $('#aiSettingsStatus').removeClass().addClass('small mt-2 text-muted').text('Masukkan API key untuk provider yang dipilih.');
+    });
+
+    $('#loadAiModels').on('click', async function() {
+        const $button = $(this), apiKey = $('#aiApiKey').val().trim(), baseUrl = $('#aiBaseUrl').val().trim();
+        if (!apiKey) { $('#aiSettingsStatus').removeClass().addClass('small mt-2 text-danger').text('API key wajib diisi untuk memuat model.'); return; }
+        $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i>Loading...');
+        try {
+            const response = await fetch('ai_settings_api.php', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'models', provider:$('#aiProvider').val(), api_key:apiKey, base_url:baseUrl})});
+            const payload = await response.json();
+            if (!response.ok || !payload.ok) throw new Error(payload.message || 'Model gagal dimuat.');
+            const $select = $('#aiModel').empty();
+            payload.data.models.forEach(model => $select.append($('<option>', {value:model.id, text:model.label})));
+            $('#aiSettingsStatus').removeClass().addClass('small mt-2 text-success').text(payload.message);
+        } catch (error) { $('#aiSettingsStatus').removeClass().addClass('small mt-2 text-danger').text(error.message); }
+        finally { $button.prop('disabled', false).html('<i class="fas fa-sync mr-1"></i>Load Models'); }
+    });
+
+    $('#saveAiSettings').on('click', async function() {
+        const $button = $(this), model = $('#aiModel').val();
+        if (!model) { $('#aiSettingsStatus').removeClass().addClass('small mt-2 text-danger').text('Pilih model terlebih dahulu.'); return; }
+        $button.prop('disabled', true);
+        try {
+            const response = await fetch('ai_settings_api.php', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'save', provider:$('#aiProvider').val(), api_key:$('#aiApiKey').val(), base_url:$('#aiBaseUrl').val(), model})});
+            const payload = await response.json();
+            if (!response.ok || !payload.ok) throw new Error(payload.message || 'Pengaturan gagal disimpan.');
+            $('#aiSettingsStatus').removeClass().addClass('small mt-2 text-success').text(payload.message);
+            setTimeout(() => $('#aiSettingsModal').modal('hide'), 700);
+        } catch (error) { $('#aiSettingsStatus').removeClass().addClass('small mt-2 text-danger').text(error.message); }
+        finally { $button.prop('disabled', false); }
+    });
+
+    /* ========== GEMINI AUTO FILL ========== */
+    $('#generateAiBtn').on('click', async function() {
+        const brief = $('#aiBrief').val().trim();
+        if (!brief) { showNotification('AI Auto Fill', 'Brief wajib diisi.', 'warning'); return; }
+        const $button = $(this);
+        $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i>Membuat draft...');
+        $('#aiStatus').text('Menghubungi provider AI...');
+        try {
+            const customers = $('#customer_id option').map(function() { return this.value ? {id: Number(this.value), label: $(this).text().trim()} : null; }).get().filter(Boolean);
+            const response = await fetch('gemini_quotation_autofill.php', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({brief, customers, provider: $('#aiProvider').val()}) });
+            const payload = await response.json();
+            if (!response.ok || !payload.ok) throw new Error(payload.message || 'Gagal membuat draft.');
+            const draft = payload.data;
+            const items = Array.isArray(draft.items) ? draft.items : [];
+            if (!items.length) throw new Error('Draft tidak memiliki item.');
+            const customerLabel = draft.customer_id ? $('#customer_id option[value="' + draft.customer_id + '"]').text().trim() : 'Tidak ditentukan';
+            $('#aiApplySummary').text(items.length + ' item akan dimasukkan' + (customerLabel !== 'Tidak ditentukan' ? ' untuk ' + customerLabel : '') + '.');
+            $('#aiApplyModal').data('draft', draft).modal('show');
+        } catch (error) { $('#aiStatus').text('Gagal membuat draft.'); showNotification('AI Auto Fill', error.message, 'danger'); }
+        finally { $button.prop('disabled', false).html('<i class="fas fa-wand-magic-sparkles mr-1"></i>Generate Draft AI'); }
+    });
+
+    $('#applyAiDraft').on('click', function() {
+        const draft = $('#aiApplyModal').data('draft');
+        if (!draft) return;
+        $('#customer_id').val(draft.customer_id ? String(draft.customer_id) : '').trigger('change');
+        $('#control_model').val(draft.control_model || '');
+        $('#mtb').val(draft.mtb || '');
+        if ($('#note_option option[value="Custom"]').length === 0) $('#note_option').append('<option value="Custom">Custom</option>');
+        $('#note_option').val('Custom').trigger('change'); $('#custom_note').val(draft.note || '').show();
+        $('#itemsTable tbody').empty();
+        (draft.items || []).forEach(function(item) {
+            $('#addRow').trigger('click');
+            const $row = $('#itemsTable tbody tr').last();
+            $row.find('textarea[name="description_quot[]"]').val(item.description || '').each(function(){ autoResize(this); });
+            $row.find('input[name="qty[]"]').val(Math.max(1, Number(item.qty) || 1));
+            $row.find('select[name="satuan_quot[]"]').val(item.unit || 'Unit');
+            const unitPrice = Math.max(0, Number(item.unit_price) || 0);
+            $row.find('input[name="unit_price[]"]').val(unitPrice ? formatRupiah(unitPrice) : '');
+            $row.find('input[name="unit_price_raw[]"]').val(unitPrice);
+        });
+        recalc();
+        $('#aiApplyModal').modal('hide');
+        $('#aiStatus').text('Draft diterapkan. Periksa item dan isi harga satuan.');
+        showNotification('AI Auto Fill', 'Draft berhasil diterapkan ke form.', 'success');
+    });
     
     /* ========== ADD/REMOVE ROW ========== */
     $('#addRow').click(function() {
@@ -1358,22 +1482,7 @@ $preview_quotation_no = generate_quotation_no($mysqli, $default_date);
         
         // Set alert type
         const alertDiv = modal.find(".alert");
-        alertDiv.removeClass("alert-success alert-danger alert-info alert-warning");
-        alertDiv.addClass(`alert-${type}`);
-        
-        // Update icon
-        const icon = alertDiv.find("i");
-        icon.removeClass("fa-check-circle fa-exclamation-circle fa-info-circle fa-exclamation-triangle");
-        
-        if (type === "success") {
-            icon.addClass("fa-check-circle");
-        } else if (type === "danger") {
-            icon.addClass("fa-exclamation-circle");
-        } else if (type === "info") {
-            icon.addClass("fa-info-circle");
-        } else if (type === "warning") {
-            icon.addClass("fa-exclamation-triangle");
-        }
+        alertDiv.removeClass("alert-success alert-danger alert-info alert-warning").addClass("alert-primary");
         
         // Show notification
         modal.fadeIn(300);
