@@ -238,9 +238,10 @@ function format_report_date($date_value) {
             padding: 10px; 
             font-size: 9pt; 
         }
-        .summary-box p { margin: 0; line-height: 1.5; }
-        .summary-box .summary-label { display: inline-block; width: 100px; font-weight: bold; }
-        .summary-box .summary-value { display: inline-block; }
+        .summary-box p { margin: 0; line-height: 1.5; display: grid; grid-template-columns: 100px 10px minmax(0, 1fr); align-items: start; }
+        .summary-box .summary-label { font-weight: bold; }
+        .summary-box .summary-separator { text-align: center; }
+        .summary-box .summary-value { min-width: 0; }
 
         /* Tanda Tangan */
         .footer-sig-title { 
@@ -487,11 +488,13 @@ function format_report_date($date_value) {
 
         <div class="summary-box">
             <p>
-                <span class="summary-label">PHENOMENA</span> : 
+                <span class="summary-label">PHENOMENA</span>
+                <span class="summary-separator">:</span>
                 <span class="summary-value"><?php echo nl2br(htmlspecialchars($report_data['phenomena'] ?? '-')); ?></span>
             </p>
             <p>
-                <span class="summary-label">CAUSE</span> : 
+                <span class="summary-label">CAUSE</span>
+                <span class="summary-separator">:</span>
                 <span class="summary-value"><?php echo nl2br(htmlspecialchars($report_data['cause'] ?? '-')); ?></span>
             </p>
             <p class="summary-row">

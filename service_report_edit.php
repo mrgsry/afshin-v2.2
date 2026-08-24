@@ -239,6 +239,15 @@ include 'header.php';
         <input type="hidden" name="action" value="update">
         <input type="hidden" name="report_id" value="<?php echo $report_id; ?>">
 
+        <div class="card shadow-sm mb-4 border-info">
+            <div class="card-header bg-info text-white"><h5 class="mb-0"><i class="fas fa-robot"></i> AI Auto Fill Service Report</h5></div>
+            <div class="card-body">
+                <label for="serviceReportAiBrief">Tempel prompt service report</label>
+                <textarea id="serviceReportAiBrief" class="form-control" rows="8" maxlength="8000" placeholder="Contoh: SERVICE REPORT PT NKI ..."></textarea>
+                <div class="mt-2"><button type="button" class="btn btn-info" id="generateServiceReportAiBtn"><i class="fas fa-wand-magic-sparkles mr-1"></i>Generate Autofill</button><span id="serviceReportAiStatus" class="ml-2 small text-muted"></span></div>
+            </div>
+        </div>
+
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-primary text-white">
                 <h5 class="mb-0"><i class="fas fa-file-alt"></i> Informasi Header & Customer</h5>
@@ -774,6 +783,36 @@ include 'header.php';
 
         window.open(printUrl, '_blank');
     }
+
+    $('#generateServiceReportAiBtn').on('click', async function() {
+        const brief = $('#serviceReportAiBrief').val().trim();
+        if (!brief) { alert('Prompt service report wajib diisi.'); return; }
+        const $button = $(this);
+        $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i>Memproses...');
+        $('#serviceReportAiStatus').text('Menghubungi provider AI...');
+        try {
+            const response = await fetch('gemini_service_report_autofill.php', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({brief})});
+            const payload = await response.json();
+            if (!response.ok || !payload.ok) throw new Error(payload.message || 'Gagal membuat draft service report.');
+            const draft = payload.data || {};
+            $('#customer_select').val(draft.customer_id ? String(draft.customer_id) : '').trigger('change');
+            $('input[name="date_doc"]').val(draft.date_doc || $('input[name="date_doc"]').val());
+            $('input[name="requested_by"]').val(draft.requested_by || $('input[name="requested_by"]').val());
+            $('input[name="prod_code"]').val(draft.prod_code || '');
+            $('input[name="type_of_service"][value="' + (draft.type_of_service || 'REPAIR') + '"]').prop('checked', true);
+            $('textarea[name="remark_general"]').val(draft.remark_general || '');
+            $('textarea[name="phenomena"]').val(draft.phenomena || '');
+            $('textarea[name="cause"]').val(draft.cause || '');
+            $('textarea[name="steps_taken"]').val(draft.steps_taken || '');
+            $('#activitiesTable tbody, #timesTable tbody, #modelsTable tbody').empty();
+            (draft.activities || []).forEach(function(item) { $('#addActivityRow').trigger('click'); const row = $('#activitiesTable tbody tr').last(); row.find('[name="act_date[]"]').val(item.date || draft.date_doc || ''); row.find('[name="act_part_number[]"]').val(item.part_number || ''); row.find('[name="act_serial_number[]"]').val(item.serial_number || ''); row.find('[name="act_alarm[]"]').val(item.alarm || ''); row.find('[name="act_remark[]"]').val(item.remark || ''); });
+            (draft.times || []).forEach(function(item) { $('#addTimeRow').trigger('click'); const row = $('#timesTable tbody tr').last(); row.find('[name="time_date[]"]').val(item.date || draft.date_doc || ''); row.find('[name="time_start[]"]').val(item.start || ''); row.find('[name="time_out[]"]').val(item.out || ''); row.find('[name="time_end[]"]').val(item.end || ''); row.find('[name="time_back[]"]').val(item.back || ''); updateRowServiceTime(row); });
+            (draft.models || []).forEach(function(item) { $('#addModelRow').trigger('click'); const row = $('#modelsTable tbody tr').last(); row.find('[name="model_number[]"]').val(item.model_number || ''); row.find('[name="model_serial[]"]').val(item.serial_number || ''); row.find('[name="model_mtb[]"]').val(item.mtb || ''); row.find('[name="model_mc[]"]').val(item.mc_model || ''); });
+            reindexTable('activitiesTable'); reindexTable('timesTable'); reindexTable('modelsTable');
+            $('#serviceReportAiStatus').text('Draft diterapkan. Periksa data sebelum diupdate.');
+        } catch (error) { $('#serviceReportAiStatus').text('Gagal membuat draft.'); alert(error.message); }
+        finally { $button.prop('disabled', false).html('<i class="fas fa-wand-magic-sparkles mr-1"></i>Generate Autofill'); }
+    });
 
 </script>
 
