@@ -380,7 +380,7 @@ $(document).on('click', '.view-quotation-detail', function() {
 <div class="modal fade" id="emailModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="emailForm">
+            <form id="emailForm" enctype="multipart/form-data">
                 <input type="hidden" name="quotation_id" id="email_quotation_id">
                 <div class="modal-header bg-success text-white">
                     <h5 class="modal-title">📧 Kirim Quotation via Email</h5>
@@ -407,6 +407,12 @@ $(document).on('click', '.view-quotation-detail', function() {
                     <div class="form-group">
                         <label><strong>Pesan</strong></label>
                         <textarea name="body" class="form-control" rows="8"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="email_attachments"><strong>Dokumen Tambahan</strong></label>
+                        <input type="file" name="attachments[]" id="email_attachments" class="form-control-file"
+                            accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" multiple>
+                        <small class="form-text text-muted">Maksimal 5 file, masing-masing 10 MB.</small>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -478,14 +484,14 @@ $(document).ready(function() {
 
         btnSend.html('<i class="fas fa-spinner fa-spin"></i> Mengirim...').prop('disabled', true);
 
+        var formData = new FormData(this);
+
         $.ajax({
             url: 'send_quotation_email.php',
             type: 'POST',
-            data: {
-                quotation_id: $('#email_quotation_id').val(),
-                subject: $('input[name="subject"]').val(),
-                body: $('textarea[name="body"]').val()
-            },
+            data: formData,
+            processData: false,
+            contentType: false,
             dataType: 'json',
             success: function(res) {
                 $('#emailModal').modal('hide');

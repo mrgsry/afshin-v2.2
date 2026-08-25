@@ -40,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ];
 
                 $_SESSION['LAST_ACTIVITY'] = time();
+                $_SESSION['login_success'] = $user['username'];
 
                 header("Location: index.php");
                 exit;
@@ -68,91 +69,149 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
+    :root { --ink: #fff; --muted: #f0c9cd; --blue: #08a9e8; --panel: #fff; --card-red: #641820; }
+
+    * { box-sizing: border-box; }
+
     body {
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: linear-gradient(135deg, #3a1c71, #6a11cb, #2575fc);
-        background-size: 400% 400%;
-        animation: gradientMove 10s ease infinite;
-        overflow: hidden;
+        min-height: 100vh;
+        margin: 0;
+        background: var(--panel);
+        font-family: "Trebuchet MS", Arial, sans-serif;
+        overflow-x: hidden;
     }
 
-    @keyframes gradientMove {
-        0% {
-            background-position: 0% 50%
-        }
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 8px;
+        background: var(--blue);
+        z-index: 5;
+    }
 
-        50% {
-            background-position: 100% 50%
-        }
+    .login-page {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: minmax(0, 1.45fr) minmax(390px, .75fr);
+        background: var(--panel);
+    }
 
-        100% {
-            background-position: 0% 50%
-        }
+    .login-visual {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        align-items: flex-end;
+        padding: clamp(2rem, 6vw, 5.5rem);
+        background-image: url("img/cover.jpg");
+        background-size: 92% auto;
+        background-repeat: no-repeat;
+        background-position: center center;
+        isolation: isolate;
+    }
+
+    .login-panel {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background: #fff;
+    }
+
+    .login-panel::before {
+        content: "";
+        position: absolute;
+        top: 8%;
+        bottom: 8%;
+        left: 0;
+        width: 1px;
+        background: rgba(255, 255, 255, .15);
     }
 
     .login-card {
-        width: 400px;
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 20px;
-        padding: 40px;
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-        animation: fadeIn .6s ease;
+        width: min(100%, 390px);
+        padding: clamp(2rem, 4vw, 3.4rem);
+        background: var(--card-red);
+        border-radius: 8px;
+        box-shadow: 0 18px 30px rgba(0, 0, 0, .28), 0 30px 75px rgba(0, 0, 0, .42);
+        animation: cardIn .6s ease both;
     }
 
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .login-card::before {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 3px;
+        margin: -3.4rem 0 2.5rem;
+        border-radius: 4px;
+        background: var(--blue);
     }
 
-    .login-title {
-        font-weight: 700;
-        color: #3a1c71;
+    @keyframes cardIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+
+    .login-brand { display: flex; align-items: center; gap: .75rem; margin-bottom: 2.2rem; }
+    .login-brand img { width: 42px; height: 42px; object-fit: contain; }
+    .login-brand strong { display: block; color: var(--ink); font-size: .88rem; letter-spacing: .03em; }
+    .login-brand span { display: block; margin-top: .2rem; color: var(--muted); font-size: .66rem; }
+    .login-heading { margin-bottom: 1.7rem; }
+    .login-heading h2 { margin: 0 0 .5rem; color: var(--ink); font-size: 1.55rem; line-height: 1.2; font-weight: 800; }
+    .login-heading p { margin: 0; color: var(--muted); font-size: .78rem; }
+    .login-title, .login-subtitle { display: none; }
+    .login-card label { color: var(--ink); font-size: .7rem; font-weight: 700; }
+    .login-card .form-group { margin-bottom: 1.15rem; }
+    .input-group-text { width: 44px; justify-content: center; color: var(--muted); background: #f8fafc; border: 1px solid #dfe3e8; border-right: 0; }
+    .form-control { height: 44px; border: 1px solid #dfe3e8; border-radius: 0 4px 4px 0; box-shadow: none; font-size: .8rem; }
+    .form-control:focus { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(8, 169, 232, .12); }
+    .btn-login { height: 44px; margin-top: .7rem; border: 0; border-radius: 4px; background: #111827; color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .02em; transition: background .2s, transform .2s; }
+    .btn-login:hover { background: var(--blue); color: #fff; transform: translateY(-1px); }
+    .login-card hr { margin: 1.8rem 0 1rem; border-color: rgba(255, 255, 255, .25); }
+
+    .login-loading { position: fixed; inset: 0; z-index: 20; display: none; align-items: center; justify-content: center; background: rgba(75, 17, 24, .94); color: #fff; }
+    .login-loading.is-visible { display: flex; }
+    .loading-content { text-align: center; }
+    .loading-spinner { width: 42px; height: 42px; margin: 0 auto 1rem; border: 3px solid rgba(255, 255, 255, .3); border-top-color: var(--blue); border-radius: 50%; animation: spin .8s linear infinite; }
+    .loading-content strong { display: block; font-size: .95rem; }
+    .loading-content span { display: block; margin-top: .35rem; color: #f0c9cd; font-size: .75rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 767.98px) {
+        .login-page { display: block; min-height: 100vh; background: var(--panel); }
+        .login-visual { min-height: 35vh; padding: 1.5rem; background-size: 100% auto; background-position: center 38%; }
+        .login-panel { min-height: 66vh; padding: 1.25rem; background: #fff; }
+        .login-panel::before { display: none; }
+        .login-card { padding: 1.8rem 1.35rem; }
+        .login-card::before { margin-top: -1.8rem; margin-bottom: 1.8rem; }
+        .login-brand { margin-bottom: 1.8rem; }
     }
 
-    .btn-login {
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        border: none;
-        color: #fff;
-        font-weight: 600;
-        border-radius: 10px;
-        transition: .3s;
-    }
-
-    .btn-login:hover {
-        transform: scale(1.05);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    }
-
-    .input-group-text {
-        background: #f0f0f0;
-        border: none;
-    }
-
-    .form-control {
-        border-radius: 10px;
+    @media (max-width: 380px) {
+        .login-visual { min-height: 30vh; background-position: center 32%; }
+        .login-panel { min-height: 70vh; }
+        .login-card { padding: 1.5rem 1.1rem; }
     }
     </style>
 </head>
 
 <body>
+    <div class="login-loading" id="loginLoading" aria-live="polite" aria-busy="true">
+        <div class="loading-content"><div class="loading-spinner"></div><strong>Memproses login...</strong><span>Menyiapkan dashboard Anda</span></div>
+    </div>
+    <main class="login-page">
+        <section class="login-visual">
+        </section>
 
-    <div class="login-card text-center">
-
-        <div class="mb-4">
-            <i class="fas fa-cogs fa-3x text-primary mb-3"></i>
-            <h4 class="login-title">CV Afshin Raya Teknik</h4>
-            <small class="login-title">CRM Apps by Hnet Solution</small>
-            <small class="text-muted">Sistem Manajemen v2.2</small>
+        <section class="login-panel">
+        <div class="login-card">
+        <div class="login-brand">
+            <img src="img/afshin2.png" alt="Afshin Raya Teknik">
+            <div><strong>AFSHIN APP</strong><span>Business management portal</span></div>
+        </div>
+        <div class="login-heading">
+            <h2>Hi there, great to see you</h2>
+            <p>Masuk untuk mengelola aplikasi Afshin.</p>
         </div>
 
         <?php if($error): ?>
@@ -181,7 +240,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-login btn-block mt-3">
+            <button type="submit" class="btn btn-login btn-block mt-3" id="loginSubmit">
                 Masuk
             </button>
 
@@ -191,7 +250,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <small class="text-muted">© <?= date('Y') ?> Afshin APP</small>
 
-    </div>
+        </div>
+        </section>
+    </main>
+
+    <script>
+    document.querySelector('form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        document.getElementById('loginLoading').classList.add('is-visible');
+        document.getElementById('loginSubmit').disabled = true;
+        window.setTimeout(function() {
+            event.target.submit();
+        }, 2000);
+    });
+    </script>
 
 </body>
 

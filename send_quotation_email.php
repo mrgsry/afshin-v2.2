@@ -11,6 +11,8 @@ require_once 'generate_quotation_pdf.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+header('Content-Type: application/json; charset=utf-8');
+
 // Config – replace with your actual Gmail credentials
 $SMTP_USER = 'cvafshinrayateknik@gmail.com';
 $SMTP_PASS = 'isch kxdm blsl xwxv'; // App password / key
@@ -44,6 +46,57 @@ if (empty($to_emails)) {
     http_response_code(400);
     echo json_encode(['status'=>'error','message'=>'No recipient email address found']);
     exit;
+}
+
+$attachments = [];
+$allowedAttachmentTypes = [
+    'pdf' => ['application/pdf'],
+    'doc' => ['application/msword'],
+    'docx' => ['application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+    'xls' => ['application/vnd.ms-excel'],
+    'xlsx' => ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
+    'jpg' => ['image/jpeg'],
+    'jpeg' => ['image/jpeg'],
+    'png' => ['image/png']
+];
+$maxAttachmentSize = 10 * 1024 * 1024;
+$uploadedFiles = $_FILES['attachments'] ?? null;
+
+if ($uploadedFiles && is_array($uploadedFiles['name'] ?? null)) {
+    $fileCount = count(array_filter($uploadedFiles['name'], static function ($name) {
+        return trim((string)$name) !== '';
+    }));
+    if ($fileCount > 5) {
+        http_response_code(400);
+        echo json_encode(['status'=>'error','message'=>'Maksimal 5 dokumen tambahan.']);
+        exit;
+    }
+
+    $fileInfo = new finfo(FILEINFO_MIME_TYPE);
+    foreach ($uploadedFiles['name'] as $index => $originalName) {
+        if (trim((string)$originalName) === '') continue;
+
+        $uploadError = (int)($uploadedFiles['error'][$index] ?? UPLOAD_ERR_NO_FILE);
+        if ($uploadError !== UPLOAD_ERR_OK) {
+            http_response_code(400);
+            echo json_encode(['status'=>'error','message'=>'Dokumen tambahan gagal diupload.']);
+            exit;
+        }
+
+        $tmpName = $uploadedFiles['tmp_name'][$index] ?? '';
+        $fileSize = (int)($uploadedFiles['size'][$index] ?? 0);
+        $extension = strtolower(pathinfo((string)$originalName, PATHINFO_EXTENSION));
+        $mimeType = $tmpName !== '' && is_uploaded_file($tmpName) ? $fileInfo->file($tmpName) : false;
+
+        if ($fileSize <= 0 || $fileSize > $maxAttachmentSize || !isset($allowedAttachmentTypes[$extension]) || !in_array($mimeType, $allowedAttachmentTypes[$extension], true)) {
+            http_response_code(400);
+            echo json_encode(['status'=>'error','message'=>'Tipe atau ukuran dokumen tambahan tidak diizinkan.']);
+            exit;
+        }
+
+        $safeName = preg_replace('/[^A-Za-z0-9._-]/', '_', basename((string)$originalName));
+        $attachments[] = ['path' => $tmpName, 'name' => $safeName, 'type' => $mimeType];
+    }
 }
 
 // Generate PDF
@@ -88,6 +141,9 @@ $mail->Port = 587;
 
     // Attachments
     $mail->addAttachment($pdf_path, basename($pdf_path));
+    foreach ($attachments as $attachment) {
+        $mail->addAttachment($attachment['path'], $attachment['name'], PHPMailer::ENCODING_BASE64, $attachment['type']);
+    }
 
     // Content
     $mail->isHTML(true);

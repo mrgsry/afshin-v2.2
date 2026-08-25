@@ -35,3 +35,20 @@
 #13 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/generate_quotation_pdf.php(371): Dompdf\Dompdf->render()
 #14 /home/hnetdiih/public_html/3afshin.hnet-diigital.biz.id/send_quotation_email.php(50): generateQuotationPDF()
 #15 {main}
+2026-08-25 14:48:01 - The PHP GD extension is required, but is not installed.
+#0 C:\xampp\htdocs\afshin_v3\vendor\dompdf\dompdf\src\Adapter\CPDF.php(674): Dompdf\Cpdf->addPngFromFile('C:\\Users\\Muhama...', 36.596456692913, 740.04354330709, 67.5, 60.75)
+#1 C:\xampp\htdocs\afshin_v3\vendor\dompdf\dompdf\src\Renderer\Image.php(63): Dompdf\Adapter\CPDF->image('C:\\Users\\Muhama...', 36.596456692913, 41.096456692913, 67.5, 60.75, 'normal')
+#2 C:\xampp\htdocs\afshin_v3\vendor\dompdf\dompdf\src\Renderer.php(305): Dompdf\Renderer\Image->render(Object(Dompdf\FrameDecorator\Image))
+#3 C:\xampp\htdocs\afshin_v3\vendor\dompdf\dompdf\src\Renderer.php(140): Dompdf\Renderer->_render_frame('image', Object(Dompdf\FrameDecorator\Image))
+#4 C:\xampp\htdocs\afshin_v3\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Image))
+#5 C:\xampp\htdocs\afshin_v3\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+#6 C:\xampp\htdocs\afshin_v3\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+#7 C:\xampp\htdocs\afshin_v3\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+#8 C:\xampp\htdocs\afshin_v3\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+#9 C:\xampp\htdocs\afshin_v3\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+#10 C:\xampp\htdocs\afshin_v3\vendor\dompdf\dompdf\src\FrameReflower\Page.php(148): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+#11 C:\xampp\htdocs\afshin_v3\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(915): Dompdf\FrameReflower\Page->reflow(NULL)
+#12 C:\xampp\htdocs\afshin_v3\vendor\dompdf\dompdf\src\Dompdf.php(817): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+#13 C:\xampp\htdocs\afshin_v3\generate_quotation_pdf.php(382): Dompdf\Dompdf->render()
+#14 C:\xampp\htdocs\afshin_v3\send_quotation_email.php(103): generateQuotationPDF(65)
+#15 {main}

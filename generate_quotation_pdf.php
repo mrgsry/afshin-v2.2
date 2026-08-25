@@ -58,18 +58,14 @@ FROM quotation_items
    $logo_path = __DIR__ . '/img/afshin2.png';
 $cap_path = __DIR__ . '/img/cap2.png';
     
-    $logo_base64 = '';
-if (file_exists($logo_path)) {
-
-    $logo_data = file_get_contents($logo_path);
-    $logo_base64 = 'data:image/' . pathinfo($logo_path, PATHINFO_EXTENSION) . ';base64,' . base64_encode($logo_data);
-}
-
-$cap_base64 = '';
-if (extension_loaded('gd') && file_exists($cap_path)) {
-    $cap_data = file_get_contents($cap_path);
-    $cap_base64 = 'data:image/' . pathinfo($cap_path, PATHINFO_EXTENSION) . ';base64,' . base64_encode($cap_data);
-}
+    $logo_src = '';
+    $cap_src = '';
+    if (file_exists($logo_path)) {
+        $logo_src = 'data:image/png;base64,' . base64_encode(file_get_contents($logo_path));
+    }
+    if (file_exists($cap_path)) {
+        $cap_src = 'data:image/png;base64,' . base64_encode(file_get_contents($cap_path));
+    }
 
     $quotation_prefix = substr($quote['quotation_no'], 0, 3);
     $file_name = $quote['quotation_no'] . ' Quotation ' . $quote['customer_name'];
@@ -218,7 +214,7 @@ table.items th {
 <div class="header-container">
     <table class="header-table">
         <tr>
-            <td class="header-logo"><img src="' . $logo_base64 . '"></td>
+            <td class="header-logo">' . ($logo_src !== '' ? '<img src="' . $logo_src . '">' : '') . '</td>
             <td class="header-content">
                 <h3>CV. AFSHIN RAYA TEKNIK</h3>
                 <p><strong>Penyedia Sparepart Mesin Bubut dan Milling, Jasa Maintenance dan Kontruksi Gedung</strong></p>
@@ -345,7 +341,7 @@ table.items th {
             <p style="margin:0;">Awaiting your inquiry order,</p>
             <p style="margin:0;">Best Regards</p>
             <div style="position:relative; height:80px; margin:0;">
-                <img src="' . $cap_base64 . '" style="position:absolute; top:-25px; left:10px; width:220px; opacity:0.8; z-index:-1;">
+                ' . ($cap_src !== '' ? '<img src="' . $cap_src . '" style="display:block; width:220px; height:auto; margin-top:-25px; opacity:0.8;">' : '') . '
             </div>
             <p style="margin:0 0 2px 0; position:relative; z-index:1;"><u>Manisah</u></p>
             <p style="margin:0; position:relative; z-index:1;">Direktur</p>

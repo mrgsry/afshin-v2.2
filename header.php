@@ -46,6 +46,43 @@ $active_user_photo = trim($active_user['photo_path'] ?? '');
         overflow-x: auto;
     }
 
+    .login-success-card {
+        position: fixed;
+        top: 76px;
+        right: 24px;
+        z-index: 1060;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: min(360px, calc(100vw - 32px));
+        padding: 15px 16px;
+        border-left: 4px solid #28a745;
+        border-radius: 8px;
+        background: #fff;
+        box-shadow: 0 12px 30px rgba(31, 45, 61, .2);
+        animation: loginSuccessIn .35s ease both;
+    }
+
+    .login-success-icon {
+        display: grid;
+        flex: 0 0 34px;
+        width: 34px;
+        height: 34px;
+        place-items: center;
+        border-radius: 50%;
+        background: #e9f7ef;
+        color: #28a745;
+    }
+
+    .login-success-card strong,
+    .login-success-card span { display: block; }
+    .login-success-card strong { color: #1f2d3d; font-size: .9rem; }
+    .login-success-card span { margin-top: 2px; color: #6c757d; font-size: .78rem; }
+    .login-success-close { margin-left: auto; padding: 0 4px; border: 0; background: transparent; color: #98a1ab; font-size: 1.3rem; line-height: 1; cursor: pointer; }
+    .login-success-card.is-hidden { animation: loginSuccessOut .25s ease forwards; }
+    @keyframes loginSuccessIn { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes loginSuccessOut { to { opacity: 0; transform: translateY(-12px); } }
+
     .dataTables_wrapper {
         width: 100%;
     }
@@ -745,6 +782,24 @@ $active_user_photo = trim($active_user['photo_path'] ?? '');
 
         <div class="content-wrapper p-3">
             <div class="container-fluid">
+
+                <?php if (!empty($_SESSION['login_success'])): ?>
+                <div class="login-success-card" role="status">
+                    <div class="login-success-icon"><i class="fas fa-check"></i></div>
+                    <div><strong>Login berhasil</strong><span>Selamat datang, <?= htmlspecialchars($_SESSION['login_success']) ?></span></div>
+                    <button type="button" class="login-success-close" aria-label="Tutup notifikasi">&times;</button>
+                </div>
+                <?php unset($_SESSION['login_success']); endif; ?>
+
+                <script>
+                (function() {
+                    var card = document.querySelector('.login-success-card');
+                    if (!card) return;
+                    var hide = function() { card.classList.add('is-hidden'); window.setTimeout(function() { card.remove(); }, 250); };
+                    card.querySelector('.login-success-close').addEventListener('click', hide);
+                    window.setTimeout(hide, 5000);
+                }());
+                </script>
 
                 <script>
                 window.addEventListener("load", function() {
