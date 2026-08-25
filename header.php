@@ -268,16 +268,19 @@ $active_user_photo = trim($active_user['photo_path'] ?? '');
     @media (max-width: 767.98px) {
         .main-header,
         body.sidebar-collapse .main-header {
-            left: 0;
-            width: 100%;
+            left: 0 !important;
+            width: 100% !important;
         }
 
-        .main-sidebar {
-            width: 250px !important;
-        }
-
+        .main-sidebar,
         body.sidebar-collapse .main-sidebar {
-            width: 4.6rem !important;
+            width: 250px !important;
+            margin-left: -250px !important;
+        }
+
+        body.sidebar-open .main-sidebar,
+        body.sidebar-open.sidebar-collapse .main-sidebar {
+            margin-left: 0 !important;
         }
 
         .content-wrapper,
@@ -506,6 +509,13 @@ $active_user_photo = trim($active_user['photo_path'] ?? '');
                             </ul>
                         </li>
 
+                        <?php endif; ?>
+                        <?php if (can_access_module('chat')): ?>
+                        <li class="nav-item">
+                            <a href="<?= $base_prefix ?>chat.php" class="nav-link <?= $current_page=='chat.php'?'active':'' ?>">
+                                <i class="nav-icon fas fa-comments"></i><p>Data Chat</p>
+                            </a>
+                        </li>
                         <?php endif; ?>
                         <?php if ((current_user()['role'] ?? '') === 'admin'): ?>
                         <li class="nav-item">
