@@ -101,10 +101,7 @@ if ($uploadedFiles && is_array($uploadedFiles['name'] ?? null)) {
 
 // Generate PDF
 $pdf_path = generateQuotationPDF($quotation_id);
-file_put_contents(__DIR__ . '/debug.log', 
-    date('Y-m-d H:i:s') . ' pdf_path: ' . var_export($pdf_path, true) . "\n", 
-    FILE_APPEND
-);
+error_log('send_quotation_email pdf_path: ' . var_export($pdf_path, true));
 if(!$pdf_path) {
     http_response_code(500);
     echo json_encode(['status'=>'error','message'=>'Failed to generate PDF']);
