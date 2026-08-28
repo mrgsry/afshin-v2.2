@@ -8,6 +8,18 @@ function service_report_ai_error($message, $status = 400) {
     echo json_encode(['ok' => false, 'message' => $message]);
     exit;
 }
+function service_report_extract_json_object($text) {
+    $text = trim((string)$text);
+    $text = preg_replace('/(?:^|\R)\s*data:\s*\[DONE\]\s*$/i', '', $text);
+    if (preg_match('/^```(?:json)?\s*(.*?)\s*```$/is', $text, $matches)) $text = trim($matches[1]);
+    $result = json_decode($text, true);
+    if (is_array($result)) return $result;
+    $start = strpos($text, '{');
+    $end = strrpos($text, '}');
+    if ($start === false || $end === false || $end <= $start) return null;
+    $result = json_decode(substr($text, $start, $end - $start + 1), true);
+    return is_array($result) ? $result : null;
+}
 
 function service_report_clean_text($value) {
     $value = trim(preg_replace('/\s+/', ' ', (string)$value));
@@ -54,7 +66,7 @@ $prompt = "Anda membantu membuat draft service report teknis. Balas HANYA JSON v
 $headers = ['Content-Type: application/json'];
 $providerLabel = $config['provider'] === 'openai_compatible' ? 'OpenAI Compatible' : 'Gemini';
 if ($config['provider'] === 'openai_compatible') {
-    $payload = json_encode(['model' => $config['model'], 'messages' => [['role' => 'system', 'content' => 'Balas hanya JSON valid tanpa markdown.'], ['role' => 'user', 'content' => $prompt]], 'temperature' => 0.1, 'max_tokens' => 4096, 'response_format' => ['type' => 'json_object']]);
+    $payload = json_encode(['model' => $config['model'], 'messages' => [['role' => 'system', 'content' => 'Balas hanya JSON valid tanpa markdown.'], ['role' => 'user', 'content' => $prompt]], 'temperature' => 0.1, 'max_tokens' => 4096, 'response_format' => ['type' => 'text']]);
     $url = rtrim($config['base_url'], '/') . '/chat/completions';
     $headers[] = 'Authorization: Bearer ' . $config['api_key'];
 } else {
@@ -70,13 +82,12 @@ $curlError = curl_error($ch);
 curl_close($ch);
 if ($response === false || $curlError) service_report_ai_error($providerLabel . ' tidak dapat dihubungi.', 502);
 
+$response = preg_replace('/\s*data:\s*\[DONE\]\s*$/i', '', (string)$response);
 $data = json_decode($response, true);
 if ($httpCode < 200 || $httpCode >= 300) service_report_ai_error($data['error']['message'] ?? ($providerLabel . ' menolak permintaan (HTTP ' . $httpCode . ').'), 502);
-$text = $config['provider'] === 'openai_compatible' ? ($data['choices'][0]['message']['content'] ?? '') : ($data['candidates'][0]['content']['parts'][0]['text'] ?? '');
+$text = $config['provider'] === 'openai_compatible' ? (($data['choices'][0]['message']['content'] ?? '') ?: ($data['choices'][0]['message']['reasoning_content'] ?? '')) : ($data['candidates'][0]['content']['parts'][0]['text'] ?? '');
 if (is_array($text)) $text = implode('', array_map(function ($part) { return is_array($part) ? (string)($part['text'] ?? $part['content'] ?? '') : (string)$part; }, $text));
-$text = trim((string)$text);
-if (preg_match('/^```(?:json)?\s*(.*?)\s*```$/is', $text, $matches)) $text = trim($matches[1]);
-$result = json_decode($text, true);
+$result = service_report_extract_json_object($text);
 if (!is_array($result)) service_report_ai_error('Respons ' . $providerLabel . ' tidak sesuai format JSON service report.', 502);
 
 $customerIds = array_column($customers, 'id');

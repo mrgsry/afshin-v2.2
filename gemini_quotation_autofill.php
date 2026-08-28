@@ -4,6 +4,18 @@ require_module_access('quotation', 'full');
 header('Content-Type: application/json; charset=utf-8');
 
 function ai_json_error($message, $status = 400) { http_response_code($status); echo json_encode(['ok' => false, 'message' => $message]); exit; }
+function ai_extract_json_object($text) {
+    $text = trim((string)$text);
+    $text = preg_replace('/(?:^|\R)\s*data:\s*\[DONE\]\s*$/i', '', $text);
+    if (preg_match('/^```(?:json)?\s*(.*?)\s*```$/is', $text, $matches)) $text = trim($matches[1]);
+    $result = json_decode($text, true);
+    if (is_array($result)) return $result;
+    $start = strpos($text, '{');
+    $end = strrpos($text, '}');
+    if ($start === false || $end === false || $end <= $start) return null;
+    $result = json_decode(substr($text, $start, $end - $start + 1), true);
+    return is_array($result) ? $result : null;
+}
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') ai_json_error('Method tidak diizinkan.', 405);
 $input = json_decode(file_get_contents('php://input'), true);
 $brief = trim((string)($input['brief'] ?? ''));
@@ -22,7 +34,7 @@ $prompt = "Anda membantu membuat draft quotation teknis. Balas HANYA JSON valid 
 $headers = ['Content-Type: application/json'];
 $providerLabel = $config['provider'] === 'openai_compatible' ? 'OpenAI Compatible' : 'Gemini';
 if ($config['provider'] === 'openai_compatible') {
-    $payload = json_encode(['model' => $config['model'], 'messages' => [['role' => 'system', 'content' => 'Balas hanya JSON valid tanpa markdown.'], ['role' => 'user', 'content' => $prompt]], 'temperature' => 0.2, 'max_tokens' => 4096, 'response_format' => ['type' => 'json_object']]);
+    $payload = json_encode(['model' => $config['model'], 'messages' => [['role' => 'system', 'content' => 'Balas hanya JSON valid tanpa markdown.'], ['role' => 'user', 'content' => $prompt]], 'temperature' => 0.2, 'max_tokens' => 4096, 'response_format' => ['type' => 'text']]);
     $url = rtrim($config['base_url'], '/') . '/chat/completions';
     $headers[] = 'Authorization: Bearer ' . $config['api_key'];
 } else {
@@ -42,19 +54,18 @@ if ($response === false || $curlError) {
     $detail = trim((string)$curlError);
     ai_json_error($providerLabel . ' tidak dapat dihubungi' . ($detail !== '' ? ': ' . $detail : '.'), 502);
 }
+$response = preg_replace('/\s*data:\s*\[DONE\]\s*$/i', '', (string)$response);
 $data = json_decode($response, true);
 if ($httpCode < 200 || $httpCode >= 300) ai_json_error($data['error']['message'] ?? ($providerLabel . ' menolak permintaan (HTTP ' . $httpCode . ').'), 502);
 $text = $config['provider'] === 'openai_compatible'
-    ? ($data['choices'][0]['message']['content'] ?? '')
+    ? (($data['choices'][0]['message']['content'] ?? '') ?: ($data['choices'][0]['message']['reasoning_content'] ?? ''))
     : ($data['candidates'][0]['content']['parts'][0]['text'] ?? '');
 if (is_array($text)) {
     $text = implode('', array_map(function ($part) {
         return is_array($part) ? (string)($part['text'] ?? $part['content'] ?? '') : (string)$part;
     }, $text));
 }
-$text = trim((string)$text);
-if (preg_match('/^```(?:json)?\s*(.*?)\s*```$/is', $text, $matches)) $text = trim($matches[1]);
-$result = json_decode($text, true);
+$result = ai_extract_json_object($text);
 if (!is_array($result) || !is_array($result['items'] ?? null)) ai_json_error('Respons ' . $providerLabel . ' tidak sesuai format JSON quotation.', 502);
 $result['control_model'] = trim((string)($result['control_model'] ?? ''));
 $result['mtb'] = trim((string)($result['mtb'] ?? ''));

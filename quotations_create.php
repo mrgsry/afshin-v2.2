@@ -15,6 +15,8 @@ $customers = mysqli_query($mysqli, "SELECT * FROM customers ORDER BY name ASC");
 $satuans = ['Unit', 'Pcs', 'Pack', 'Set', 'Koli', 'Box', 'Buah', 'Pallet'];
 $ai_config = gemini_config($mysqli);
 $ai_openai_config = ai_config($mysqli, 'openai_compatible');
+$ai_provider = $ai_openai_config['configured'] ? 'openai_compatible' : 'gemini';
+$ai_active_config = $ai_provider === 'openai_compatible' ? $ai_openai_config : $ai_config;
 
 function generate_quotation_no($mysqli, $date_quot) {
     if (empty($date_quot)) {
@@ -813,10 +815,10 @@ $preview_quotation_no = generate_quotation_no($mysqli, $default_date);
                     <div class="modal-header bg-light"><h5 class="modal-title"><i class="fas fa-robot mr-2"></i>Pengaturan Provider AI</h5><button type="button" class="close" data-dismiss="modal"><span>&times;</span></button></div>
                     <div class="modal-body">
                         <div class="p-3" style="background:#d9eee5;border:1px solid #a8d5c0;border-radius:6px">
-                            <div class="form-group"><label for="aiProvider">Provider AI</label><select id="aiProvider" class="form-control"><option value="gemini">Gemini API</option><option value="openai_compatible">OpenAI Compatible (9Router)</option></select></div>
-                            <div class="form-group"><label for="aiBaseUrl">Base URL</label><input type="url" id="aiBaseUrl" class="form-control" value="<?= htmlspecialchars($ai_config['base_url']) ?>"></div>
+                            <div class="form-group"><label for="aiProvider">Provider AI</label><select id="aiProvider" class="form-control"><option value="gemini" <?= $ai_provider === 'gemini' ? 'selected' : '' ?>>Gemini API</option><option value="openai_compatible" <?= $ai_provider === 'openai_compatible' ? 'selected' : '' ?>>OpenAI Compatible (9Router)</option></select></div>
+                            <div class="form-group"><label for="aiBaseUrl">Base URL</label><input type="url" id="aiBaseUrl" class="form-control" value="<?= htmlspecialchars($ai_active_config['base_url']) ?>"></div>
                             <div class="form-group"><label for="aiApiKey">API Key</label><input type="password" id="aiApiKey" class="form-control" autocomplete="new-password"></div>
-                            <div class="input-group"><select id="aiModel" class="form-control"><option value="<?= htmlspecialchars($ai_config['model']) ?>"><?= htmlspecialchars($ai_config['model']) ?></option></select><div class="input-group-append"><button type="button" id="loadAiModels" class="btn btn-outline-success"><i class="fas fa-sync mr-1"></i>Load Models</button></div></div>
+                            <div class="input-group"><select id="aiModel" class="form-control"><option value="<?= htmlspecialchars($ai_active_config['model']) ?>"><?= htmlspecialchars($ai_active_config['model']) ?></option></select><div class="input-group-append"><button type="button" id="loadAiModels" class="btn btn-outline-success"><i class="fas fa-sync mr-1"></i>Load Models</button></div></div>
                             <script type="application/json" id="aiProviderConfigs"><?= json_encode(['gemini' => ['base_url' => $ai_config['base_url'], 'model' => $ai_config['model'], 'configured' => $ai_config['configured']], 'openai_compatible' => ['base_url' => $ai_openai_config['base_url'], 'model' => $ai_openai_config['model'], 'configured' => $ai_openai_config['configured']]], JSON_UNESCAPED_SLASHES) ?></script>
                             <small class="form-text text-muted">Model akan dimuat dari provider yang dipilih.</small>
                         </div>
@@ -1254,19 +1256,27 @@ $preview_quotation_no = generate_quotation_no($mysqli, $default_date);
         updateQuotationPreview();
     });
 
-    $('#aiProvider').on('change', function() {
+    function updateAiProviderForm(showStatus = true) {
         const configs = JSON.parse($('#aiProviderConfigs').text() || '{}');
-        const config = configs[$(this).val()] || {};
+        const config = configs[$('#aiProvider').val()] || {};
         $('#aiBaseUrl').val(config.base_url || '');
         $('#aiModel').empty();
         if (config.model) $('#aiModel').append($('<option>', {value: config.model, text: config.model}));
         $('#aiApiKey').val('');
-        $('#aiSettingsStatus').removeClass().addClass('small mt-2 text-muted').text('Masukkan API key untuk provider yang dipilih.');
+        if (showStatus) {
+            const message = config.configured
+                ? 'API key tersimpan. Kosongkan field API key untuk memakai key tersimpan, atau isi untuk menggantinya.'
+                : 'API key belum tersimpan untuk provider ini.';
+            $('#aiSettingsStatus').removeClass().addClass('small mt-2 text-muted').text(message);
+        }
+    }
+
+    $('#aiProvider').on('change', function() {
+        updateAiProviderForm();
     });
 
     $('#loadAiModels').on('click', async function() {
         const $button = $(this), apiKey = $('#aiApiKey').val().trim(), baseUrl = $('#aiBaseUrl').val().trim();
-        if (!apiKey) { $('#aiSettingsStatus').removeClass().addClass('small mt-2 text-danger').text('API key wajib diisi untuk memuat model.'); return; }
         $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i>Loading...');
         try {
             const response = await fetch('ai_settings_api.php', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'models', provider:$('#aiProvider').val(), api_key:apiKey, base_url:baseUrl})});

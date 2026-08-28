@@ -37,7 +37,18 @@ function save_ai_config($mysqli, $provider, $apiKey, $model, $baseUrl = '')
     $baseUrl = rtrim(trim($baseUrl ?: ($provider === 'gemini' ? ai_default_base_url() : '')), '/');
     if (!filter_var($baseUrl, FILTER_VALIDATE_URL) || !preg_match('/^https?:\/\//i', $baseUrl)) throw new InvalidArgumentException('Base URL tidak valid.');
     if ($model === '' || strlen($model) > 150 || !preg_match('/^[A-Za-z0-9._:@\/-]+$/', $model)) throw new InvalidArgumentException('Model AI tidak valid.');
-    $encrypted = encrypt_url_token($apiKey);
+    $apiKey = trim((string)$apiKey);
+    $encrypted = '';
+    if ($apiKey === '') {
+        $existing = ai_config($mysqli, $provider);
+        if (!$existing['configured']) throw new InvalidArgumentException('API key provider wajib diisi.');
+        $existingResult = mysqli_query($mysqli, "SELECT api_key_encrypted FROM ai_settings WHERE provider = '" . mysqli_real_escape_string($mysqli, $provider) . "' LIMIT 1");
+        $existingRow = $existingResult ? mysqli_fetch_assoc($existingResult) : null;
+        $encrypted = trim((string)($existingRow['api_key_encrypted'] ?? ''));
+        if ($encrypted === '') throw new InvalidArgumentException('API key provider wajib diisi.');
+    } else {
+        $encrypted = encrypt_url_token($apiKey);
+    }
     $stmt = mysqli_prepare($mysqli, "INSERT INTO ai_settings (provider, base_url, model, api_key_encrypted) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE base_url = VALUES(base_url), model = VALUES(model), api_key_encrypted = VALUES(api_key_encrypted), updated_at = CURRENT_TIMESTAMP");
     if (!$stmt) throw new RuntimeException('Database gagal menyiapkan konfigurasi AI.');
     mysqli_stmt_bind_param($stmt, 'ssss', $provider, $baseUrl, $model, $encrypted);

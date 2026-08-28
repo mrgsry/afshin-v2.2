@@ -13,7 +13,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $message = 'Pengaturan AI berhasil disimpan.';
     } catch (Throwable $e) { $error = $e->getMessage(); }
 }
-$provider = ($provider ?? ($_GET['provider'] ?? 'gemini')) === 'openai_compatible' ? 'openai_compatible' : 'gemini';
+$requestedProvider = $provider ?? ($_GET['provider'] ?? '');
+if ($requestedProvider === 'openai_compatible' || $requestedProvider === 'gemini') {
+    $provider = $requestedProvider;
+} else {
+    $provider = ai_config($mysqli, 'openai_compatible')['configured'] ? 'openai_compatible' : 'gemini';
+}
 $config = ai_config($mysqli, $provider);
 include __DIR__ . '/header.php';
 ?>

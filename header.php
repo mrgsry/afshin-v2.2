@@ -548,18 +548,6 @@ $active_user_photo = trim($active_user['photo_path'] ?? '');
 
                         <?php endif; ?>
                         <?php if (can_access_module('chat')): ?>
-                        <li class="nav-item">
-                            <a href="<?= $base_prefix ?>chat.php" class="nav-link <?= $current_page=='chat.php'?'active':'' ?>">
-                                <i class="nav-icon fas fa-comments"></i><p>Data Chat</p>
-                            </a>
-                        </li>
-                        <?php endif; ?>
-                        <?php if ((current_user()['role'] ?? '') === 'admin'): ?>
-                        <li class="nav-item">
-                            <a href="<?= $base_prefix ?>ai_settings.php" class="nav-link <?= $current_page=='ai_settings.php'?'active':'' ?>">
-                                <i class="nav-icon fas fa-robot"></i><p>AI Gemini Settings</p>
-                            </a>
-                        </li>
                         <?php endif; ?>
                         <?php if (can_access_module('invoice')): ?>
                         <!-- INVOICE -->

@@ -7,6 +7,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 require_once 'functions.php';
+require_once 'ai_config.php';
 require_module_access('service_report', 'full');
 
 if (!$mysqli) {
@@ -46,6 +47,10 @@ function generate_service_report_no($mysqli) {
 
 $next_doc_no = generate_service_report_no($mysqli);
 $types_of_service = ['REPAIR','SERVICE','ENGINEERING'];
+$ai_config = gemini_config($mysqli);
+$ai_openai_config = ai_config($mysqli, 'openai_compatible');
+$ai_provider = $ai_openai_config['configured'] ? 'openai_compatible' : 'gemini';
+$ai_active_config = $ai_provider === 'openai_compatible' ? $ai_openai_config : $ai_config;
 
 /* ================== SAVE PROCESS ================== */
 
@@ -221,8 +226,25 @@ include 'header.php';
             <div class="card-body">
                 <label for="serviceReportAiBrief">Tempel prompt service report</label>
                 <textarea id="serviceReportAiBrief" class="form-control" rows="8" maxlength="8000" placeholder="Contoh: SERVICE REPORT PT NKI ..."></textarea>
-                <div class="mt-2"><button type="button" class="btn btn-info" id="generateServiceReportAiBtn"><i class="fas fa-wand-magic-sparkles mr-1"></i>Generate Autofill</button><span id="serviceReportAiStatus" class="ml-2 small text-muted"></span></div>
+                <div class="mt-2"><button type="button" class="btn btn-info" id="generateServiceReportAiBtn"><i class="fas fa-wand-magic-sparkles mr-1"></i>Generate Autofill</button><button type="button" class="btn btn-outline-secondary ml-1" data-toggle="modal" data-target="#aiSettingsModal" title="Pengaturan AI"><i class="fas fa-sliders-h mr-1"></i>Pengaturan</button><span id="serviceReportAiStatus" class="ml-2 small text-muted"></span></div>
             </div>
+        </div>
+        <div class="modal fade" id="aiSettingsModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document"><div class="modal-content">
+                <div class="modal-header bg-light"><h5 class="modal-title"><i class="fas fa-robot mr-2"></i>Pengaturan Provider AI</h5><button type="button" class="close" data-dismiss="modal"><span>&times;</span></button></div>
+                <div class="modal-body">
+                    <div class="p-3" style="background:#d9eee5;border:1px solid #a8d5c0;border-radius:6px">
+                        <div class="form-group"><label for="aiProvider">Provider AI</label><select id="aiProvider" class="form-control"><option value="gemini" <?= $ai_provider === 'gemini' ? 'selected' : '' ?>>Gemini API</option><option value="openai_compatible" <?= $ai_provider === 'openai_compatible' ? 'selected' : '' ?>>OpenAI Compatible (9Router)</option></select></div>
+                        <div class="form-group"><label for="aiBaseUrl">Base URL</label><input type="url" id="aiBaseUrl" class="form-control" value="<?= htmlspecialchars($ai_active_config['base_url']) ?>"></div>
+                        <div class="form-group"><label for="aiApiKey">API Key</label><input type="password" id="aiApiKey" class="form-control" autocomplete="new-password"></div>
+                        <div class="input-group"><select id="aiModel" class="form-control"><option value="<?= htmlspecialchars($ai_active_config['model']) ?>"><?= htmlspecialchars($ai_active_config['model']) ?></option></select><div class="input-group-append"><button type="button" id="loadAiModels" class="btn btn-outline-success"><i class="fas fa-sync mr-1"></i>Load Models</button></div></div>
+                        <script type="application/json" id="aiProviderConfigs"><?= json_encode(['gemini' => ['base_url' => $ai_config['base_url'], 'model' => $ai_config['model'], 'configured' => $ai_config['configured']], 'openai_compatible' => ['base_url' => $ai_openai_config['base_url'], 'model' => $ai_openai_config['model'], 'configured' => $ai_openai_config['configured']]], JSON_UNESCAPED_SLASHES) ?></script>
+                        <small class="form-text text-muted">Model akan dimuat dari provider yang dipilih.</small>
+                    </div>
+                    <div id="aiSettingsStatus" class="small mt-2"></div>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button><button type="button" class="btn btn-primary" id="saveAiSettings"><i class="fas fa-save mr-1"></i>Simpan</button></div>
+            </div></div>
         </div>
 
         <div class="card shadow-sm mb-4">
@@ -705,6 +727,42 @@ include 'header.php';
         // Logika untuk mempersiapkan data JSON dan mengirimkan ke halaman print draft
     }
 
+    function updateAiProviderForm(showStatus = true) {
+        const configs = JSON.parse($('#aiProviderConfigs').text() || '{}');
+        const config = configs[$('#aiProvider').val()] || {};
+        $('#aiBaseUrl').val(config.base_url || '');
+        $('#aiModel').empty();
+        if (config.model) $('#aiModel').append($('<option>', {value: config.model, text: config.model}));
+        $('#aiApiKey').val('');
+        if (showStatus) $('#aiSettingsStatus').removeClass().addClass('small mt-2 text-muted').text(config.configured ? 'API key tersimpan. Kosongkan field API key untuk memakai key tersimpan, atau isi untuk menggantinya.' : 'API key belum tersimpan untuk provider ini.');
+    }
+    $('#aiProvider').on('change', updateAiProviderForm);
+    $('#loadAiModels').on('click', async function() {
+        const $button = $(this);
+        $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i>Loading...');
+        try {
+            const response = await fetch('ai_settings_api.php', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'models', provider:$('#aiProvider').val(), api_key:$('#aiApiKey').val().trim(), base_url:$('#aiBaseUrl').val().trim()})});
+            const payload = await response.json();
+            if (!response.ok || !payload.ok) throw new Error(payload.message || 'Model gagal dimuat.');
+            $('#aiModel').empty(); payload.data.models.forEach(model => $('#aiModel').append($('<option>', {value:model.id, text:model.label})));
+            $('#aiSettingsStatus').removeClass().addClass('small mt-2 text-success').text(payload.message);
+        } catch (error) { $('#aiSettingsStatus').removeClass().addClass('small mt-2 text-danger').text(error.message); }
+        finally { $button.prop('disabled', false).html('<i class="fas fa-sync mr-1"></i>Load Models'); }
+    });
+    $('#saveAiSettings').on('click', async function() {
+        const $button = $(this), model = $('#aiModel').val();
+        if (!model) { $('#aiSettingsStatus').removeClass().addClass('small mt-2 text-danger').text('Pilih model terlebih dahulu.'); return; }
+        $button.prop('disabled', true);
+        try {
+            const response = await fetch('ai_settings_api.php', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'save', provider:$('#aiProvider').val(), api_key:$('#aiApiKey').val(), base_url:$('#aiBaseUrl').val(), model})});
+            const payload = await response.json();
+            if (!response.ok || !payload.ok) throw new Error(payload.message || 'Pengaturan gagal disimpan.');
+            $('#aiSettingsStatus').removeClass().addClass('small mt-2 text-success').text(payload.message);
+            setTimeout(() => $('#aiSettingsModal').modal('hide'), 700);
+        } catch (error) { $('#aiSettingsStatus').removeClass().addClass('small mt-2 text-danger').text(error.message); }
+        finally { $button.prop('disabled', false); }
+    });
+
     $('#generateServiceReportAiBtn').on('click', async function() {
         const brief = $('#serviceReportAiBrief').val().trim();
         if (!brief) { alert('Prompt service report wajib diisi.'); return; }
@@ -712,7 +770,7 @@ include 'header.php';
         $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i>Memproses...');
         $('#serviceReportAiStatus').text('Menghubungi provider AI...');
         try {
-            const response = await fetch('gemini_service_report_autofill.php', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({brief})});
+            const response = await fetch('gemini_service_report_autofill.php', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({brief, provider: $('#aiProvider').val()})});
             const payload = await response.json();
             if (!response.ok || !payload.ok) throw new Error(payload.message || 'Gagal membuat draft service report.');
             const draft = payload.data || {};
