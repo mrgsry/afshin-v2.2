@@ -15,10 +15,41 @@ if ($action === 'models') {
     $url = rtrim($baseUrl, '/') . '/models';
     $headers = ['Accept: application/json'];
     if ($provider === 'gemini') { $url .= '?key=' . rawurlencode($apiKey); } else { $headers[] = 'Authorization: Bearer ' . $apiKey; }
-    $ch = curl_init($url); curl_setopt_array($ch, [CURLOPT_HTTPHEADER => $headers, CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 20]);
-    $response = curl_exec($ch); $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE); curl_close($ch);
-    $data = json_decode((string)$response, true);
-    if ($response === false || $code < 200 || $code >= 300) ai_settings_response(false, $data['error']['message'] ?? 'Model gagal dimuat.');
+    $ch = curl_init($url);
+    if ($ch === false) ai_settings_response(false, 'Gagal menyiapkan koneksi ke provider AI.');
+    curl_setopt_array($ch, [
+        CURLOPT_HTTPHEADER => $headers,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_CONNECTTIMEOUT => 10,
+        CURLOPT_TIMEOUT => 20,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_MAXREDIRS => 3,
+    ]);
+    $response = curl_exec($ch);
+    $curlError = curl_error($ch);
+    $curlErrno = curl_errno($ch);
+    $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($response === false) {
+        $detail = $curlError !== '' ? ' cURL #' . $curlErrno . ': ' . $curlError : '';
+        ai_settings_response(false, 'Tidak dapat terhubung ke provider AI.' . $detail);
+    }
+
+    $data = json_decode($response, true);
+    if ($code < 200 || $code >= 300) {
+        if ($code === 401 || $code === 403) {
+            ai_settings_response(false, 'Provider menolak request (HTTP ' . $code . '). Periksa API key dan pastikan dikirim sebagai Bearer token.');
+        }
+        if ($code === 0) ai_settings_response(false, 'Provider tidak mengembalikan status HTTP. Periksa akses keluar server dan port 2266.');
+        ai_settings_response(false, 'Provider mengembalikan HTTP ' . $code . '.');
+    }
+    if (!is_array($data)) {
+        ai_settings_response(false, 'Respons provider bukan JSON yang valid (HTTP ' . $code . ').');
+    }
+    if ($provider !== 'gemini' && (!isset($data['data']) || !is_array($data['data']))) {
+        ai_settings_response(false, 'Format respons provider tidak sesuai: field data harus berupa array.');
+    }
     $models = [];
     foreach (($provider === 'gemini' ? ($data['models'] ?? []) : ($data['data'] ?? [])) as $item) {
         if ($provider === 'gemini') {
@@ -28,6 +59,7 @@ if ($action === 'models') {
             $models[] = ['id' => (string)$item['id'], 'label' => (string)$item['id']];
         }
     }
+    if ($models === []) ai_settings_response(false, 'Provider mengembalikan daftar model kosong atau tidak memiliki model dengan ID yang valid.');
     ai_settings_response(true, 'Model berhasil dimuat.', ['models' => $models]);
 }
 try { save_ai_config($mysqli, $provider, $apiKey, trim((string)($input['model'] ?? '')), $baseUrl); ai_settings_response(true, 'Pengaturan AI berhasil disimpan.'); }
