@@ -10,15 +10,75 @@ function service_report_ai_error($message, $status = 400) {
 }
 function service_report_extract_json_object($text) {
     $text = trim((string)$text);
+    if ($text === '') return null;
     $text = preg_replace('/(?:^|\R)\s*data:\s*\[DONE\]\s*$/i', '', $text);
     if (preg_match('/^```(?:json)?\s*(.*?)\s*```$/is', $text, $matches)) $text = trim($matches[1]);
     $result = json_decode($text, true);
-    if (is_array($result)) return $result;
+    if (is_array($result) && (array_key_exists('customer_id', $result) || array_key_exists('date_doc', $result) || array_key_exists('activities', $result))) return $result;
+    if (is_array($result)) {
+        foreach (['data', 'output', 'result', 'service_report'] as $key) {
+            if (isset($result[$key]) && is_array($result[$key])) return $result[$key];
+        }
+    }
     $start = strpos($text, '{');
     $end = strrpos($text, '}');
     if ($start === false || $end === false || $end <= $start) return null;
     $result = json_decode(substr($text, $start, $end - $start + 1), true);
-    return is_array($result) ? $result : null;
+    if (!is_array($result)) return null;
+    foreach (['data', 'output', 'result', 'service_report'] as $key) {
+        if (isset($result[$key]) && is_array($result[$key])) return $result[$key];
+    }
+    return $result;
+}
+
+function service_report_text_from_content($content) {
+    if (is_string($content)) return $content;
+    if (!is_array($content)) return '';
+    if (array_keys($content) !== range(0, count($content) - 1)) {
+        foreach (['text', 'content', 'value'] as $key) {
+            if (array_key_exists($key, $content)) return service_report_text_from_content($content[$key]);
+        }
+        $encoded = json_encode($content, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        return $encoded === false ? '' : $encoded;
+    }
+    $text = '';
+    foreach ($content as $part) {
+        if (is_string($part)) {
+            $text .= $part;
+        } elseif (is_array($part)) {
+            $text .= (string)($part['text'] ?? $part['content'] ?? $part['value'] ?? '');
+        }
+    }
+    return $text;
+}
+
+function service_report_openai_response_text($response, $data) {
+    $text = '';
+    if (is_array($data)) {
+        $choice = $data['choices'][0] ?? [];
+        $message = is_array($choice['message'] ?? null) ? $choice['message'] : [];
+        $text = service_report_text_from_content($message['content'] ?? '');
+        if ($text === '') $text = service_report_text_from_content($choice['text'] ?? '');
+        if ($text === '') $text = service_report_text_from_content($message['reasoning_content'] ?? '');
+        if ($text === '') $text = service_report_text_from_content($data['output_text'] ?? $data['output'] ?? '');
+    }
+    if ($text !== '') return $text;
+
+    // Some compatible endpoints always return SSE, even when streaming was not requested.
+    $chunks = [];
+    foreach (preg_split('/\R/', (string)$response) as $line) {
+        $line = trim($line);
+        if (stripos($line, 'data:') !== 0) continue;
+        $chunk = trim(substr($line, 5));
+        if ($chunk === '' || strtoupper($chunk) === '[DONE]') continue;
+        $chunkData = json_decode($chunk, true);
+        if (!is_array($chunkData)) continue;
+        $delta = $chunkData['choices'][0]['delta'] ?? [];
+        $piece = service_report_text_from_content($delta['content'] ?? '');
+        if ($piece === '') $piece = service_report_text_from_content($chunkData['choices'][0]['text'] ?? '');
+        if ($piece !== '') $chunks[] = $piece;
+    }
+    return implode('', $chunks);
 }
 
 function service_report_clean_text($value) {
@@ -66,7 +126,7 @@ $prompt = "Anda membantu membuat draft service report teknis. Balas HANYA JSON v
 $headers = ['Content-Type: application/json'];
 $providerLabel = $config['provider'] === 'openai_compatible' ? 'OpenAI Compatible' : 'Gemini';
 if ($config['provider'] === 'openai_compatible') {
-    $payload = json_encode(['model' => $config['model'], 'messages' => [['role' => 'system', 'content' => 'Balas hanya JSON valid tanpa markdown.'], ['role' => 'user', 'content' => $prompt]], 'temperature' => 0.1, 'max_tokens' => 4096, 'response_format' => ['type' => 'text']]);
+    $payload = json_encode(['model' => $config['model'], 'messages' => [['role' => 'system', 'content' => 'Balas hanya JSON valid tanpa markdown. Jangan gunakan code fence atau penjelasan tambahan.'], ['role' => 'user', 'content' => $prompt]], 'temperature' => 0.1, 'max_tokens' => 4096]);
     $url = rtrim($config['base_url'], '/') . '/chat/completions';
     $headers[] = 'Authorization: Bearer ' . $config['api_key'];
 } else {
@@ -82,11 +142,12 @@ $curlError = curl_error($ch);
 curl_close($ch);
 if ($response === false || $curlError) service_report_ai_error($providerLabel . ' tidak dapat dihubungi.', 502);
 
-$response = preg_replace('/\s*data:\s*\[DONE\]\s*$/i', '', (string)$response);
+$response = (string)$response;
 $data = json_decode($response, true);
 if ($httpCode < 200 || $httpCode >= 300) service_report_ai_error($data['error']['message'] ?? ($providerLabel . ' menolak permintaan (HTTP ' . $httpCode . ').'), 502);
-$text = $config['provider'] === 'openai_compatible' ? (($data['choices'][0]['message']['content'] ?? '') ?: ($data['choices'][0]['message']['reasoning_content'] ?? '')) : ($data['candidates'][0]['content']['parts'][0]['text'] ?? '');
-if (is_array($text)) $text = implode('', array_map(function ($part) { return is_array($part) ? (string)($part['text'] ?? $part['content'] ?? '') : (string)$part; }, $text));
+$text = $config['provider'] === 'openai_compatible'
+    ? service_report_openai_response_text($response, $data)
+    : service_report_text_from_content($data['candidates'][0]['content']['parts'] ?? '');
 $result = service_report_extract_json_object($text);
 if (!is_array($result)) service_report_ai_error('Respons ' . $providerLabel . ' tidak sesuai format JSON service report.', 502);
 
