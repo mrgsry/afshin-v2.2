@@ -967,6 +967,13 @@ include 'header.php';
         
         // Jika kosong setelah dibersihkan, return 0
         if (cleaned === '') return 0;
+
+        // Nilai raw dari MySQL menggunakan format desimal standar, misalnya 5000000.00.
+        // Jangan perlakukan titik desimal tersebut sebagai pemisah ribuan.
+        if (/^-?\d+(\.\d+)?$/.test(cleaned)) {
+            const result = parseFloat(cleaned);
+            return isNaN(result) ? 0 : result;
+        }
         
         // Nominal invoice menggunakan koma sebagai pemisah ribuan.
         cleaned = cleaned.replace(/[.,]/g, '');

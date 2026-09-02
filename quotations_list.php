@@ -4,6 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require_once 'functions.php';
 require_once 'db.php';
+require_once 'crypto.php';
 require_module_access('quotation');
 
 /* ================= DELETE ================= */
@@ -164,7 +165,8 @@ $item_count = $row['item_count'] + 1;
                                         <i class="fas fa-envelope"></i>
                                     </button>
                                     <?php 
-            $public_url = "https://afshin.hnet-diigital.biz.id/quotations_view_public.php?id=" . $row['id'];
+            $public_token = get_or_create_quotation_public_token($mysqli, $row['id']);
+            $public_url = "https://afshin.hnet-diigital.biz.id/quotations_view_public.php?token=" . rawurlencode((string) $public_token);
             $wa_message = urlencode("Halo, berikut adalah Quotation Anda dari CV Afshin Raya Teknik:\n\nNo: " . $row['quotation_no'] . "\nLink Preview: " . $public_url);
             $wa_url = "https://wa.me/?text=" . $wa_message;
         ?>
