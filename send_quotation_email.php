@@ -4,9 +4,9 @@
  * Mail Service for sending Quotation PDF via Gmail (PHPMailer)
  * Expected POST params: quotation_id, subject, body
  */
-require_once 'vendor/autoload.php';
-require_once 'db.php';
-require_once 'generate_quotation_pdf.php';
+require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/generate_quotation_pdf.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;

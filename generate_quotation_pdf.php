@@ -4,8 +4,8 @@
  * Menghasilkan file PDF dari data quotation dengan format persis quotations_print.php
  */
 
-require_once 'db.php';
-require_once 'vendor/autoload.php';
+require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -27,20 +27,43 @@ function generateQuotationPDF($quotation_id) {
         return false;
     }
     
-    // Fetch Items
+    // Support both the older schema (description/satuan) and the current
+    // quotation schema (description_quot/satuan_quot).
+    $columns = [];
+    $columns_res = mysqli_query($mysqli, "SHOW COLUMNS FROM quotation_items");
+    if ($columns_res) {
+        while ($column = mysqli_fetch_assoc($columns_res)) {
+            $columns[$column['Field']] = true;
+        }
+    }
+
+    $description_column = isset($columns['description_quot']) ? 'description_quot' : 'description';
+    $satuan_column = isset($columns['satuan_quot']) ? 'satuan_quot' : 'satuan';
+    $discount_column = isset($columns['discount']) ? 'discount' : '0';
+
+    if (!isset($columns[$description_column], $columns[$satuan_column])) {
+        error_log('Quotation PDF error: quotation_items schema is missing description/satuan columns');
+        return false;
+    }
+
     $items_res = mysqli_query($mysqli, "
-        SELECT 
-    item_no,
-    description_quot,
-    qty,
-    satuan_quot,
-    unit_price,
-    discount,
-    amount
-FROM quotation_items
+        SELECT
+            item_no,
+            `$description_column` AS description_quot,
+            qty,
+            `$satuan_column` AS satuan_quot,
+            unit_price,
+            $discount_column AS discount,
+            amount
+        FROM quotation_items
         WHERE quotation_id = $id
         ORDER BY item_no ASC
     ");
+
+    if (!$items_res) {
+        error_log('Quotation PDF item query failed: ' . mysqli_error($mysqli));
+        return false;
+    }
     
     $items = [];
     while($row = mysqli_fetch_assoc($items_res)) {
@@ -60,10 +83,13 @@ $cap_path = __DIR__ . '/img/cap2.png';
     
     $logo_src = '';
     $cap_src = '';
-    if (file_exists($logo_path)) {
+    // DomPDF's CPDF adapter needs GD to render PNG files. Keep PDF delivery
+    // working on hosts where GD cannot be enabled by omitting those images.
+    $can_render_png = extension_loaded('gd');
+    if ($can_render_png && file_exists($logo_path)) {
         $logo_src = 'data:image/png;base64,' . base64_encode(file_get_contents($logo_path));
     }
-    if (file_exists($cap_path)) {
+    if ($can_render_png && file_exists($cap_path)) {
         $cap_src = 'data:image/png;base64,' . base64_encode(file_get_contents($cap_path));
     }
 
