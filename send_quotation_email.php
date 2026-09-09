@@ -4,6 +4,30 @@
  * Mail Service for sending Quotation PDF via Gmail (PHPMailer)
  * Expected POST params: quotation_id, subject, body
  */
+
+define('SEND_QUOTATION_EMAIL_VERSION', '2026-09-09-diagnostic-2');
+
+// Keep deployment/runtime failures as JSON so AJAX clients can show the real
+// error instead of receiving an empty HTTP 500 response.
+$sendEmailFailure = static function ($error) {
+    $message = $error instanceof Throwable ? $error->getMessage() : 'Unknown server error';
+    error_log('send_quotation_email unhandled failure: ' . get_class($error) . ': ' . $message);
+    if (!headers_sent()) {
+        header('Content-Type: application/json; charset=utf-8');
+    }
+    http_response_code(500);
+    echo json_encode(['status' => 'error', 'message' => 'Mail service error: ' . $message]);
+    exit;
+};
+set_exception_handler($sendEmailFailure);
+register_shutdown_function(static function () use ($sendEmailFailure) {
+    $lastError = error_get_last();
+    if ($lastError && in_array($lastError['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR], true)) {
+        $sendEmailFailure(new Error($lastError['message'], 0));
+    }
+});
+
+error_log('send_quotation_email version: ' . SEND_QUOTATION_EMAIL_VERSION);
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/generate_quotation_pdf.php';
@@ -25,6 +49,10 @@ if ($quotation_id <= 0) {
 
 // Fetch customer email & cc
 $res = mysqli_query($mysqli, "SELECT email, cc_email FROM customers WHERE id = (SELECT customer_id FROM quotations WHERE id=$quotation_id) LIMIT 1");
+if (!$res) {
+    error_log('send_quotation_email customer query failed: ' . mysqli_error($mysqli));
+    throw new RuntimeException('Unable to load customer email details');
+}
 if(!$cust = mysqli_fetch_assoc($res)) {
     http_response_code(404);
     echo json_encode(['status'=>'error','message'=>'Customer not found']);
@@ -32,8 +60,8 @@ if(!$cust = mysqli_fetch_assoc($res)) {
 }
 
 // Support multiple emails in "To" and "CC" separated by comma
-$to_raw   = $cust['email'];
-$cc_raw   = $cust['cc_email'];
+$to_raw   = (string)($cust['email'] ?? '');
+$cc_raw   = (string)($cust['cc_email'] ?? '');
 
 $to_emails = array_filter(array_map('trim', explode(',', $to_raw)));
 $cc_emails = array_filter(array_map('trim', explode(',', $cc_raw)));

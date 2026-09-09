@@ -507,7 +507,7 @@ $(document).ready(function() {
                     var res = JSON.parse(xhr.responseText);
                     errorMsg = res.message || errorMsg;
                 } catch (e) {
-                    errorMsg = xhr.responseText || errorMsg;
+                    errorMsg = 'Server mengembalikan HTTP ' + xhr.status + '. Cek error_log hosting.';
                 }
                 alert('❌ ' + errorMsg);
             },
