@@ -84,11 +84,8 @@ if (empty($validToEmails)) {
 
 $smtpUser = trim((string)($SMTP_USER ?? ''));
 $smtpPass = preg_replace('/\s+/', '', (string)($SMTP_PASS ?? ''));
-$smtpHost = trim((string)($SMTP_HOST ?? 'smtp.gmail.com'));
-$smtpPort = (int)($SMTP_PORT ?? 587);
-$smtpSecure = strtolower(trim((string)($SMTP_SECURE ?? 'tls')));
 
-if ($smtpUser === '' || $smtpPass === '' || $smtpHost === '' || $smtpPort <= 0) {
+if ($smtpUser === '' || $smtpPass === '') {
     http_response_code(500);
     echo json_encode(['status'=>'error','message'=>'Mail service is not configured']);
     exit;
@@ -169,23 +166,18 @@ error_log('send_quotation_email preparing SMTP: ' . json_encode([
     'cc_count' => $safeCcCount,
     'attachment_size' => filesize($pdf_path),
     'smtp_user_domain' => substr(strrchr($smtpUser, '@') ?: '', 1),
-    'smtp_host' => $smtpHost,
-    'smtp_port' => $smtpPort,
-    'smtp_secure' => $smtpSecure,
 ]));
 
 $mail = new PHPMailer(true);
 try {
     // Server settings
     $mail->isSMTP();
-    $mail->Host = $smtpHost;
+    $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = true;
     $mail->Username = $smtpUser;
     $mail->Password = $smtpPass;
-    $mail->SMTPSecure = $smtpSecure === 'ssl'
-        ? PHPMailer::ENCRYPTION_SMTPS
-        : PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port = $smtpPort;
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port = 587;
     $mail->SMTPDebug = 0;
 
     // Recipients
