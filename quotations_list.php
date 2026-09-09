@@ -122,7 +122,7 @@ $item_count = $row['item_count'] + 1;
                                 <?= date('d/m/Y',strtotime($row['date_quot'])) ?>
                             </td>
 
-                            <td><?= htmlspecialchars($row['customer_name']) ?></td>
+                            <td><?= htmlspecialchars((string)($row['customer_name'] ?? ''), ENT_QUOTES, 'UTF-8') ?></td>
 
 
                             <td><?= htmlspecialchars($row['first_description'] ?? '-') ?></td>
@@ -159,8 +159,8 @@ $item_count = $row['item_count'] + 1;
                                     </a>
                                     <button type="button" class="btn btn-success btn-sm btn-send-email"
                                         data-id="<?php echo $row['id']; ?>"
-                                        data-customer="<?php echo htmlspecialchars($row['customer_name']); ?>"
-                                        data-quotation-no="<?php echo htmlspecialchars($row['quotation_no']); ?>"
+                                        data-customer="<?php echo htmlspecialchars((string)($row['customer_name'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>"
+                                        data-quotation-no="<?php echo htmlspecialchars((string)($row['quotation_no'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>"
                                         title="Send Email">
                                         <i class="fas fa-envelope"></i>
                                     </button>
