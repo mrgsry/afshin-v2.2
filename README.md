@@ -25,3 +25,5 @@ Security configuration:
 - Generate a production key with PHP: `php -r "echo bin2hex(random_bytes(32)), PHP_EOL;"`
 - Keep the same `AFSHIN_ENCRYPTION_KEY` when deploying updates. Changing it makes existing encrypted API keys unreadable; save the API key again after an intentional key rotation.
 - Do not put the Gemini API key in PHP source, SQL dumps, browser JavaScript, or Git history.
+- Gmail SMTP credentials are configured as `$SMTP_USER` and `$SMTP_PASS` in `db.php`. This file is ignored by Git and must be uploaded/configured manually on cPanel.
+- Set `$SMTP_PASS` to the new Google app password without spaces. Revoke any app password that was previously exposed or committed; never put the password in tracked source code or Git history.

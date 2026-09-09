@@ -13,10 +13,6 @@ use PHPMailer\PHPMailer\Exception;
 
 header('Content-Type: application/json; charset=utf-8');
 
-// Config – replace with your actual Gmail credentials
-$SMTP_USER = 'cvafshinrayateknik@gmail.com';
-$SMTP_PASS = 'isch kxdm blsl xwxv'; // App password / key
-
 $quotation_id = intval($_POST['quotation_id'] ?? 0);
 $subject = trim($_POST['subject'] ?? 'Quotation from Afshin');
 $body   = trim($_POST['body'] ?? 'Berikut terlampir quotation Anda.');
@@ -45,6 +41,25 @@ $cc_emails = array_filter(array_map('trim', explode(',', $cc_raw)));
 if (empty($to_emails)) {
     http_response_code(400);
     echo json_encode(['status'=>'error','message'=>'No recipient email address found']);
+    exit;
+}
+
+$validToEmails = array_values(array_filter($to_emails, static function ($email) {
+    return filter_var($email, FILTER_VALIDATE_EMAIL);
+}));
+
+if (empty($validToEmails)) {
+    http_response_code(400);
+    echo json_encode(['status'=>'error','message'=>'No valid recipient email address found']);
+    exit;
+}
+
+$smtpUser = trim((string)($SMTP_USER ?? ''));
+$smtpPass = preg_replace('/\s+/', '', (string)($SMTP_PASS ?? ''));
+
+if ($smtpUser === '' || $smtpPass === '') {
+    http_response_code(500);
+    echo json_encode(['status'=>'error','message'=>'Mail service is not configured']);
     exit;
 }
 
@@ -114,19 +129,17 @@ try {
     $mail->isSMTP();
     $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = true;
-    $mail->Username = $SMTP_USER;
-    $mail->Password = $SMTP_PASS;
+    $mail->Username = $smtpUser;
+    $mail->Password = $smtpPass;
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-$mail->Port = 587;
+    $mail->Port = 587;
 
     // Recipients
-    $mail->setFrom($SMTP_USER, 'CV Afshin Raya Teknik');
+    $mail->setFrom($smtpUser, 'CV Afshin Raya Teknik');
     
     // Add multiple recipients
-    foreach($to_emails as $email) {
-        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $mail->addAddress($email);
-        }
+    foreach ($validToEmails as $email) {
+        $mail->addAddress($email);
     }
     
     // Add multiple CCs
