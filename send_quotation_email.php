@@ -117,11 +117,28 @@ if ($uploadedFiles && is_array($uploadedFiles['name'] ?? null)) {
 // Generate PDF
 $pdf_path = generateQuotationPDF($quotation_id);
 error_log('send_quotation_email pdf_path: ' . var_export($pdf_path, true));
-if(!$pdf_path) {
+if (!$pdf_path || !is_file($pdf_path) || !is_readable($pdf_path) || (int)filesize($pdf_path) <= 0) {
+    error_log('send_quotation_email PDF validation failed: ' . var_export([
+        'path' => $pdf_path,
+        'is_file' => $pdf_path ? is_file($pdf_path) : false,
+        'is_readable' => $pdf_path ? is_readable($pdf_path) : false,
+        'size' => $pdf_path && is_file($pdf_path) ? filesize($pdf_path) : null,
+    ], true));
     http_response_code(500);
     echo json_encode(['status'=>'error','message'=>'Failed to generate PDF']);
     exit;
 }
+
+$safeCcCount = count(array_filter($cc_emails, static function ($email) {
+    return filter_var($email, FILTER_VALIDATE_EMAIL);
+}));
+error_log('send_quotation_email preparing SMTP: ' . json_encode([
+    'quotation_id' => $quotation_id,
+    'to_count' => count($validToEmails),
+    'cc_count' => $safeCcCount,
+    'attachment_size' => filesize($pdf_path),
+    'smtp_user_domain' => substr(strrchr($smtpUser, '@') ?: '', 1),
+]));
 
 $mail = new PHPMailer(true);
 try {
@@ -133,6 +150,10 @@ try {
     $mail->Password = $smtpPass;
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port = 587;
+    $mail->SMTPDebug = 2;
+    $mail->Debugoutput = static function ($message, $level) {
+        error_log('PHPMailer SMTP [' . $level . ']: ' . trim($message));
+    };
 
     // Recipients
     $mail->setFrom($smtpUser, 'CV Afshin Raya Teknik');
@@ -151,6 +172,7 @@ try {
 
     // Attachments
     $mail->addAttachment($pdf_path, basename($pdf_path));
+    error_log('send_quotation_email PDF attachment added');
     foreach ($attachments as $attachment) {
         $mail->addAttachment($attachment['path'], $attachment['name'], PHPMailer::ENCODING_BASE64, $attachment['type']);
     }
@@ -180,15 +202,19 @@ try {
 $mail->Body    = nl2br(htmlspecialchars($body)) . $signature;
 $mail->AltBody = $body . "\n\n--\nCV. Afshin Rayan Teknik\nTlp: +62 896 1464 7011\nEmail: cvafshinrayateknik@gmail.com";
 
+    error_log('send_quotation_email calling SMTP send');
     $mail->send();
+    error_log('send_quotation_email SMTP send completed');
 
     // Cleanup temp PDF
     @unlink($pdf_path);
 
     echo json_encode(['status'=>'success','message'=>'Email sent successfully']);
-} catch (Exception $e) {
+} catch (Throwable $e) {
     // Cleanup temp PDF even on error
     @unlink($pdf_path);
+    error_log('send_quotation_email failed: ' . get_class($e) . ': ' . $e->getMessage());
+    error_log('send_quotation_email PHPMailer ErrorInfo: ' . $mail->ErrorInfo);
     http_response_code(500);
     echo json_encode(['status'=>'error','message'=>'Mailer Error: '.$mail->ErrorInfo]);
 }
