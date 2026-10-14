@@ -4,7 +4,9 @@
 // =========================================================================
 require_once 'db.php';
 require_once 'functions.php';
+require_once 'ai_config.php';
 require_login();
+require_module_access('invoice', 'full');
 
 if (!isset($mysqli) || !$mysqli) {
     die("Koneksi database gagal!");
@@ -190,6 +192,10 @@ $success_msg = $error_msg && strpos($error_msg,'ERROR')===false ? $error_msg : '
 $error_msg   = strpos($error_msg,'ERROR')!==false ? $error_msg : '';
 
 $default_invoice_no = generate_invoice_no($mysqli, date('Y-m-d'));
+$ai_config = gemini_config($mysqli);
+$ai_openai_config = ai_config($mysqli, 'openai_compatible');
+$ai_provider = $ai_openai_config['configured'] ? 'openai_compatible' : 'gemini';
+$ai_active_config = $ai_provider === 'openai_compatible' ? $ai_openai_config : $ai_config;
 
 include 'header.php';
 ?>
@@ -752,6 +758,41 @@ include 'header.php';
         <?php endif; ?>
 
         <form method="post" id="invoiceForm">
+            <div class="invoice-card border-left border-info">
+                <div class="section-title"><i class="fas fa-robot"></i> AI Auto Fill</div>
+                <p class="text-muted small">Masukkan kebutuhan pelanggan. AI akan membuat draft item, harga, customer, dan catatan. Periksa data sebelum menyimpan invoice.</p>
+                <div class="form-group mb-2"><label for="invoiceAiBrief">Brief invoice</label><textarea id="invoiceAiBrief" class="form-control" rows="4" maxlength="6000" placeholder="Contoh: Invoice jasa repair spindle motor Fanuc, inspeksi, penggantian bearing, testing, dan laporan pekerjaan."></textarea></div>
+                <button type="button" class="btn btn-info" id="generateInvoiceAiBtn"><i class="fas fa-wand-magic-sparkles mr-1"></i>Generate Draft AI</button>
+                <button type="button" class="btn btn-outline-secondary ml-1" data-toggle="modal" data-target="#invoiceAiSettingsModal" title="Pengaturan AI"><i class="fas fa-sliders-h mr-1"></i>Pengaturan</button>
+                <span id="invoiceAiStatus" class="ml-2 small text-muted"></span>
+            </div>
+
+            <div class="modal fade" id="invoiceAiSettingsModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document"><div class="modal-content">
+                    <div class="modal-header bg-light"><h5 class="modal-title"><i class="fas fa-robot mr-2"></i>Pengaturan Provider AI</h5><button type="button" class="close" data-dismiss="modal"><span>&times;</span></button></div>
+                    <div class="modal-body">
+                        <div class="p-3" style="background:#d9eee5;border:1px solid #a8d5c0;border-radius:6px">
+                            <div class="form-group"><label for="invoiceAiProvider">Provider AI</label><select id="invoiceAiProvider" class="form-control"><option value="gemini" <?= $ai_provider === 'gemini' ? 'selected' : '' ?>>Gemini API</option><option value="openai_compatible" <?= $ai_provider === 'openai_compatible' ? 'selected' : '' ?>>OpenAI Compatible (9Router)</option></select></div>
+                            <div class="form-group"><label for="invoiceAiBaseUrl">Base URL</label><input type="url" id="invoiceAiBaseUrl" class="form-control" value="<?= htmlspecialchars($ai_active_config['base_url']) ?>"></div>
+                            <div class="form-group"><label for="invoiceAiApiKey">API Key</label><input type="password" id="invoiceAiApiKey" class="form-control" autocomplete="new-password"></div>
+                            <div class="input-group"><select id="invoiceAiModel" class="form-control"><option value="<?= htmlspecialchars($ai_active_config['model']) ?>"><?= htmlspecialchars($ai_active_config['model']) ?></option></select><div class="input-group-append"><button type="button" id="loadInvoiceAiModels" class="btn btn-outline-success"><i class="fas fa-sync mr-1"></i>Load Models</button></div></div>
+                            <script type="application/json" id="invoiceAiProviderConfigs"><?= json_encode(['gemini' => ['base_url' => $ai_config['base_url'], 'model' => $ai_config['model'], 'configured' => $ai_config['configured']], 'openai_compatible' => ['base_url' => $ai_openai_config['base_url'], 'model' => $ai_openai_config['model'], 'configured' => $ai_openai_config['configured']]], JSON_UNESCAPED_SLASHES) ?></script>
+                            <small class="form-text text-muted">Model akan dimuat dari provider yang dipilih.</small>
+                        </div>
+                        <div id="invoiceAiSettingsStatus" class="small mt-2"></div>
+                    </div>
+                    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button><button type="button" class="btn btn-primary" id="saveInvoiceAiSettings"><i class="fas fa-save mr-1"></i>Simpan</button></div>
+                </div></div>
+            </div>
+
+            <div class="modal fade" id="invoiceAiApplyModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document"><div class="modal-content">
+                    <div class="modal-header bg-info text-white"><h5 class="modal-title"><i class="fas fa-wand-magic-sparkles mr-2"></i>Terapkan Draft AI</h5><button type="button" class="close text-white" data-dismiss="modal"><span>&times;</span></button></div>
+                    <div class="modal-body"><p class="mb-2">Draft AI siap diterapkan ke form invoice.</p><div class="alert alert-light border mb-0"><i class="fas fa-circle-info text-info mr-2"></i><span id="invoiceAiApplySummary"></span></div><small class="text-muted d-block mt-2">Data item, catatan, tanggal invoice, dan nomor PO yang sedang diisi akan diganti jika draft AI memuat nilainya. Faktur pajak, tanggal jatuh tempo, dan pajak tetap perlu diperiksa.</small></div>
+                    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-xmark mr-1"></i>Batal</button><button type="button" class="btn btn-info" id="applyInvoiceAiDraft"><i class="fas fa-check mr-1"></i>Terapkan Draft</button></div>
+                </div></div>
+            </div>
+
             <!-- Customer & Invoice Details -->
             <div class="invoice-card">
                 <div class="section-title">
@@ -963,7 +1004,6 @@ include 'header.php';
         </form>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
     /* ========== UTILITY FUNCTIONS ========== */
     function formatRupiah(num) {
@@ -1043,6 +1083,97 @@ include 'header.php';
                 document.getElementById('customer_info_display').style.display = 'none';
             });
     }
+
+    /* ========== AI AUTO FILL ========== */
+    function updateInvoiceAiProviderForm(showStatus = true) {
+        const configs = JSON.parse($('#invoiceAiProviderConfigs').text() || '{}');
+        const config = configs[$('#invoiceAiProvider').val()] || {};
+        $('#invoiceAiBaseUrl').val(config.base_url || '');
+        $('#invoiceAiModel').empty();
+        if (config.model) $('#invoiceAiModel').append($('<option>', {value: config.model, text: config.model}));
+        $('#invoiceAiApiKey').val('');
+        if (showStatus) $('#invoiceAiSettingsStatus').removeClass().addClass('small mt-2 text-muted').text(config.configured ? 'API key tersimpan. Kosongkan field API key untuk memakai key tersimpan.' : 'API key belum tersimpan untuk provider ini.');
+    }
+
+    $('#invoiceAiProvider').on('change', function() { updateInvoiceAiProviderForm(); });
+
+    $('#loadInvoiceAiModels').on('click', async function() {
+        const $button = $(this), apiKey = $('#invoiceAiApiKey').val().trim(), baseUrl = $('#invoiceAiBaseUrl').val().trim();
+        $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i>Loading...');
+        try {
+            const response = await fetch('ai_settings_api.php', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'models', provider:$('#invoiceAiProvider').val(), api_key:apiKey, base_url:baseUrl})});
+            const payload = await response.json();
+            if (!response.ok || !payload.ok) throw new Error(payload.message || 'Model gagal dimuat.');
+            const $select = $('#invoiceAiModel').empty();
+            payload.data.models.forEach(model => $select.append($('<option>', {value:model.id, text:model.label})));
+            $('#invoiceAiSettingsStatus').removeClass().addClass('small mt-2 text-success').text(payload.message);
+        } catch (error) { $('#invoiceAiSettingsStatus').removeClass().addClass('small mt-2 text-danger').text(error.message); }
+        finally { $button.prop('disabled', false).html('<i class="fas fa-sync mr-1"></i>Load Models'); }
+    });
+
+    $('#saveInvoiceAiSettings').on('click', async function() {
+        const $button = $(this), model = $('#invoiceAiModel').val();
+        if (!model) { $('#invoiceAiSettingsStatus').removeClass().addClass('small mt-2 text-danger').text('Pilih model terlebih dahulu.'); return; }
+        $button.prop('disabled', true);
+        try {
+            const response = await fetch('ai_settings_api.php', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'save', provider:$('#invoiceAiProvider').val(), api_key:$('#invoiceAiApiKey').val(), base_url:$('#invoiceAiBaseUrl').val(), model})});
+            const payload = await response.json();
+            if (!response.ok || !payload.ok) throw new Error(payload.message || 'Pengaturan gagal disimpan.');
+            $('#invoiceAiSettingsStatus').removeClass().addClass('small mt-2 text-success').text(payload.message);
+            setTimeout(() => $('#invoiceAiSettingsModal').modal('hide'), 700);
+        } catch (error) { $('#invoiceAiSettingsStatus').removeClass().addClass('small mt-2 text-danger').text(error.message); }
+        finally { $button.prop('disabled', false); }
+    });
+
+    $('#generateInvoiceAiBtn').on('click', async function() {
+        const brief = $('#invoiceAiBrief').val().trim();
+        if (!brief) { $('#invoiceAiStatus').text('Brief wajib diisi.'); return; }
+        const $button = $(this);
+        $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i>Membuat draft...');
+        $('#invoiceAiStatus').text('Menghubungi provider AI...');
+        try {
+            const customers = $('#customer_id option').map(function() { return this.value ? {id: Number(this.value), label: $(this).text().trim()} : null; }).get().filter(Boolean);
+            const response = await fetch('gemini_invoice_autofill.php', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({brief, customers, provider:$('#invoiceAiProvider').val()})});
+            const payload = await response.json();
+            if (!response.ok || !payload.ok) throw new Error(payload.message || 'Gagal membuat draft.');
+            const draft = payload.data;
+            if (!Array.isArray(draft.items) || !draft.items.length) throw new Error('Draft tidak memiliki item.');
+            const customerLabel = draft.customer_id ? $('#customer_id option[value="' + draft.customer_id + '"]').text().trim() : 'Tidak ditentukan';
+            const summaryParts = [draft.items.length + ' item'];
+            if (customerLabel !== 'Tidak ditentukan') summaryParts.push('customer: ' + customerLabel);
+            if (draft.invoice_date) summaryParts.push('tanggal: ' + draft.invoice_date);
+            if (draft.po_number) summaryParts.push('PO: ' + draft.po_number);
+            $('#invoiceAiApplySummary').text(summaryParts.join(' · ') + ' akan diterapkan.');
+            $('#invoiceAiApplyModal').data('draft', draft).modal('show');
+        } catch (error) { $('#invoiceAiStatus').text('Gagal membuat draft.'); alert(error.message); }
+        finally { $button.prop('disabled', false).html('<i class="fas fa-wand-magic-sparkles mr-1"></i>Generate Draft AI'); }
+    });
+
+    $('#applyInvoiceAiDraft').on('click', function() {
+        const draft = $('#invoiceAiApplyModal').data('draft');
+        if (!draft) return;
+        $('#customer_id').val(draft.customer_id ? String(draft.customer_id) : '').trigger('change');
+        if (draft.invoice_date) {
+            $('#created_at_inv').val(draft.invoice_date);
+            updateInvoiceNumber();
+        }
+        if (draft.po_number) $('#po_number').val(draft.po_number);
+        $('#note').val(draft.note || '');
+        $('#itemsTableInv tbody').empty();
+        (draft.items || []).forEach(function(item) {
+            $('#addRowInv').trigger('click');
+            const $row = $('#itemsTableInv tbody tr').last();
+            $row.find('input[name="description[]"]').val(item.description || '');
+            $row.find('input[name="qty[]"]').val(Math.max(0.01, Number(item.qty) || 1));
+            $row.find('select[name="satuan[]"]').val(item.unit || 'Unit');
+            const unitPrice = Math.max(0, Number(item.unit_price) || 0);
+            $row.find('input[name="unit_price_display[]"]').val(unitPrice ? formatRupiah(unitPrice) : '');
+            $row.find('input[name="unit_price_raw[]"]').val(unitPrice);
+        });
+        recalcInv();
+        $('#invoiceAiApplyModal').modal('hide');
+        $('#invoiceAiStatus').text('Draft diterapkan. Periksa data invoice sebelum disimpan.');
+    });
 
     /* ========== PPH HANDLING ========== */
     $(document).on("focus", "#pphInv", function() {
