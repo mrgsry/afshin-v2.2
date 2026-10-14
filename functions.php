@@ -95,6 +95,7 @@ function available_modules(){
         'travel_document' => 'Travel Document / Surat Jalan',
         'service_report' => 'Service Report',
         'berita_acara' => 'Berita Acara',
+        'bad' => 'BAD (Before After Documentation)',
         'data_po' => 'Data PO',
         'operational' => 'Operational',
         'finance' => 'Finance',

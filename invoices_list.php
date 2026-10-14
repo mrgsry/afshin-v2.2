@@ -1375,7 +1375,7 @@ $(document).ready(function() {
                                 <thead style="background:var(--gray-50);">
                                     <tr>
                                         <th>No</th><th>Description</th><th>Qty</th>
-                                        <th>Unit</th><th>Unit Price</th><th>Discount</th><th>Amount</th>
+                                        <th>Unit</th><th>Unit Price</th><th>Discount</th><th>Amount</th><th>DPP Nilai Lain</th>
                                     </tr>
                                 </thead>
                                 <tbody>`;
@@ -1389,16 +1389,17 @@ $(document).ready(function() {
                             <td class="text-right">${item.unit_price_formatted}</td>
                             <td class="text-right">${item.discount_formatted}</td>
                             <td class="text-right"><strong>${item.amount_formatted}</strong></td>
+                            <td class="text-right">${item.dpp_nilai_lain_formatted}</td>
                         </tr>`;
                     });
 
                     html += `</tbody>
                         <tfoot style="background:var(--gray-50);">
-                            <tr><td colspan="6" class="text-right"><strong>Subtotal:</strong></td><td class="text-right"><strong>${response.invoice.subtotal_formatted}</strong></td></tr>
-                            <tr><td colspan="6" class="text-right"><strong>PPN:</strong></td><td class="text-right"><strong>${response.invoice.ppn_formatted}</strong></td></tr>
-                            <tr><td colspan="6" class="text-right"><strong>PPH:</strong></td><td class="text-right"><strong>${response.invoice.pph_formatted}</strong></td></tr>
+                            <tr><td colspan="7" class="text-right"><strong>Subtotal:</strong></td><td class="text-right"><strong>${response.invoice.subtotal_formatted}</strong></td></tr>
+                            <tr><td colspan="7" class="text-right"><strong>PPN:</strong></td><td class="text-right"><strong>${response.invoice.ppn_formatted}</strong></td></tr>
+                            <tr><td colspan="7" class="text-right"><strong>PPH:</strong></td><td class="text-right"><strong>${response.invoice.pph_formatted}</strong></td></tr>
                             <tr style="background:var(--primary-color);color:white;">
-                                <td colspan="6" class="text-right"><strong>Total:</strong></td>
+                                <td colspan="7" class="text-right"><strong>Total:</strong></td>
                                 <td class="text-right"><strong>${response.invoice.total_formatted}</strong></td>
                             </tr>
                         </tfoot>

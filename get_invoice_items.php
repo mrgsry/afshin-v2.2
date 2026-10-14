@@ -53,16 +53,21 @@ $items_query = mysqli_query($mysqli, "
 
 $items = [];
 while($row = mysqli_fetch_assoc($items_query)){
+    $unit_price = floatval($row['unit_price'] ?? 0);
+    $amount = floatval($row['amount'] ?? 0);
+    $dpp_nilai_lain = ($amount * 11) / 12;
+
     $items[] = [
         'description' => htmlspecialchars($row['description'] ?? ''),
         'qty_formatted' => number_format(floatval($row['qty'] ?? 0), 2),
         'qty' => number_format(floatval($row['qty'] ?? 0), 2),
         'satuan' => htmlspecialchars($row['satuan'] ?? ''),
-        'unit_price_formatted' => 'Rp ' . number_format(floatval($row['unit_price'] ?? 0), 2, ',', '.'),
+        'unit_price_formatted' => 'Rp ' . number_format($unit_price, 2, ',', '.'),
         'discount_formatted' => 'Rp ' . number_format(floatval($row['discount'] ?? 0), 2, ',', '.'),
         'discount' => floatval($row['discount'] ?? 0),
-        'amount_formatted' => 'Rp ' . number_format(floatval($row['amount'] ?? 0), 2, ',', '.'),
-        'amount' => 'Rp ' . number_format(floatval($row['amount'] ?? 0), 2, ',', '.')
+        'amount_formatted' => 'Rp ' . number_format($amount, 2, ',', '.'),
+        'amount' => 'Rp ' . number_format($amount, 2, ',', '.'),
+        'dpp_nilai_lain_formatted' => 'Rp ' . number_format($dpp_nilai_lain, 2, ',', '.')
     ];
 }
 

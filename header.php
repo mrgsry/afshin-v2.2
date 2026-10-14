@@ -686,6 +686,27 @@ $active_user_photo = trim($active_user['photo_path'] ?? '');
                         </li>
 
                         <?php endif; ?>
+                        <?php if (can_access_module('bad')): ?>
+                        <!-- BEFORE AFTER DOCUMENTATION -->
+                        <li class="nav-item has-treeview <?= in_array($current_page,['bad_create.php','bad_list.php','bad_edit.php'])?'menu-open':'' ?>">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-images"></i>
+                                <p>BAD Documentation <i class="right fas fa-angle-right"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="<?= $base_prefix ?>bad_create.php" class="nav-link <?= $current_page=='bad_create.php'?'active':'' ?>">
+                                        <i class="far fa-circle nav-icon"></i><p>Create BAD</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="<?= $base_prefix ?>bad_list.php" class="nav-link <?= in_array($current_page,['bad_list.php','bad_edit.php'])?'active':'' ?>">
+                                        <i class="far fa-circle nav-icon"></i><p>BAD List</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <?php endif; ?>
                         <?php if (can_access_module('operational')): ?>
                         <!-- OPERATIONAL -->
                         <li class="nav-item">
