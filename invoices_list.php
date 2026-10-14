@@ -1358,7 +1358,8 @@ $(document).ready(function() {
                             <div class="row">
                                 <div class="col-md-6">
                                     <small class="text-muted">Customer</small>
-                                    <p class="mb-2"><strong>${response.invoice.customer_name}</strong></p>
+                                    <p class="mb-1"><strong>${response.invoice.customer_name}</strong></p>
+                                    <small class="text-muted">NPWP: ${response.invoice.customer_npwp || '-'}</small>
                                 </div>
                                 <div class="col-md-3">
                                     <small class="text-muted">Invoice Date</small>

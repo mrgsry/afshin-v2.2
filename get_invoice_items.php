@@ -13,6 +13,7 @@ $invoice_query = mysqli_query($mysqli, "
     SELECT 
         i.*,
         c.name as customer_name,
+        c.npwp as customer_npwp,
         DATE_FORMAT(i.created_at, '%d/%m/%Y') as invoice_date
     FROM invoices i
     LEFT JOIN customers c ON i.customer_id = c.id
@@ -29,6 +30,7 @@ $invoice_data = mysqli_fetch_assoc($invoice_query);
 // Format angka untuk invoice
 $invoice = [
     'customer_name' => $invoice_data['customer_name'] ?? '',
+    'customer_npwp' => $invoice_data['customer_npwp'] ?? '',
     'invoice_date' => $invoice_data['invoice_date'] ?? '',
     'po_number' => $invoice_data['po_number'] ?? '',
     'subtotal_formatted' => 'Rp ' . number_format(floatval($invoice_data['subtotal'] ?? 0), 2, ',', '.'),
